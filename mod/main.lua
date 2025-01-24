@@ -1,6 +1,8 @@
 -- name: Arena
--- description: A arena-shooter inspired game mode with custom weapons and levels.\nSeven gamemodes in one, three custom stages, five weapons.
+-- description: An arena-shooter inspired game mode with custom weapons and levels.\nSeven gamemodes in one, three custom stages, and five weapons.
 -- incompatible: gamemode arena
+-- pausable: false
+-- category: gamemode
 
 GAME_STATE_ACTIVE   = 1
 GAME_STATE_INACTIVE = 2
@@ -14,36 +16,45 @@ GAME_MODE_KOTH  = 6
 GAME_MODE_TKOTH = 7
 
 gGameModes = {
-    [GAME_MODE_DM]    = { shortName = 'DM',    name = 'Deathmatch',            teams = false, teamSpawns = false, useScore = false, scoreCap = 10,  minPlayers = 0, maxPlayers = 99 },
-    [GAME_MODE_TDM]   = { shortName = 'TDM',   name = 'Team Deathmatch',       teams = true,  teamSpawns = false, useScore = false, scoreCap = 20,  minPlayers = 4, maxPlayers = 99 },
-    [GAME_MODE_CTF]   = { shortName = 'CTF',   name = 'Capture the Flag',      teams = true,  teamSpawns = true,  useScore = false, scoreCap =  3,  minPlayers = 4, maxPlayers = 99 },
-    [GAME_MODE_FT]    = { shortName = 'FT',    name = 'Flag Tag',              teams = false, teamSpawns = false, useScore = true,  scoreCap = 60,  minPlayers = 0, maxPlayers = 99 },
-    [GAME_MODE_TFT]   = { shortName = 'TFT',   name = 'Team Flag Tag',         teams = true,  teamSpawns = false, useScore = true,  scoreCap = 120, minPlayers = 4, maxPlayers = 99 },
-    [GAME_MODE_KOTH]  = { shortName = 'KOTH',  name = 'King of the Hill',      teams = false, teamSpawns = false, useScore = true,  scoreCap = 45,  minPlayers = 0, maxPlayers = 6  },
-    [GAME_MODE_TKOTH] = { shortName = 'TKOTH', name = 'Team King of the Hill', teams = true,  teamSpawns = false, useScore = true,  scoreCap = 90,  minPlayers = 4, maxPlayers = 99 },
+    [GAME_MODE_DM]    = { shortName = 'DM',    name = 'Deathmatch',            teams = false, teamSpawns = false, useScore = false, scoreCap = 10,  minPlayers = 0, maxPlayers = 99, time = 0,   rules = "First to %d kills"         },
+    [GAME_MODE_TDM]   = { shortName = 'TDM',   name = 'Team Deathmatch',       teams = true,  teamSpawns = false, useScore = false, scoreCap = 20,  minPlayers = 4, maxPlayers = 99, time = 0,   rules = "First team to %d kills"    },
+    [GAME_MODE_CTF]   = { shortName = 'CTF',   name = 'Capture the Flag',      teams = true,  teamSpawns = true,  useScore = false, scoreCap =  3,  minPlayers = 4, maxPlayers = 99, time = 360, rules = "First team to %d captures" },
+    [GAME_MODE_FT]    = { shortName = 'FT',    name = 'Flag Tag',              teams = false, teamSpawns = false, useScore = true,  scoreCap = 60,  minPlayers = 0, maxPlayers = 99, time = 0,   rules = "First to %d points"        },
+    [GAME_MODE_TFT]   = { shortName = 'TFT',   name = 'Team Flag Tag',         teams = true,  teamSpawns = false, useScore = true,  scoreCap = 120, minPlayers = 4, maxPlayers = 99, time = 0,   rules = "First team to %d points"   },
+    [GAME_MODE_KOTH]  = { shortName = 'KOTH',  name = 'King of the Hill',      teams = false, teamSpawns = false, useScore = true,  scoreCap = 45,  minPlayers = 0, maxPlayers = 6,  time = 360, rules = "First to %d points"        },
+    [GAME_MODE_TKOTH] = { shortName = 'TKOTH', name = 'Team King of the Hill', teams = true,  teamSpawns = false, useScore = true,  scoreCap = 90,  minPlayers = 4, maxPlayers = 99, time = 360, rules = "First team to %d points"   }
 }
 
-LEVEL_ARENA_ORIGIN    = level_register('level_arena_origin_entry',    COURSE_NONE, 'Origin',    'origin',    28000, 0x28, 0x28, 0x28)
-LEVEL_ARENA_SKY_BEACH = level_register('level_arena_sky_beach_entry', COURSE_NONE, 'Sky Beach', 'beach',     28000, 0x28, 0x28, 0x28)
-LEVEL_ARENA_PILLARS   = level_register('level_arena_pillars_entry',   COURSE_NONE, 'Pillars',   'pillars',   28000, 0x28, 0x28, 0x28)
-LEVEL_ARENA_FORTS     = level_register('level_arena_forts_entry',     COURSE_NONE, 'Forts',     'forts',     28000, 0x28, 0x28, 0x28)
-LEVEL_ARENA_CITADEL   = level_register('level_arena_citadel_entry',   COURSE_NONE, 'Citadel',   'citadel',   28000, 0x28, 0x28, 0x28)
-LEVEL_ARENA_SPIRE     = level_register('level_arena_spire_entry',     COURSE_NONE, 'Spire',     'spire',     28000, 0x28, 0x28, 0x28)
+LEVEL_ARENA_ORIGIN    = level_register('level_arena_origin_entry',    COURSE_NONE, 'Origin',    'origin',    28000, 0x08, 0x08, 0x08)
+LEVEL_ARENA_SKY_BEACH = level_register('level_arena_sky_beach_entry', COURSE_NONE, 'Sky Beach', 'beach',     28000, 0x08, 0x08, 0x08)
+LEVEL_ARENA_PILLARS   = level_register('level_arena_pillars_entry',   COURSE_NONE, 'Pillars',   'pillars',   28000, 0x08, 0x08, 0x08)
+LEVEL_ARENA_FORTS     = level_register('level_arena_forts_entry',     COURSE_NONE, 'Forts',     'forts',     28000, 0x08, 0x08, 0x08)
+LEVEL_ARENA_CITADEL   = level_register('level_arena_citadel_entry',   COURSE_NONE, 'Citadel',   'citadel',   28000, 0x08, 0x08, 0x08)
+LEVEL_ARENA_SPIRE     = level_register('level_arena_spire_entry',     COURSE_NONE, 'Spire',     'spire',     28000, 0x08, 0x08, 0x08)
+LEVEL_ARENA_RAINBOW   = level_register('level_arena_rainbow_entry',   COURSE_NONE, 'Rainbow',   'rainbow',   28000, 0x28, 0x28, 0x28)
+LEVEL_ARENA_CITY      = level_register('level_arena_city_entry',      COURSE_NONE, 'City',      'city',      28000, 0x28, 0x28, 0x28)
 
-local gGameLevels = {
-    { level = LEVEL_ARENA_ORIGIN,    name = 'Origin'    },
-    { level = LEVEL_ARENA_SKY_BEACH, name = 'Sky Beach' },
-    { level = LEVEL_ARENA_PILLARS,   name = 'Pillars'   },
-    { level = LEVEL_ARENA_FORTS,     name = 'Forts'     },
-    { level = LEVEL_ARENA_CITADEL,   name = 'Citadel' },
-    { level = LEVEL_ARENA_SPIRE,     name = 'Spire' },
+gGameLevels = {
+    { level = LEVEL_ARENA_ORIGIN,    name = 'Origin',    compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
+    { level = LEVEL_ARENA_SKY_BEACH, name = 'Sky Beach', compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
+    { level = LEVEL_ARENA_PILLARS,   name = 'Pillars',   compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
+    { level = LEVEL_ARENA_FORTS,     name = 'Forts',     compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
+    { level = LEVEL_ARENA_CITADEL,   name = 'Citadel',   compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
+    { level = LEVEL_ARENA_SPIRE,     name = 'Spire',     compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
+    { level = LEVEL_ARENA_RAINBOW,   name = 'Rainbow',   compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
+    { level = LEVEL_ARENA_CITY,      name = 'City',      compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } }
 }
 
 -- expose certain functions to other mods
 _G.Arena = {
-    add_level = function (levelNum, levelName)
-        table.insert(gGameLevels, { level = levelNum, name = levelName })
-        update_chat_command_description('arena-level', string.format('[%s] sets level', get_level_choices()))
+    add_level = function (levelNum, levelName, compatibleGamemodes)
+        if not compatibleGamemodes then
+            compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH }
+        end
+        table.insert(gGameLevels, { level = levelNum, name = levelName, compatibleGamemodes = compatibleGamemodes })
+    end,
+    get_player_team = function (localIndex)
+        return gPlayerSyncTable[localIndex].team
     end
 }
 
@@ -56,15 +67,19 @@ gGlobalSyncTable.capTeam1 = 0
 gGlobalSyncTable.capTeam2 = 0
 gGlobalSyncTable.kothPoint = -1
 gGlobalSyncTable.message = ' '
+gGlobalSyncTable.timer = 0
+gGlobalSyncTable.maxInvincTimer = 0
 sWaitTimerMax = 15 * 30 -- 15 seconds
 sWaitTimer = 0
 sRoundCount = 0
+sUsingTimer = false
 
 sRandomizeMode = true
 
--- force pvp and knockback
+-- force pvp and knockback, disable player list
 gServerSettings.playerInteractions = PLAYER_INTERACTIONS_PVP
 gServerSettings.playerKnockbackStrength = 20
+gServerSettings.enablePlayerList = false
 
 -- use fixed collisions
 gLevelValues.fixCollisionBugs = 1
@@ -75,7 +90,7 @@ function calculate_rankings()
         local s  = gPlayerSyncTable[i]
         local np = gNetworkPlayers[i]
         local m  = gMarioStates[i]
-        if active_player(m) then
+        if active_player(m) and s.team ~= 3 then
             local score = 0
             if gGameModes[gGlobalSyncTable.gameMode].useScore then
                 score = s.score * 1000 + (1 - (np.globalIndex / MAX_PLAYERS))
@@ -184,7 +199,7 @@ function shuffle_teams()
     for i = 0, (MAX_PLAYERS-1) do
         local m = gMarioStates[i]
         local s = gPlayerSyncTable[i]
-        if active_player(m) then
+        if active_player(m) and s.team ~= 3 then
             table.insert(t, s)
             count = count + 1
         end
@@ -217,6 +232,18 @@ function shuffle_teams()
     end
 end
 
+function get_current_level_key()
+    local curLevel = nil
+
+    for i, gl in ipairs(gGameLevels) do
+        if gGlobalSyncTable.currentLevel == gl.level then
+            curLevel = i
+        end
+    end
+
+    return curLevel
+end
+
 function round_begin()
     gGlobalSyncTable.message = ' '
     gGlobalSyncTable.gameState = GAME_STATE_ACTIVE
@@ -234,25 +261,9 @@ function round_begin()
 
     local playerCount = network_player_connected_count()
 
-    if roundShuffle and sRandomizeMode then
-        local gamemodes = {}
-        for i, gm in ipairs(gGameModes) do
-            if playerCount >= gm.minPlayers and playerCount <= gm.maxPlayers then
-                table.insert(gamemodes, i)
-            end
-        end
-        gGlobalSyncTable.gameMode = gamemodes[math.random(#gamemodes)]
-    end
-
     if roundShuffle then
 
-        local curLevel = nil
-
-        for i, gl in ipairs(gGameLevels) do
-            if gGlobalSyncTable.currentLevel == gl.level then
-                curLevel = i
-            end
-        end
+        local curLevel = get_current_level_key()
 
         if curLevel ~= nil then
             if curLevel >= #gGameLevels then
@@ -266,16 +277,38 @@ function round_begin()
         end
     end
 
+    if roundShuffle and sRandomizeMode then
+        local gamemodes = {}
+        for i, gm in ipairs(gGameModes) do
+            if playerCount >= gm.minPlayers and playerCount <= gm.maxPlayers then
+                table.insert(gamemodes, i)
+            end
+        end
+        gGlobalSyncTable.gameMode = gamemodes[math.random(#gamemodes)]
+    end
+
+    while not gGameLevels[get_current_level_key()].compatibleGamemodes[gGlobalSyncTable.gameMode] do
+        gGlobalSyncTable.gameMode = math.random(#gGameModes)
+    end
+
     for i = 0, (MAX_PLAYERS - 1) do
         player_reset_sync_table(gMarioStates[i])
-        if not gGameModes[gGlobalSyncTable.gameMode].teams then
-            local s = gPlayerSyncTable[i]
+        local s = gPlayerSyncTable[i]
+        if not gGameModes[gGlobalSyncTable.gameMode].teams and s.team ~= 3 then
             s.team = 0
         end
     end
 
     if gGameModes[gGlobalSyncTable.gameMode].teams then
         shuffle_teams()
+    end
+
+    if gGameModes[gGlobalSyncTable.gameMode].time > 0 then
+        gGlobalSyncTable.timer = gGameModes[gGlobalSyncTable.gameMode].time
+        sUsingTimer = true
+    else
+        gGlobalSyncTable.timer = 0
+        sUsingTimer = false
     end
 
     send_arena_respawn()
@@ -371,7 +404,7 @@ function on_arena_player_death(victimGlobalId, attackerGlobalId)
             if sAttacker.team ~= 0 then
                 local teamScore = calculate_team_score(sAttacker.team)
                 if teamScore >= gGameModes[gGlobalSyncTable.gameMode].scoreCap then
-                    round_end()                    
+                    round_end()
                 end
             end
         end
@@ -402,6 +435,14 @@ end
 
 ---
 
+local function split(s)
+    local result = {}
+    for match in (s):gmatch(string.format("[^%s]+", " ")) do
+        table.insert(result, match)
+    end
+    return result
+end
+
 function level_check()
     local np = gNetworkPlayers[0]
     if np.currLevelNum ~= gGlobalSyncTable.currentLevel or np.currActNum ~= 1 or np.currAreaIndex ~= 1 then
@@ -427,6 +468,12 @@ function on_server_update()
         if gGameModes[gGlobalSyncTable.gameMode].teams then
             end_round_if_team_empty()
         end
+        if sUsingTimer then
+            gGlobalSyncTable.timer = gGlobalSyncTable.timer - 1 / 30
+            if gGlobalSyncTable.timer <= 0 then
+                round_end()
+            end
+        end
     elseif gGlobalSyncTable.gameState == GAME_STATE_INACTIVE then
         sWaitTimer = sWaitTimer - 1
         if sWaitTimer <= 0 then
@@ -447,17 +494,17 @@ function on_update()
 end
 
 function on_gamemode_command(msg)
-
+    msg = msg:lower()
     local setMode = nil
 
     for i, gm in ipairs(gGameModes) do
-        if msg == gm.shortName then
+        if msg == gm.shortName:lower() then
             setMode = i
         end
     end
 
     if msg == 'random' then
-        djui_chat_message_create('Setting to random gamemode.')
+        djui_chat_message_create("[Arena] Setting to random gamemode.")
         sRandomizeMode = true
         round_end()
         sWaitTimer = 1
@@ -465,24 +512,29 @@ function on_gamemode_command(msg)
         return true
     end
 
-    if setMode ~= nil then
-        djui_chat_message_create('Setting game mode.')
+    if setMode ~= nil and gGameLevels[get_current_level_key()].compatibleGamemodes[setMode] then
+        djui_chat_message_create("[Arena] Setting game mode.")
         gGlobalSyncTable.gameMode = setMode
         sRandomizeMode = false
         round_end()
         sWaitTimer = 1
         sRoundCount = 0
         return true
+    elseif not gGameLevels[get_current_level_key()].compatibleGamemodes[setMode] then
+        djui_chat_message_create("[Arena] Gamemode not compatible with current level.")
+        return true
     end
 
-    return false
+    djui_chat_message_create("/arena \\#00ffff\\gamemode\\#ffff00\\ " .. string.format("[%s|random]\\#dcdcdc\\ sets gamemode", sGameModeShortTimes))
+    return true
 end
 
 function on_level_command(msg)
+    msg = msg:lower()
     local setLevel = nil
 
     for i, gl in ipairs(gGameLevels) do
-        if msg == gl.name then
+        if msg == gl.name:lower() then
             setLevel = i
         end
     end
@@ -495,7 +547,44 @@ function on_level_command(msg)
         return true
     end
 
-    return false
+    djui_chat_message_create("/arena \\#00ffff\\level\\#ffff00\\ " .. string.format("[%s]\\#dcdcdc\\ sets level", get_level_choices()))
+    return true
+end
+
+function on_jump_leniency_command(msg)
+    local num = tonumber(msg)
+    if not network_is_server and not network_is_moderator() then
+        djui_chat_message_create("\\#ffa0a0\\[Arena] You need to be a moderator to use this command.")
+        return true
+    elseif num == nil then
+        djui_chat_message_create("\\#ffa0a0\\[Arena] Invalid number!")
+        return true
+    else
+        gGlobalSyncTable.jumpLeniency = num
+        djui_chat_message_create("[Arena] The number of jump leniency frames has been set to " .. num)
+        return true
+    end
+end
+
+local function on_arena_command(msg)
+    local args = split(msg)
+    if args[1] == "gamemode" then
+        return on_gamemode_command(args[2] or "")
+    elseif args[1] == "level" then
+        local name = args[2] or ""
+        if args[3] ~= nil then
+            name = name .. " " .. args[3]
+        end
+        return on_level_command(name or "")
+    elseif args[1] == "jump-leniency" then
+        return on_jump_leniency_command(args[2] or "")
+    elseif args[1] == "help" then
+        djui_chat_message_create("/arena \\#00ffff\\[gamemode|level|jump-leniency|help]")
+        return true
+    end
+
+    toggle_arena_settings()
+    return true
 end
 
 hook_event(HOOK_ON_SYNC_VALID, on_sync_valid)
@@ -522,6 +611,9 @@ function get_level_choices()
 end
 
 if network_is_server() then
-    hook_chat_command('arena-gamemode', string.format("[%s|random] sets gamemode", sGameModeShortTimes), on_gamemode_command)
-    hook_chat_command('arena-level', string.format('[%s] sets level', get_level_choices()), on_level_command)
+    hook_chat_command("arena", "\\#00ffff\\[gamemode|level|jump-leniency]", on_arena_command)
+end
+
+if _G.dayNightCycleApi ~= nil then
+    _G.dayNightCycleApi.enable_day_night_cycle(false)
 end

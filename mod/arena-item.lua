@@ -58,7 +58,7 @@ function bhv_arena_item_collect_metal_cap(obj)
 
     m.flags = m.flags | MARIO_CAP_ON_HEAD
 
-    play_sound(SOUND_MENU_STAR_SOUND, m.marioObj.header.gfx.cameraToObject)
+    play_sound(SOUND_MENU_STAR_SOUND, gGlobalSoundSource)
     play_character_sound(m, CHAR_SOUND_HERE_WE_GO)
 
     play_cap_music(capMusic)
@@ -141,10 +141,10 @@ function bhv_arena_item_check_collect(obj)
         local player = m.marioObj
         local yDist = math.abs(obj.oPosY - player.oPosY)
         local xzDist = math.sqrt((obj.oPosX - player.oPosX) ^ 2 + (obj.oPosZ - player.oPosZ) ^ 2)
-        if xzDist < 160 and yDist < 250 then
+        if xzDist < 160 and yDist < 250 and s.team ~= 3 then
             if data ~= nil and data.customCollectionFunc ~= nil then
                 data.customCollectionFunc(obj)
-            elseif s.item == ITEM_NONE and s.item == ITEM_NONE and s.item == ITEM_NONE then
+            elseif s.item == ITEM_NONE then
                 bhv_arena_item_collect(obj)
             end
         end

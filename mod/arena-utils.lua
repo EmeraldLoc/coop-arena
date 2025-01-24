@@ -1,4 +1,3 @@
-
 function active_player(m)
     local np = gNetworkPlayers[m.playerIndex]
     if m.playerIndex == 0 then
@@ -107,6 +106,90 @@ function team_name_str(teamNum)
     else
         return 'white'
     end
+end
+
+function seconds_to_minutes(seconds)
+    if seconds < 60 then return seconds end
+    return string.format('%d:%02d', math.floor(seconds / 60), seconds % 60)
+end
+
+function table.copy(orig)
+    local copy
+    if type(orig) == 'table' then
+        copy = {}
+        for orig_key, orig_value in next, orig, nil do
+            copy[table.copy(orig_key)] = table.copy(orig_value)
+        end
+        setmetatable(copy, table.copy(getmetatable(orig)))
+    else -- number, string, boolean, etc
+        copy = orig
+    end
+    return copy
+end
+
+---@param x number|integer
+---@param y number|integer
+---@param width number|integer
+---@param height number|integer
+---@param oR number|integer
+---@param oG number|integer
+---@param oB number|integer
+---@param thickness number|integer
+---@param opacity number|integer|nil
+function djui_hud_render_rect_outlined(x, y, width, height, oR, oG, oB, thickness)
+    -- render main rect
+    djui_hud_render_rect(x, y, width, height)
+    -- set outline color to, well, outline color
+    djui_hud_set_color(oR, oG, oB, djui_hud_get_color().a)
+    -- render rect outside of each side
+    djui_hud_render_rect(x - thickness, y - thickness, thickness, height + thickness * 2)
+    djui_hud_render_rect(x + (width - thickness) + thickness, y, thickness, height + thickness)
+    djui_hud_render_rect(x, y - thickness, width + thickness, thickness)
+    djui_hud_render_rect(x, y + (height - thickness) + thickness, width, thickness)
+end
+
+function hex_to_rgb(hex)
+	-- remove the # and the \\ from the hex so that we can convert it properly
+	hex = hex:gsub('#','')
+	hex = hex:gsub('\\','')
+
+    return { r = tonumber('0x'..hex:sub(1,2)), g = tonumber('0x'..hex:sub(3,4)), b = tonumber('0x'..hex:sub(5,6)) }
+end
+
+function rgb_to_hex(r, g, b)
+	return string.format("#%02X%02X%02X", r, g, b)
+end
+
+function strip_hex(name)
+	-- create variables
+	local s = ''
+	local inSlash = false
+	-- the way this works is if you're in a slash, you dont add the characters in the slash,
+	-- otherwise, you do, this allows you to skip the hex's
+
+	-- loop thru each character in the string
+	for i = 1, #name do
+		local c = name:sub(i,i)
+		if c == '\\' then
+			-- we are now in (or out) of the slash, set variable accordingly
+			inSlash = not inSlash
+		elseif not inSlash then
+			s = s .. c
+		end
+	end
+	return s
+end
+
+function cap_text(text, maxLength)
+	local newText = ""
+	local lastValidText = ""
+	for i = 1, #text do
+		local c = text:sub(i, i)
+		newText = newText .. c
+		if djui_hud_measure_text(strip_hex(newText)) <= maxLength then lastValidText = newText end
+	end
+
+	return lastValidText
 end
 
 ------------

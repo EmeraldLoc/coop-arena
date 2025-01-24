@@ -284,6 +284,10 @@ end
 function allow_pvp_attack(attacker, victim)
     local npAttacker = gNetworkPlayers[attacker.playerIndex]
     local sAttacker = gPlayerSyncTable[attacker.playerIndex]
+    local sVictim = gPlayerSyncTable[victim.playerIndex]
+
+    -- check spectator status
+    if sAttacker.team == 2 or sVictim.team == 2 then return false end
 
     -- hammer attacks are custom
     if sAttacker.item == ITEM_HAMMER and mario_hammer_is_attack(attacker.action) then
@@ -300,6 +304,19 @@ function on_pvp_attack(attacker, victim)
         local npAttacker = gNetworkPlayers[attacker.playerIndex]
         e.lastDamagedByGlobal = npAttacker.globalIndex
     end
+end
+
+function allow_interact(interactor, interactee, interactType, interactValue)
+    -- find the interactee's mario state if this is mario
+    for i = 0, MAX_PLAYERS - 1 do
+        local m = gMarioStates[i]
+        local s = gPlayerSyncTable[i]
+        if m.marioObj == interactee and s.team == 3 then
+            return false
+        end
+    end
+
+    if gPlayerSyncTable[interactor.playerIndex].team == 3 then return false end
 end
 
 function on_interact(interactor, interactee, interactType, interactValue)
@@ -402,9 +419,6 @@ function mario_local_update(m)
         end
     end
 
-    -- check for ladder
-    mario_check_for_ladder(m)
-
     e.prevHurtCounter = m.hurtCounter
 end
 
@@ -412,6 +426,7 @@ function mario_update(m)
     local e  = gMarioStateExtras[m.playerIndex]
     local s  = gPlayerSyncTable[m.playerIndex]
     local np = gNetworkPlayers[m.playerIndex]
+    if not np.connected then return end
 
     -- increase knockback animations
     local animInfo = nil
@@ -434,8 +449,8 @@ function mario_update(m)
         end
     end
 
-    -- clear invincibilities
-    m.invincTimer = 0
+    -- set invincibilites
+    if m.invincTimer > gGlobalSyncTable.maxInvincTimer then m.invincTimer = gGlobalSyncTable.maxInvincTimer end
     if m.knockbackTimer > 5 then
         m.knockbackTimer = 5
     end
@@ -446,17 +461,36 @@ function mario_update(m)
     end
 
     -- update palette
-    if s.team == 2 then
-        np.overridePaletteIndex = 7
-    elseif s.team == 1 then
-        np.overridePaletteIndex = 15
+    if s.team == 1 then
+        network_player_set_override_palette_color(np, PANTS, { r = 225, g = 5, b = 49 })
+        network_player_set_override_palette_color(np, SHIRT, { r = 40, g = 10, b = 10 })
+        network_player_set_override_palette_color(np, GLOVES, network_player_get_palette_color(np, GLOVES))
+        network_player_set_override_palette_color(np, SHOES, network_player_get_palette_color(np, SHOES))
+        network_player_set_override_palette_color(np, HAIR, network_player_get_palette_color(np, HAIR))
+        network_player_set_override_palette_color(np, SKIN, network_player_get_palette_color(np, SKIN))
+        network_player_set_override_palette_color(np, CAP, { r = 40, g = 10, b = 10 })
+        network_player_set_override_palette_color(np, EMBLEM, network_player_get_palette_color(np, EMBLEM))
+    elseif s.team == 2 then
+        network_player_set_override_palette_color(np, PANTS, { r = 63, g = 63, b = 255 })
+        network_player_set_override_palette_color(np, SHIRT, { r = 10, g = 10, b = 40 })
+        network_player_set_override_palette_color(np, GLOVES, network_player_get_palette_color(np, GLOVES))
+        network_player_set_override_palette_color(np, SHOES, network_player_get_palette_color(np, SHOES))
+        network_player_set_override_palette_color(np, HAIR, network_player_get_palette_color(np, HAIR))
+        network_player_set_override_palette_color(np, SKIN, network_player_get_palette_color(np, SKIN))
+        network_player_set_override_palette_color(np, CAP, { r = 10, g = 10, b = 40 })
+        network_player_set_override_palette_color(np, EMBLEM, network_player_get_palette_color(np, EMBLEM))
     else
-        np.overridePaletteIndex = np.paletteIndex
+        network_player_reset_override_palette(np)
     end
 
     -- set metal
     if s.metal then
         m.marioBodyState.modelState = MODEL_STATE_METAL
+    end
+
+    -- set spectator transparency
+    if s.team == 3 then
+        m.marioBodyState.modelState = MODEL_STATE_NOISE_ALPHA
     end
 
     -- allow yaw change on springing
@@ -560,7 +594,7 @@ end
 function before_phys_step(m)
     local hScale = 1.0
 
-    if is_holding_flag(m) then
+    if is_holding_flag(m) and m.action ~= ACT_SHOT_FROM_CANNON then
         hScale = 0.9
     end
 
@@ -570,6 +604,7 @@ end
 
 hook_event(HOOK_ALLOW_PVP_ATTACK, allow_pvp_attack)
 hook_event(HOOK_ON_PVP_ATTACK, on_pvp_attack)
+hook_event(HOOK_ALLOW_INTERACT, allow_interact)
 hook_event(HOOK_ON_INTERACT, on_interact)
 hook_event(HOOK_ON_SET_MARIO_ACTION, on_set_mario_action)
 hook_event(HOOK_MARIO_UPDATE, mario_update)

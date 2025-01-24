@@ -55,55 +55,43 @@ function render_game_mode()
         return
     end
 
+    local screenWidth = djui_hud_get_screen_width()
+
     local scoreCap = gGameModes[gGlobalSyncTable.gameMode].scoreCap
 
-    local txt = string.format("%s", gGameModes[gGlobalSyncTable.gameMode].name)
-    if gGlobalSyncTable.gameMode == GAME_MODE_DM then
-        txt = string.format("%s | First to %d kills", gGameModes[gGlobalSyncTable.gameMode].name, scoreCap)
-    elseif gGlobalSyncTable.gameMode == GAME_MODE_TDM then
-        txt = string.format("%s | First team to %d kills", gGameModes[gGlobalSyncTable.gameMode].name, scoreCap)
-    elseif gGlobalSyncTable.gameMode == GAME_MODE_CTF then
-        txt = string.format("%s | First team to %d captures", gGameModes[gGlobalSyncTable.gameMode].name, scoreCap)
-    elseif gGlobalSyncTable.gameMode == GAME_MODE_FT then
-        txt = string.format("%s | First to %d points", gGameModes[gGlobalSyncTable.gameMode].name, scoreCap)
-    elseif gGlobalSyncTable.gameMode == GAME_MODE_TFT then
-        txt = string.format("%s | First team to %d points", gGameModes[gGlobalSyncTable.gameMode].name, scoreCap)
-    elseif gGlobalSyncTable.gameMode == GAME_MODE_KOTH then
-        txt = string.format("%s | First to %d points", gGameModes[gGlobalSyncTable.gameMode].name, scoreCap)
-    elseif gGlobalSyncTable.gameMode == GAME_MODE_TKOTH then
-        txt = string.format("%s | First team to %d points", gGameModes[gGlobalSyncTable.gameMode].name, scoreCap)
-    end
-    local scale = 0.25
-    local width = (djui_hud_measure_text(txt) + 8) * scale
-    local height = 4 * scale + 28 * scale
-    local x = 4 * scale
-    local y = 2 * scale
-    djui_hud_set_color(0, 0, 0, 128)
-    djui_hud_render_rect(x, y, width, height)
+    local txt = string.format(gGameModes[gGlobalSyncTable.gameMode].rules, scoreCap)
+    local scale = 0.35
+    local width = djui_hud_measure_text(txt) * scale
+    local x = (screenWidth - width) / 2
+    local y = 4 * scale
 
-    x = x + 4 * scale
     djui_hud_set_color(0, 0, 0, 255)
     djui_hud_print_text(txt, x + 2 * scale, y + 2 * scale, scale)
     djui_hud_set_color(255, 255, 255, 255)
-    djui_hud_print_text(txt, x + 0 * scale, y + 0 * scale, scale)
+    djui_hud_print_text(txt, x, y, scale)
 end
 
 function render_single_team_score(team)
     local txt = string.format("%d", calculate_team_score(team))
 
+    local screenWidth = djui_hud_get_screen_width()
+    local screenHeight = djui_hud_get_screen_height()
     local scale = 0.25
     local width = 64 * scale
     local textWidth = djui_hud_measure_text(txt) * scale
-    local height = 4 * scale + 28 * scale
-    local x = 4 * scale
-    local y = 72 * scale
+    local height = 32 * scale
+    local x = (screenWidth - width) / 2
+    local y = screenHeight - height - 21
+    local distance = 56
 
     if team == 1 then
+        x = x - distance
         djui_hud_set_color(128, 0, 0, 128)
     elseif team == 2 then
-        x = x + 72 * scale
+        x = x + distance
         djui_hud_set_color(0, 0, 128, 128)
     end
+
     djui_hud_render_rect(x, y, width, height)
 
     x = x + (width - textWidth) / 2
@@ -123,8 +111,6 @@ function render_team_score()
 end
 
 function render_local_rank()
-    local m  = gMarioStates[0]
-    local np = gNetworkPlayers[0]
     local s  = gPlayerSyncTable[0]
 
     if s.rank <= 0 then
@@ -133,24 +119,21 @@ function render_local_rank()
 
     local rankTxt = ""
     if gGameModes[gGlobalSyncTable.gameMode].useScore then
-        rankTxt = string.format("%s | %d points | %d kills | %d deaths", rank_str(s.rank), s.score, s.kills, s.deaths)
+        rankTxt = string.format("%s | %d points | %d kills", rank_str(s.rank), s.score, s.kills)
     else
         rankTxt = string.format("%s | %d kills | %d deaths", rank_str(s.rank), s.kills, s.deaths)
     end
-    local scale = 0.25
-    local width = (djui_hud_measure_text(rankTxt) + 8) * scale
-    local height = 4 * scale + 28 * scale
+    local screenWidth = djui_hud_get_screen_width()
+    local scale = 0.35
+    local paddingX = 64 * scale
+    local width = (djui_hud_measure_text(rankTxt) + paddingX) * scale
+    local x = (screenWidth - width) / 2
+    local y = 40 * scale
 
-    local x = 4 * scale
-    local y = 36 * scale
-    djui_hud_set_color(0, 0, 0, 128)
-    djui_hud_render_rect(x, y, width, height)
-
-    x = x + 4 * scale
     djui_hud_set_color(0, 0, 0, 255)
-    djui_hud_print_text(rankTxt, x + 2 * scale, y + 2 * scale, scale)
+    djui_hud_print_text(rankTxt, x + paddingX / 8 + 2 * scale, y + 2 * scale, scale)
     djui_hud_set_color(255, rank_color_g(s.rank), 0, 255)
-    djui_hud_print_text(rankTxt, x + 0 * scale, y + 0 * scale, scale)
+    djui_hud_print_text(rankTxt, x + paddingX / 8, y, scale)
 end
 
 function render_server_message()
@@ -187,8 +170,8 @@ function render_health()
     local scale = 1
     local width = 128 * scale
     local height = 16 * scale
-    local x = math.floor((screenWidth - width) / 2)
-    local y = math.floor(screenHeight - height - 4 * scale)
+    local x = (screenWidth - width) / 2
+    local y = screenHeight - height - 4 * scale
 
     djui_hud_set_color(0, 0, 0, 128)
     djui_hud_render_rect(x, y, width, height)
@@ -201,11 +184,38 @@ function render_health()
     if health > 0 and health < 0.02 then
         health = 0.02
     end
-    width = math.floor(width * health)
+    width = width * health
     rscale = clamp(((1 - health) ^ 2) * 3, 0, 1)
     gscale = clamp((health ^ 2) * 2, 0, 1)
     djui_hud_set_color(255 * rscale, 255 * gscale, 0, 128)
     djui_hud_render_rect(x, y, width, height)
+end
+
+function render_timer()
+    if gGlobalSyncTable.timer <= 0 then return end
+
+    local txt = string.format("%d:%02d", math.floor(gGlobalSyncTable.timer / 60), math.floor(gGlobalSyncTable.timer) % 60)
+
+    if gGlobalSyncTable.timer < 60 then
+        txt = string.format("%d", math.floor(gGlobalSyncTable.timer))
+    end
+
+    local screenWidth = djui_hud_get_screen_width()
+    local screenHeight = djui_hud_get_screen_height()
+    local scale = 0.25
+    local paddingX = 64 * scale
+    local width = (djui_hud_measure_text(txt) + paddingX) * scale
+    local height = 32 * scale
+    local x = (screenWidth - width) / 2
+    local y = screenHeight - height - 21
+
+    djui_hud_set_color(0, 0, 0, 128)
+    djui_hud_render_rect(x, y, width, height)
+
+    djui_hud_set_color(0, 0, 0, 255)
+    djui_hud_print_text(txt, x + paddingX / 8 + 2 * scale, y + 2 * scale, scale)
+    djui_hud_set_color(255, 255, 255, 255)
+    djui_hud_print_text(txt, x + paddingX / 8, y, scale)
 end
 
 function render_hud_icon(obj, hudIcon)
@@ -233,18 +243,22 @@ function render_hud_icon(obj, hudIcon)
     hudIcon.prevY = dY
 end
 
-function on_hud_render()
+local function on_hud_render()
+    -- hide default hud elements
+    hud_hide()
+
     -- set resolution and font
     djui_hud_set_resolution(RESOLUTION_N64)
-    djui_hud_set_font(FONT_NORMAL)
+    djui_hud_set_font(djui_menu_get_font())
 
-    -- do the things
+    -- update and render information
     update_ranking_descriptions()
     render_game_mode()
     render_local_rank()
     render_team_score()
     render_server_message()
     render_health()
+    render_timer()
 
     -- render hud icons
     if gGlobalSyncTable.gameMode == GAME_MODE_FT or gGlobalSyncTable.gameMode == GAME_MODE_TFT then
@@ -265,5 +279,4 @@ function on_hud_render()
     end
 end
 
-hud_hide()
 hook_event(HOOK_ON_HUD_RENDER, on_hud_render)
