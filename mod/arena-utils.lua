@@ -135,14 +135,13 @@ end
 ---@param oR number|integer
 ---@param oG number|integer
 ---@param oB number|integer
+---@param oA number|integer
 ---@param thickness number|integer
----@param opacity number|integer|nil
-function djui_hud_render_rect_outlined(x, y, width, height, oR, oG, oB, thickness)
+function djui_hud_render_rect_outlined(x, y, width, height, oR, oG, oB, oA, thickness)
     -- render main rect
     djui_hud_render_rect(x, y, width, height)
-    -- set outline color to, well, outline color
-    djui_hud_set_color(oR, oG, oB, djui_hud_get_color().a)
     -- render rect outside of each side
+    djui_hud_set_color(oR, oG, oB, oA)
     djui_hud_render_rect(x - thickness, y - thickness, thickness, height + thickness * 2)
     djui_hud_render_rect(x + (width - thickness) + thickness, y, thickness, height + thickness)
     djui_hud_render_rect(x, y - thickness, width + thickness, thickness)

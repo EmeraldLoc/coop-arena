@@ -83,15 +83,15 @@ local function on_mods_loaded()
                 gGlobalSyncTable.maxInvincTimer = clamp(gGlobalSyncTable.maxInvincTimer + (strength * direction), 0, 30)
             end,
             update = function (entry)
-                local iFramesText = gGlobalSyncTable.maxInvincTimer == 0 and "None" or gGlobalSyncTable.maxInvincTimer == 30 and "Vanilla" or tostring(gGlobalSyncTable.maxInvincTimer)
-                entry.value = iFramesText
+                entry.value = gGlobalSyncTable.maxInvincTimer == 30 and "Default" or gGlobalSyncTable.maxInvincTimer == 0 and "None" or tostring(gGlobalSyncTable.maxInvincTimer)
             end,
-            value = "None"
+            value = gGlobalSyncTable.maxInvincTimer
         },
         {
             name = 'Spectating',
             input = INPUT_A,
             permission = PERMISSION_ALL,
+            toggleValue = gPlayerSyncTable[0].team == 3,
             action = function ()
                 if gPlayerSyncTable[0].team == 3 then
                     player_reset_sync_table(gMarioStates[0])
@@ -101,9 +101,8 @@ local function on_mods_loaded()
                 end
             end,
             update = function (entry)
-                entry.value = gPlayerSyncTable[0].team == 3 and "Enabled" or "Disabled"
+                entry.toggleValue = gPlayerSyncTable[0].team == 3
             end,
-            value = "Disabled"
         }
     }
 
@@ -176,13 +175,13 @@ local function on_mods_loaded()
 end
 
 local function on_hud_render()
-
     if #entries == 0 then
         return
     end
 
     djui_hud_set_resolution(RESOLUTION_DJUI)
     djui_hud_set_font(djui_menu_get_font())
+
     local screenWidth = djui_hud_get_screen_width()
     local screenHeight = djui_hud_get_screen_height()
 
@@ -192,7 +191,7 @@ local function on_hud_render()
     local x = (screenWidth - width) / 2
     local y = (screenHeight - height) / 2
 
-    djui_hud_set_color(0, 0, 0, 128)
+    djui_hud_set_color(20, 20, 20, 200)
     djui_hud_render_rect(x, y, width, height)
 
     width = width - 50
@@ -204,21 +203,21 @@ local function on_hud_render()
         if entry.update then
             entry.update(entry)
         end
-        local rectColor = i == selection and { 45, 45, 45, 255 } or { 25, 25, 25, 255 }
+        local rectColor = i == selection and { 50, 50, 0, 255 } or { 0, 0, 0, 128 }
+        local outlineRectColor = i == selection and { 255, 220, 0, 255 } or { 0, 0, 0, 128 }
         local textColor = i == selection and { 255, 255, 255, 255 } or { 220, 220, 220, 255 }
         height = 40
         djui_hud_set_color(rectColor[1], rectColor[2], rectColor[3], rectColor[4])
-        djui_hud_render_rect(x, y, width, height)
+        djui_hud_render_rect_outlined(x, y, width, height, outlineRectColor[1], outlineRectColor[2], outlineRectColor[3], outlineRectColor[4], 2)
         djui_hud_set_color(textColor[1], textColor[2], textColor[3], textColor[4])
         djui_hud_print_text(entry.name, x + 5, y + 3, 1)
         if entry.toggleValue ~= nil then
             local texture = entry.toggleValue == true and TEXTURE_CHECKMARK or TEXTURE_NO_CHECKMARK
             djui_hud_set_filter(FILTER_LINEAR)
-            djui_hud_set_color(255, 255, 255, 255)
+            djui_hud_set_color(255, 255, 255, 200)
             djui_hud_render_texture(texture, x + width - 35, y + 5, (height - 10) / 32, (height - 10) / 32)
             djui_hud_set_filter(FILTER_NEAREST)
-        end
-        if entry.value then
+        elseif entry.value then
             djui_hud_set_color(255, 220, 0, 255)
             djui_hud_print_text(entry.value, x + width - djui_hud_measure_text(entry.value) - 5, y + 3, 1)
         end
