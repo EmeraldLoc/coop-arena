@@ -90,7 +90,7 @@ function mario_hammer_update(m)
 
     -- override dive animation
     if m.action == ACT_DIVE then
-        set_mario_animation(m, MARIO_ANIM_FORWARD_SPINNING)
+        set_character_animation(m, CHAR_ANIM_FORWARD_SPINNING)
 
         e.rotFrames = e.rotFrames + 1
         if (e.rotFrames) % 7 == 0 then
@@ -185,9 +185,9 @@ function mario_fire_flower_use(m)
             obj.oForwardVel = m.forwardVel + 70
         end)
 
-    if (m.action & ACT_FLAG_INVULNERABLE) ~= 0 or (m.action & ACT_FLAG_INTANGIBLE) ~= 0 then
-        -- nothing
-    elseif (m.action == ACT_SHOT_FROM_CANNON) then
+    if (m.action & ACT_FLAG_INVULNERABLE) ~= 0
+    or (m.action & ACT_FLAG_INTANGIBLE) ~= 0
+    or (m.action == ACT_SHOT_FROM_CANNON) then
         -- nothing
     elseif (m.action & ACT_FLAG_SWIMMING) ~= 0 then
         set_mario_action(m, ACT_WATER_PUNCH, 0)
@@ -219,9 +219,9 @@ function mario_bobomb_use(m)
             obj.oForwardVel = m.forwardVel + 50
         end)
 
-    if (m.action & ACT_FLAG_INVULNERABLE) ~= 0 or (m.action & ACT_FLAG_INTANGIBLE) ~= 0 then
-        -- nothing
-    elseif (m.action == ACT_SHOT_FROM_CANNON) then
+    if (m.action & ACT_FLAG_INVULNERABLE) ~= 0
+    or (m.action & ACT_FLAG_INTANGIBLE) ~= 0
+    or (m.action == ACT_SHOT_FROM_CANNON) then
         -- nothing
     elseif (m.action & ACT_FLAG_SWIMMING) ~= 0 then
         set_mario_action(m, ACT_WATER_PUNCH, 0)

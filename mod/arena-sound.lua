@@ -1,8 +1,8 @@
 local m = gMarioStates[0]
 local np = gNetworkPlayers[0]
 
-local pauseMenuShouldShowMusic = true
-local pauseMenuShowLevelID = true
+local pauseMenuShouldShowMusic = false
+local pauseMenuShowLevelID = false
 
 local curMap = -1
 local audioMainPaused = false
@@ -11,9 +11,9 @@ local audioSpecial --Used for things like cap music
 local audioCurSeq
 
 local bgms = {
-    [55] = {audio='snow.ogg',    loopEnd = 500,     loopStart = 0,      volume = 1, name="Frosty Citadel - Sonic Gaiden"  },
-    [56] = {audio='rainbow.ogg', loopEnd = 148.657, loopStart = 12.406, volume = 1, name="Rainbow Road - Coop Deluxe"     },
-    [57] = {audio='city.ogg',    loopEnd = 500,     loopStart = 06.975, volume = 1, name="City Outskirts - Sonic Megamix" }
+    [55] = { audio = 'snow.ogg',    loopEnd = 500,     loopStart = 0,      volume = 1, name = "Frosty Citadel - Sonic Gaiden"  },
+    [56] = { audio = 'rainbow.ogg', loopEnd = 148.657, loopStart = 12.406, volume = 1, name = "Rainbow Road - Coop Deluxe"     },
+    [57] = { audio = 'city.ogg',    loopEnd = 500,     loopStart = 06.975, volume = 1, name = "City Outskirts - Sonic Megamix" }
 }
 
 -- disable cap music
@@ -86,7 +86,7 @@ function handleMusic()
     end
 
     if audioMain then
-        audio_stream_set_volume(audioMain, is_game_paused() and bgms[curMap].volume/3.5 or bgms[curMap].volume)
+        audio_stream_set_volume(audioMain, bgms[curMap].volume * (is_game_paused() and .31 or 1))
 
         local curPosition = audio_stream_get_position(audioMain)
         if curPosition >= bgms[curMap].loopEnd then

@@ -21,11 +21,9 @@ local gamemodeSettingEntries = {}
 local selection = 1
 
 local function has_permission(perm)
-    if perm == PERMISSION_ALL then return true end
-    if perm == PERMISSION_SERVER and network_is_server() then return true end
-    if perm == PERMISSION_MODERATORS and (network_is_server() or network_is_moderator()) then return true end
-
-    return false
+    return perm == PERMISSION_ALL
+        or perm == PERMISSION_SERVER and network_is_server()
+        or perm == PERMISSION_MODERATORS and (network_is_server() or network_is_moderator())
 end
 
 local function set_setting_entries(newEntries)

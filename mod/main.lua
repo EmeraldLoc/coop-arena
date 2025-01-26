@@ -34,6 +34,12 @@ LEVEL_ARENA_SPIRE     = level_register('level_arena_spire_entry',     COURSE_NON
 LEVEL_ARENA_RAINBOW   = level_register('level_arena_rainbow_entry',   COURSE_NONE, 'Rainbow',   'rainbow',   28000, 0x28, 0x28, 0x28)
 LEVEL_ARENA_CITY      = level_register('level_arena_city_entry',      COURSE_NONE, 'City',      'city',      28000, 0x28, 0x28, 0x28)
 
+--- @class ArenaLevel
+--- @field public level               LevelNum|integer
+--- @field public name                string
+--- @field public compatibleGamemodes table
+
+--- @type ArenaLevel[]
 gGameLevels = {
     { level = LEVEL_ARENA_ORIGIN,    name = 'Origin',    compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
     { level = LEVEL_ARENA_SKY_BEACH, name = 'Sky Beach', compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
@@ -262,7 +268,6 @@ function round_begin()
     local playerCount = network_player_connected_count()
 
     if roundShuffle then
-
         local curLevel = get_current_level_key()
 
         if curLevel ~= nil then
@@ -335,7 +340,7 @@ function round_end()
 
         if winner ~= nil then
             local winnerNp = gNetworkPlayers[winner.playerIndex]
-            gGlobalSyncTable.message = strip_colors(winnerNp.name) .. ' Wins!'
+            gGlobalSyncTable.message = get_uncolored_string(winnerNp.name) .. ' Wins!'
         else
             gGlobalSyncTable.message = 'Round Ended'
         end

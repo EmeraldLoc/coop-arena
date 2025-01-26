@@ -64,11 +64,12 @@ function is_invuln_or_intang(m)
     return invuln or intang
 end
 
-function strip_colors(name)
+get_uncolored_string = get_uncolored_string and get_uncolored_string or
+function (str)
     local s = ''
     local inSlash = false
-    for i = 1, #name do
-        local c = name:sub(i,i)
+    for i = 1, #str do
+        local c = str:sub(i,i)
         if c == '\\' then
             inSlash = not inSlash
         elseif not inSlash then
@@ -160,33 +161,13 @@ function rgb_to_hex(r, g, b)
 	return string.format("#%02X%02X%02X", r, g, b)
 end
 
-function strip_hex(name)
-	-- create variables
-	local s = ''
-	local inSlash = false
-	-- the way this works is if you're in a slash, you dont add the characters in the slash,
-	-- otherwise, you do, this allows you to skip the hex's
-
-	-- loop thru each character in the string
-	for i = 1, #name do
-		local c = name:sub(i,i)
-		if c == '\\' then
-			-- we are now in (or out) of the slash, set variable accordingly
-			inSlash = not inSlash
-		elseif not inSlash then
-			s = s .. c
-		end
-	end
-	return s
-end
-
 function cap_text(text, maxLength)
 	local newText = ""
 	local lastValidText = ""
 	for i = 1, #text do
 		local c = text:sub(i, i)
 		newText = newText .. c
-		if djui_hud_measure_text(strip_hex(newText)) <= maxLength then lastValidText = newText end
+		if djui_hud_measure_text(get_uncolored_string(newText)) <= maxLength then lastValidText = newText end
 	end
 
 	return lastValidText

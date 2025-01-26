@@ -1,3 +1,5 @@
+MAX_PLAYERS = gServerSettings.maxPlayers
+
 ITEM_NONE        = 0
 ITEM_METAL_CAP   = 1
 ITEM_HAMMER      = 2
@@ -8,7 +10,7 @@ ITEM_COIN        = 6
 ITEM_MAX         = 7
 
 E_MODEL_HAMMER        = smlua_model_util_get_id("hammer_geo")
-E_MODEL_FIRE_FLOWER   = smlua_model_util_get_id("fire_flower")
+E_MODEL_FIRE_FLOWER   = smlua_model_util_get_id("fire_flower_geo")
 E_MODEL_CANNON_BOX    = smlua_model_util_get_id("cannon_box_geo")
 E_MODEL_CANNON_BALL   = smlua_model_util_get_id("arena_ball_geo")
 E_MODEL_FLAG_RED      = smlua_model_util_get_id("arena_flag_red_geo")

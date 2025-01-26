@@ -84,30 +84,13 @@ function bhv_arena_flag_update_pos_rot(obj)
 end
 
 function bhv_arena_flag_update_score(obj)
-    if gGlobalSyncTable.gameMode ~= GAME_MODE_FT and gGlobalSyncTable.gameMode ~= GAME_MODE_TFT then
-        return
-    end
-
-    if not network_is_server() then
-        return
-    end
-
-    if obj.oArenaFlagTeam ~= 0 then
-        return
-    end
-
-    if obj.oArenaFlagHeldByGlobal == ARENA_FLAG_INVALID_GLOBAL then
-        return
-    end
-
-    if gGlobalSyncTable.gameState ~= GAME_STATE_ACTIVE then
-        return
-    end
-
     local np = network_player_from_global_index(obj.oArenaFlagHeldByGlobal)
-    if np == nil then
-        return
-    end
+    if gGlobalSyncTable.gameMode ~= GAME_MODE_FT and gGlobalSyncTable.gameMode ~= GAME_MODE_TFT
+    or not network_is_server()
+    or obj.oArenaFlagTeam ~= 0
+    or obj.oArenaFlagHeldByGlobal == ARENA_FLAG_INVALID_GLOBAL
+    or gGlobalSyncTable.gameState ~= GAME_STATE_ACTIVE
+    or not np then return end
 
     sFlagScoreTimer = sFlagScoreTimer + 1
     if (sFlagScoreTimer % 30) == 0 then
@@ -171,7 +154,7 @@ function bhv_arena_flag_collect(obj, m)
                 otherFlag.oPosY = otherData.pos.y
                 otherFlag.oPosZ = otherData.pos.z
                 network_send_object(otherFlag, true)
-                local msg = string.format('%s%s captured the %s%s%s flag!', team_color_str(s.team), strip_colors(np.name), team_color_str(otherTeam), team_name_str(otherTeam), team_color_str(s.team))
+                local msg = string.format('%s%s captured the %s%s%s flag!', team_color_str(s.team), get_uncolored_string(np.name), team_color_str(otherTeam), team_name_str(otherTeam), team_color_str(s.team))
                 send_arena_flag(otherFlag.oArenaFlagTeam, np.globalIndex, msg)
                 if gGlobalSyncTable.gameState == GAME_STATE_ACTIVE then
                     if s.team == 1 then
@@ -198,7 +181,7 @@ function bhv_arena_flag_collect(obj, m)
         obj.oPosY = data.pos.y
         obj.oPosZ = data.pos.z
         network_send_object(obj, true)
-        local msg = string.format('%s%s returned the %s flag!', team_color_str(s.team), strip_colors(np.name), team_name_str(s.team))
+        local msg = string.format('%s%s returned the %s flag!', team_color_str(s.team), get_uncolored_string(np.name), team_name_str(s.team))
         send_arena_flag(obj.oArenaFlagTeam, np.globalIndex, msg)
         return true
     end
@@ -211,7 +194,7 @@ function bhv_arena_flag_collect(obj, m)
     obj.oPosY = m.pos.y
     obj.oPosZ = m.pos.z
     network_send_object(obj, true)
-    local msg = string.format('%s%s picked up the %s%s%s flag!', team_color_str(s.team), strip_colors(np.name), team_color_str(obj.oArenaFlagTeam), team_name_str(obj.oArenaFlagTeam), team_color_str(s.team))
+    local msg = string.format('%s%s picked up the %s%s%s flag!', team_color_str(s.team), get_uncolored_string(np.name), team_color_str(obj.oArenaFlagTeam), team_name_str(obj.oArenaFlagTeam), team_color_str(s.team))
     send_arena_flag(obj.oArenaFlagTeam, np.globalIndex, msg)
     return true
 end
@@ -274,7 +257,7 @@ function bhv_arena_flag_check_drop(obj)
         obj.oArenaFlagAtBase = 0
         obj.oTimer = 0
         network_send_object(obj, true)
-        local msg = string.format('%s%s dropped the %s%s%s flag!', team_color_str(s.team), strip_colors(np.name), team_color_str(obj.oArenaFlagTeam), team_name_str(obj.oArenaFlagTeam), team_color_str(s.team))
+        local msg = string.format('%s%s dropped the %s%s%s flag!', team_color_str(s.team), get_uncolored_string(np.name), team_color_str(obj.oArenaFlagTeam), team_name_str(obj.oArenaFlagTeam), team_color_str(s.team))
         send_arena_flag(obj.oArenaFlagTeam, ARENA_FLAG_INVALID_GLOBAL, msg)
         return
     end
