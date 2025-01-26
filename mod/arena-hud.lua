@@ -7,16 +7,13 @@ gHudIcons = {
     koth = { tex = TEX_KOTH, prevX = 0, prevY = 0, r = 255, g = 255, b = 255 },
 }
 
+local ranks = {
+    "st",
+    "nd",
+    "rd"
+}
 function rank_str(rank)
-    if rank == 1 then
-        return '1st'
-    elseif rank == 2 then
-        return '2nd'
-    elseif rank == 3 then
-        return '3rd'
-    else
-        return tostring(rank) .. 'th'
-    end
+    return rank .. (((rank // 10) % 10 ~= 1) and ranks[rank % 10] or "th")
 end
 
 function rank_color_g(rank)
@@ -51,9 +48,7 @@ function render_game_mode()
     local np = gNetworkPlayers[0]
     local s  = gPlayerSyncTable[0]
 
-    if s.rank <= 0 then
-        return
-    end
+    if s.rank <= 0 then return end
 
     local screenWidth = djui_hud_get_screen_width()
 
@@ -138,9 +133,7 @@ end
 
 function render_server_message()
     local txt = gGlobalSyncTable.message
-    if txt == nil or string.len(txt) <= 1 then
-        return
-    end
+    if not txt or #txt <= 1 then return end
 
     -- get screen dimensions
     local screenWidth  = djui_hud_get_screen_width()
@@ -262,18 +255,18 @@ local function on_hud_render()
 
     -- render hud icons
     if gGlobalSyncTable.gameMode == GAME_MODE_FT or gGlobalSyncTable.gameMode == GAME_MODE_TFT then
-        if gArenaFlagInfo[0] ~= nil and gArenaFlagInfo[0].obj ~= nil then
+        if gArenaFlagInfo[0] and gArenaFlagInfo[0].obj then
             render_hud_icon(gArenaFlagInfo[0].obj, gHudIcons.flags[0])
         end
     elseif gGlobalSyncTable.gameMode == GAME_MODE_CTF then
-        if gArenaFlagInfo[1] ~= nil and gArenaFlagInfo[1].obj ~= nil then
+        if gArenaFlagInfo[1] and gArenaFlagInfo[1].obj then
             render_hud_icon(gArenaFlagInfo[1].obj, gHudIcons.flags[1])
         end
-        if gArenaFlagInfo[2] ~= nil and gArenaFlagInfo[2].obj ~= nil then
+        if gArenaFlagInfo[2] and gArenaFlagInfo[2].obj then
             render_hud_icon(gArenaFlagInfo[2].obj, gHudIcons.flags[2])
         end
     elseif gGlobalSyncTable.gameMode == GAME_MODE_KOTH or gGlobalSyncTable.gameMode == GAME_MODE_TKOTH then
-        if gArenaKothActiveObj ~= nil then
+        if gArenaKothActiveObj then
             render_hud_icon(gArenaKothActiveObj, gHudIcons.koth)
         end
     end

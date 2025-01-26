@@ -175,9 +175,7 @@ local function on_mods_loaded()
 end
 
 local function on_hud_render()
-    if #entries == 0 then
-        return
-    end
+    if #entries == 0 then return end
 
     djui_hud_set_resolution(RESOLUTION_DJUI)
     djui_hud_set_font(djui_menu_get_font())
@@ -198,21 +196,20 @@ local function on_hud_render()
     x = x + 25
     y = y + 25
 
-    for i = 1, #entries do
-        local entry = entries[i]
+    for i, entry in ipairs(entries) do
         if entry.update then
             entry.update(entry)
         end
-        local rectColor = i == selection and { 50, 50, 0, 255 } or { 0, 0, 0, 128 }
-        local outlineRectColor = i == selection and { 255, 220, 0, 255 } or { 0, 0, 0, 128 }
-        local textColor = i == selection and { 255, 255, 255, 255 } or { 220, 220, 220, 255 }
+        local rectColor        = i == selection and { 50,   50,   0, 255 } or {   0,   0,   0, 128 }
+        local outlineRectColor = i == selection and { 255, 220,   0, 255 } or {   0,   0,   0, 128 }
+        local textColor        = i == selection and { 255, 255, 255, 255 } or { 220, 220, 220, 255 }
         height = 40
         djui_hud_set_color(rectColor[1], rectColor[2], rectColor[3], rectColor[4])
         djui_hud_render_rect_outlined(x, y, width, height, outlineRectColor[1], outlineRectColor[2], outlineRectColor[3], outlineRectColor[4], 2)
         djui_hud_set_color(textColor[1], textColor[2], textColor[3], textColor[4])
         djui_hud_print_text(entry.name, x + 5, y + 3, 1)
         if entry.toggleValue ~= nil then
-            local texture = entry.toggleValue == true and TEXTURE_CHECKMARK or TEXTURE_NO_CHECKMARK
+            local texture = entry.toggleValue and TEXTURE_CHECKMARK or TEXTURE_NO_CHECKMARK
             djui_hud_set_filter(FILTER_LINEAR)
             djui_hud_set_color(255, 255, 255, 200)
             djui_hud_render_texture(texture, x + width - 35, y + 5, (height - 10) / 32, (height - 10) / 32)
@@ -230,6 +227,7 @@ local function mario_update(m)
     if m.playerIndex ~= 0 then return end
     if #entries == 0 then return end
 
+    local curEntry = entries[selection]
     m.freeze = 1
 
     if m.controller.buttonPressed & START_BUTTON ~= 0 then
@@ -238,9 +236,9 @@ local function mario_update(m)
         return
     end
 
-    if  m.controller.buttonPressed & A_BUTTON ~= 0 and entries[selection].input == INPUT_A
-    and has_permission(entries[selection].permission) then
-        entries[selection].action()
+    if m.controller.buttonPressed & A_BUTTON ~= 0 and curEntry.input == INPUT_A
+    and has_permission(curEntry.permission) then
+        curEntry.action()
     end
 
     if joystickCooldown > 0 then
@@ -270,12 +268,12 @@ local function mario_update(m)
         end
     end
 
-    if entries[selection].input == INPUT_JOYSTICK and has_permission(entries[selection].permission) then
+    if curEntry.input == INPUT_JOYSTICK and has_permission(curEntry.permission) then
         if m.controller.stickX > 0.5 then
-            entries[selection].action(1, math.max(1, math.floor(joystickCombo * 0.2)))
+            curEntry.action(1, math.max(1, math.floor(joystickCombo * 0.2)))
             joystickCooldown = 0.2 * 30
         elseif m.controller.stickX < -0.5 then
-            entries[selection].action(-1, math.max(1, math.floor(joystickCombo * 0.2)))
+            curEntry.action(-1, math.max(1, math.floor(joystickCombo * 0.2)))
             joystickCooldown = 0.2 * 30
         end
     end

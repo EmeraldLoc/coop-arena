@@ -603,7 +603,7 @@ hook_event(HOOK_UPDATE, on_update)
 
 sGameModeShortTimes = ''
 for i, gm in ipairs(gGameModes) do
-    if string.len(sGameModeShortTimes) > 0 then
+    if #sGameModeShortTimes > 0 then
         sGameModeShortTimes = sGameModeShortTimes .. '|'
     end
     sGameModeShortTimes = sGameModeShortTimes .. gm.shortName
@@ -612,7 +612,7 @@ end
 function get_level_choices()
     local levelChoices = ''
     for i, gl in ipairs(gGameLevels) do
-        if string.len(levelChoices) > 0 then
+        if #levelChoices > 0 then
             levelChoices = levelChoices .. '|'
         end
         levelChoices = levelChoices .. gl.name
