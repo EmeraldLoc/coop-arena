@@ -35,9 +35,10 @@ LEVEL_ARENA_RAINBOW   = level_register('level_arena_rainbow_entry',   COURSE_NON
 LEVEL_ARENA_CITY      = level_register('level_arena_city_entry',      COURSE_NONE, 'City',      'city',      28000, 0x28, 0x28, 0x28)
 
 --- @class ArenaLevel
---- @field public level               LevelNum|integer
---- @field public name                string
---- @field public compatibleGamemodes table
+--- @field level               LevelNum|integer
+--- @field name                string
+--- @field compatibleGamemodes table
+--- @field bgm                 ArenaBGM?
 
 --- @type ArenaLevel[]
 gGameLevels = {
@@ -46,18 +47,22 @@ gGameLevels = {
     { level = LEVEL_ARENA_PILLARS,   name = 'Pillars',   compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
     { level = LEVEL_ARENA_FORTS,     name = 'Forts',     compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
     { level = LEVEL_ARENA_CITADEL,   name = 'Citadel',   compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
-    { level = LEVEL_ARENA_SPIRE,     name = 'Spire',     compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
-    { level = LEVEL_ARENA_RAINBOW,   name = 'Rainbow',   compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
-    { level = LEVEL_ARENA_CITY,      name = 'City',      compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } }
+    { level = LEVEL_ARENA_SPIRE,     name = 'Spire',     compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH },
+      bgm = { audio = 'snow.ogg',    loopStart = 0,      loopEnd = 500,     volume = 1, name = "Frosty Citadel - Sonic Gaiden" } },
+    { level = LEVEL_ARENA_RAINBOW,   name = 'Rainbow',   compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH },
+      bgm = { audio = 'rainbow.ogg', loopStart = 13.378, loopEnd = 159.948, volume = 1, name = "Rainbow Road - FunkyLion" } },
+    { level = LEVEL_ARENA_CITY,      name = 'City',      compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH },
+      bgm = { audio = 'city.ogg',    loopStart = 06.975, loopEnd = 500,     volume = 1, name = "City Outskirts - Sonic Megamix" } }
 }
 
 -- expose certain functions to other mods
 _G.Arena = {
-    add_level = function (levelNum, levelName, compatibleGamemodes)
+    add_level = function (levelNum, levelName, compatibleGamemodes, bgm)
         if not compatibleGamemodes then
             compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH }
         end
-        table.insert(gGameLevels, { level = levelNum, name = levelName, compatibleGamemodes = compatibleGamemodes })
+
+        table.insert(gGameLevels, { level = levelNum, name = levelName, compatibleGamemodes = compatibleGamemodes, bgm = bgm })
     end,
     get_player_team = function (localIndex)
         return gPlayerSyncTable[localIndex].team

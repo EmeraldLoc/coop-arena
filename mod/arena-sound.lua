@@ -1,110 +1,67 @@
+--- @class ArenaBGM
+--- @field audio     string
+--- @field loopStart number
+--- @field loopEnd   number
+--- @field volume    number
+--- @field name      string
+--- @field stream    ModAudio?
+
 local m = gMarioStates[0]
 local np = gNetworkPlayers[0]
 
-local pauseMenuShouldShowMusic = false
-local pauseMenuShowLevelID = false
+local pauseDisplayMusic = false
+local pauseDisplayLevelID = false
 
-local curMap = -1
-local audioMainPaused = false
-local audioMain --Used for the main audio
-local audioSpecial --Used for things like cap music
-local audioCurSeq
+--- @type ArenaBGM?
+local curBGM
+local BGMPaused = false
 
-local bgms = {
-    [55] = { audio = 'snow.ogg',    loopEnd = 500,     loopStart = 0,      volume = 1, name = "Frosty Citadel - Sonic Gaiden"  },
-    [56] = { audio = 'rainbow.ogg', loopEnd = 148.657, loopStart = 12.406, volume = 1, name = "Rainbow Road - Coop Deluxe"     },
-    [57] = { audio = 'city.ogg',    loopEnd = 500,     loopStart = 06.975, volume = 1, name = "City Outskirts - Sonic Megamix" }
-}
+local function handle_music()
+    local bgm = gGameLevels[get_current_level_key()].bgm
 
--- disable cap music
-function music()
-    if bgms[np.currLevelNum] then
-        stop_cap_music()
-    end
-end
-hook_event(HOOK_UPDATE, music)
-
-function handleMusic()
-    ------------------------------------------------------
-    --          Handle stopping/starting of music       --
-    ------------------------------------------------------
     --Handle main course music
-    if curMap ~= np.currLevelNum and m.area.macroObjects then
-        curMap = np.currLevelNum
-        audioCurSeq = get_current_background_music()
-        if audioMain then
-            audio_stream_stop(audioMain)
-            audioMain = nil
+    if np.currAreaSyncValid and bgm ~= curBGM then
+        if curBGM and curBGM.stream then
+            audio_stream_stop(curBGM.stream)
         end
-        if bgms[curMap] and bgms[curMap].audio then
-            set_background_music(0,0,0)
-            audioMain = audio_stream_load(bgms[curMap].audio)
-            if audioMain then
-                audio_stream_set_looping(audioMain, true)
-                audio_stream_play(audioMain, true, bgms[curMap].volume)
-                print("Playing new audio " .. bgms[curMap].name)
+        curBGM = bgm
+
+        if bgm and bgm.audio then
+            bgm.stream = audio_stream_load(bgm.audio)
+            if bgm.stream then
+                audio_stream_set_looping(bgm.stream, true)
+                audio_stream_play(bgm.stream, true, bgm.volume)
+                print("Playing new audio " .. bgm.name)
             else
-                djui_popup_create('Missing audio!: ' .. bgms[curMap].audio, 10)
-                print("Attempted to load filed audio file, but couldn't find it on the system: " .. bgms[curMap].audio)
-            end
-        else
-            print("No audio for this map, so not stopping default: " .. curMap)
-        end
-    end
-    --Handle cap music
-    if m.capTimer > 0 and bgms[-2] then
-        --Handle pausing main streamed music, if applicable.
-        if audioMain and not audioMainPaused then
-            audioMainPaused = true
-            audio_stream_pause(audioMain)
-        end
-        --Start up cap music if it's defined.
-        if not audioSpecial then
-            set_background_music(0,0,0)
-            stop_cap_music()
-            audioSpecial = audio_stream_load(bgms[-2].audio)
-            if audioSpecial then
-                audio_stream_set_looping(audioSpecial, true)
-                audio_stream_play(audioSpecial, true, bgms[-2].volume)
-                print("Playing cap audio " .. bgms[-2].name)
-            else
-                djui_popup_create('Missing audio!: ' .. bgms[-2].audio, 3)
-                print("Attempted to load filed audio file, but couldn't find it on the system: " .. bgms[-2].audio)
-            end
-        end
-    else
-        if audioSpecial then
-            audio_stream_stop(audioSpecial)
-            audioSpecial = nil
-            if audioMain and audioMainPaused then
-                audioMainPaused = false
-                audio_stream_play(audioMain, false, bgms[curMap].volume)
-            else
-                set_background_music(0, audioCurSeq, 10)
+                djui_popup_create('Missing audio!: ' .. bgm.audio, 10)
+                print("Attempted to load audio file, but couldn't find it on the system: " .. bgm.audio)
             end
         end
     end
 
-    if audioMain then
-        audio_stream_set_volume(audioMain, bgms[curMap].volume * (is_game_paused() and .31 or 1))
-
-        local curPosition = audio_stream_get_position(audioMain)
-        if curPosition >= bgms[curMap].loopEnd then
-            local minus = bgms[curMap].loopStart - bgms[curMap].loopEnd
-            audio_stream_set_position(audioMain, curPosition - math.abs(minus))
+    if bgm and bgm.stream then
+        if m.capTimer > 0 ~= BGMPaused then
+            BGMPaused = m.capTimer > 0
+            if BGMPaused then
+                audio_stream_stop(bgm.stream)
+            else
+                audio_stream_play(bgm.stream, true, bgm.volume)
+            end
         end
-    end
-    if audioSpecial then
-        local curPosition = audio_stream_get_position(audioSpecial)
-        if curPosition >= bgms[-2].loopEnd then
-            local minus = bgms[-2].loopStart - bgms[-2].loopEnd
-            audio_stream_set_position(audioSpecial, curPosition - math.abs(minus))
+
+        audio_stream_set_volume(bgm.stream, bgm.volume * (is_game_paused() and .31 or 1))
+
+        local curPosition = audio_stream_get_position(bgm.stream)
+        if curPosition >= bgm.loopEnd then
+            local minus = bgm.loopStart - bgm.loopEnd
+            audio_stream_set_position(bgm.stream, curPosition - math.abs(minus))
         end
     end
 end
 
 local function hud_render()
-    if pauseMenuShouldShowMusic and is_game_paused() then
+    if pauseDisplayMusic and is_game_paused() then
+        local bgm = gGameLevels[get_current_level_key()].bgm
         djui_hud_set_resolution(RESOLUTION_DJUI)
         djui_hud_set_font(FONT_NORMAL)
         local screenWidth = djui_hud_get_screen_width()
@@ -113,15 +70,21 @@ local function hud_render()
         local y = screenHeight - height
         djui_hud_set_color(200,200,200,255)
         local text
-        if pauseMenuShowLevelID then
+        if pauseDisplayLevelID then
             text = "Level ID: " .. np.currLevelNum
-        elseif audioSpecial then
-            text = "Music: " .. bgms[-2].name
-        elseif audioMain then
-            text = "Music: " .. bgms[curMap].name
+        elseif bgm then
+            text = "Music: " .. bgm.name
         end
         djui_hud_print_text(text, 5, y, 1)
     end
 end
+
+local function override_music(player, seqID)
+    if gGameLevels[get_current_level_key()].bgm and player == 0
+    and ((seqID & 0xFF) < 0x0E or 0x20 < (seqID & 0xFF))
+    then return 0 end
+end
+
+hook_event(HOOK_UPDATE, handle_music)
 hook_event(HOOK_ON_HUD_RENDER, hud_render)
-hook_event(HOOK_UPDATE, handleMusic)
+hook_event(HOOK_ON_SEQ_LOAD, override_music)
