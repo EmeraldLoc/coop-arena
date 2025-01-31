@@ -114,6 +114,22 @@ function seconds_to_minutes(seconds)
     return string.format('%d:%02d', math.floor(seconds / 60), seconds % 60)
 end
 
+---@param table table
+---@param element any
+function table.contains(table, element)
+	-- check each value in the table
+    for _, value in pairs(table) do
+		-- check if that value is equal to the element
+      	if value == element then
+			-- if so, we are good to go, and the table contains the element, return true!
+        	return true
+      	end
+    end
+
+	-- if we finish the loop, we didn't find the entry in the table, so return false
+	return false
+end
+
 function table.copy(orig)
     local copy
     if type(orig) == 'table' then
@@ -146,6 +162,14 @@ function djui_hud_render_rect_outlined(x, y, width, height, oR, oG, oB, oA, thic
     djui_hud_render_rect(x + (width - thickness) + thickness, y, thickness, height + thickness)
     djui_hud_render_rect(x, y - thickness, width + thickness, thickness)
     djui_hud_render_rect(x, y + (height - thickness) + thickness, width, thickness)
+end
+
+function djui_hud_print_text_shaded(text, x, y, scale)
+    local color = djui_hud_get_color()
+    djui_hud_set_color(0, 0, 0, color.a)
+    djui_hud_print_text(text, x + 2 * scale, y + 2 * scale, scale)
+    djui_hud_set_color(color.r, color.g, color.b, color.a)
+    djui_hud_print_text(text, x, y, scale)
 end
 
 function hex_to_rgb(hex)

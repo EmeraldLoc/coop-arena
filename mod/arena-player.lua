@@ -422,7 +422,7 @@ function mario_local_update(m)
     e.prevHurtCounter = m.hurtCounter
 end
 
-function mario_update(m)
+local function mario_update(m)
     local e  = gMarioStateExtras[m.playerIndex]
     local s  = gPlayerSyncTable[m.playerIndex]
     local np = gNetworkPlayers[m.playerIndex]
@@ -525,6 +525,7 @@ function player_reset_sync_table(m)
     s.metal    = false
     s.rank     = 0
     s.team     = pick_team_on_join(m)
+    s.vote     = 0
 end
 
 function player_respawn(m)

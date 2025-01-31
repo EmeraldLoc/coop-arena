@@ -49,6 +49,25 @@ function toggle_arena_settings()
     end
 end
 
+local function update()
+    -- always update the level entries, as this can be controlled by other mods, and levels can be added at any time
+    -- also avoids a race condition
+    setLevelEntries = {}
+    for _, level in ipairs(gGameLevels) do
+        setLevelEntries[#setLevelEntries + 1] = {
+            name = level.name,
+            input = INPUT_A,
+            permission = PERMISSION_MODERATORS,
+            action = function ()
+                gGlobalSyncTable.currentLevel = level.level
+                round_end()
+                sWaitTimer = 1
+                sRoundCount = 0
+            end
+        }
+    end
+end
+
 local function on_mods_loaded()
     mainEntries = {
         {
@@ -113,7 +132,7 @@ local function on_mods_loaded()
         toggleValue = sRandomizeMode,
         action = function ()
             sRandomizeMode = true
-            round_end()
+            round_end(false)
             sWaitTimer = 1
             sRoundCount = 0
         end,
@@ -132,7 +151,7 @@ local function on_mods_loaded()
                 if gGameLevels[get_current_level_key()].compatibleGamemodes[key] then
                     gGlobalSyncTable.gameMode = key
                     sRandomizeMode = false
-                    round_end()
+                    round_end(false)
                     sWaitTimer = 1
                     sRoundCount = 0
                 end
@@ -183,7 +202,7 @@ local function on_hud_render()
     local screenWidth = djui_hud_get_screen_width()
     local screenHeight = djui_hud_get_screen_height()
 
-    local width = djui_hud_get_screen_height() - 80
+    local width = 850
     local height = 800
 
     local x = (screenWidth - width) / 2
@@ -230,7 +249,7 @@ local function mario_update(m)
     local curEntry = entries[selection]
     m.freeze = 1
 
-    if m.controller.buttonPressed & START_BUTTON ~= 0 then
+    if m.controller.buttonPressed & START_BUTTON ~= 0 or gGlobalSyncTable.gameState == GAME_STATE_VOTING then
         if entries ~= mainEntries then set_setting_entries(mainEntries) else entries = {} end
         m.controller.buttonPressed = m.controller.buttonPressed & ~START_BUTTON
         return
@@ -279,6 +298,7 @@ local function mario_update(m)
     end
 end
 
+hook_event(HOOK_UPDATE, update)
 hook_event(HOOK_ON_MODS_LOADED, on_mods_loaded)
 hook_event(HOOK_ON_HUD_RENDER, on_hud_render)
 hook_event(HOOK_MARIO_UPDATE, mario_update)

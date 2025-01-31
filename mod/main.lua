@@ -6,6 +6,7 @@
 
 GAME_STATE_ACTIVE   = 1
 GAME_STATE_INACTIVE = 2
+GAME_STATE_VOTING   = 3
 
 GAME_MODE_DM    = 1
 GAME_MODE_TDM   = 2
@@ -34,35 +35,44 @@ LEVEL_ARENA_SPIRE     = level_register('level_arena_spire_entry',     COURSE_NON
 LEVEL_ARENA_RAINBOW   = level_register('level_arena_rainbow_entry',   COURSE_NONE, 'Rainbow',   'rainbow',   28000, 0x28, 0x28, 0x28)
 LEVEL_ARENA_CITY      = level_register('level_arena_city_entry',      COURSE_NONE, 'City',      'city',      28000, 0x28, 0x28, 0x28)
 
+--- @class ArenaBGM
+--- @field audio               string
+--- @field loopStart           number
+--- @field loopEnd             number
+--- @field volume              number
+--- @field name                string
+
 --- @class ArenaLevel
 --- @field level               LevelNum|integer
 --- @field name                string
+--- @field author              string
+--- @field previewImage        TextureInfo?
 --- @field compatibleGamemodes table
 --- @field bgm                 ArenaBGM?
 
 --- @type ArenaLevel[]
 gGameLevels = {
-    { level = LEVEL_ARENA_ORIGIN,    name = 'Origin',    compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
-    { level = LEVEL_ARENA_SKY_BEACH, name = 'Sky Beach', compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
-    { level = LEVEL_ARENA_PILLARS,   name = 'Pillars',   compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
-    { level = LEVEL_ARENA_FORTS,     name = 'Forts',     compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
-    { level = LEVEL_ARENA_CITADEL,   name = 'Citadel',   compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
-    { level = LEVEL_ARENA_SPIRE,     name = 'Spire',     compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH },
-      bgm = { audio = 'snow.ogg',    loopStart = 0,      loopEnd = 500,     volume = 1, name = "Frosty Citadel - Sonic Gaiden" } },
-    { level = LEVEL_ARENA_RAINBOW,   name = 'Rainbow',   compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH },
-      bgm = { audio = 'rainbow.ogg', loopStart = 13.378, loopEnd = 159.948, volume = 1, name = "Rainbow Road - FunkyLion" } },
-    { level = LEVEL_ARENA_CITY,      name = 'City',      compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH },
-      bgm = { audio = 'city.ogg',    loopStart = 06.975, loopEnd = 500,     volume = 1, name = "City Outskirts - Sonic Megamix" } }
+    { level = LEVEL_ARENA_ORIGIN,    name = 'Origin',    author = "djoslin0", previewImage = get_texture_info("origin_preview_image"), compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
+    { level = LEVEL_ARENA_SKY_BEACH, name = 'Sky Beach', author = "djoslin0", previewImage = nil,                                      compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
+    { level = LEVEL_ARENA_PILLARS,   name = 'Pillars',   author = "djoslin0", previewImage = nil,                                      compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
+    { level = LEVEL_ARENA_FORTS,     name = 'Forts',     author = "djoslin0", previewImage = nil,                                      compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
+    { level = LEVEL_ARENA_CITADEL,   name = 'Citadel',   author = "djoslin0", previewImage = nil,                                      compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
+    { level = LEVEL_ARENA_SPIRE,     name = 'Spire',     author = "djoslin0", previewImage = nil,                                      compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH },
+      bgm = { audio = 'snow.ogg',    loopStart = 0,      loopEnd = 500,                                                                volume = 1, name = "Frosty Citadel - Sonic Gaiden" } },
+    { level = LEVEL_ARENA_RAINBOW,   name = 'Rainbow',   author = "unknown",  previewImage = nil,                                      compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH },
+      bgm = { audio = 'rainbow.ogg', loopStart = 13.378, loopEnd = 159.948,                                                            volume = 1, name = "Rainbow Road - FunkyLion" } },
+    { level = LEVEL_ARENA_CITY,      name = 'City',      author = "unknown",  previewImage = nil,                                      compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH },
+      bgm = { audio = 'city.ogg',    loopStart = 06.975, loopEnd = 500,                                                                volume = 1, name = "City Outskirts - Sonic Megamix" } }
 }
 
 -- expose certain functions to other mods
 _G.Arena = {
-    add_level = function (levelNum, levelName, compatibleGamemodes, bgm)
+    add_level = function (levelNum, levelName, compatibleGamemodes, bgm, previewImage)
         if not compatibleGamemodes then
             compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH }
         end
 
-        table.insert(gGameLevels, { level = levelNum, name = levelName, compatibleGamemodes = compatibleGamemodes, bgm = bgm })
+        table.insert(gGameLevels, { level = levelNum, name = levelName, compatibleGamemodes = compatibleGamemodes, bgm = bgm, previewImage = previewImage })
     end,
     get_player_team = function (localIndex)
         return gPlayerSyncTable[localIndex].team
@@ -80,10 +90,12 @@ gGlobalSyncTable.kothPoint = -1
 gGlobalSyncTable.message = ' '
 gGlobalSyncTable.timer = 0
 gGlobalSyncTable.maxInvincTimer = 0
+gGlobalSyncTable.voteLevels = {}
 sWaitTimerMax = 15 * 30 -- 15 seconds
 sWaitTimer = 0
 sRoundCount = 0
 sUsingTimer = false
+sWillEnterVoting = false
 
 sRandomizeMode = true
 
@@ -272,7 +284,7 @@ function round_begin()
 
     local playerCount = network_player_connected_count()
 
-    if roundShuffle then
+    --[[if roundShuffle then
         local curLevel = get_current_level_key()
 
         if curLevel ~= nil then
@@ -285,7 +297,7 @@ function round_begin()
         else
             gGlobalSyncTable.currentLevel = gGameLevels[math.random(#gGameLevels)].level
         end
-    end
+    end--]]
 
     if roundShuffle and sRandomizeMode then
         local gamemodes = {}
@@ -324,11 +336,12 @@ function round_begin()
     send_arena_respawn()
 end
 
-function round_end()
+function round_end(overrideGoingToVoting)
     calculate_rankings()
 
     gGlobalSyncTable.gameState = GAME_STATE_INACTIVE
     sWaitTimer = sWaitTimerMax
+    sWillEnterVoting = overrideGoingToVoting == nil and true or overrideGoingToVoting
 
     if gGlobalSyncTable.gameMode == GAME_MODE_DM or gGlobalSyncTable.gameMode == GAME_MODE_FT or gGlobalSyncTable.gameMode == GAME_MODE_KOTH then
         lowestRank = 999
@@ -361,6 +374,27 @@ function round_end()
         end
     else
         gGlobalSyncTable.message = 'Round Ended'
+    end
+end
+
+function start_voting()
+    gGlobalSyncTable.message = ' '
+    gGlobalSyncTable.gameState = GAME_STATE_VOTING
+    sWaitTimer = 10 * 30 -- 10 seconds
+    for i = 1, 3 do
+        local level = 0
+        local containsLevel = true
+        while containsLevel do
+            level = math.random(#gGameLevels)
+            containsLevel = false
+
+            for i = 1, 3 do
+                if gGlobalSyncTable.voteLevels[i] == level or gGlobalSyncTable.currentLevel == level then
+                    containsLevel = true
+                end
+            end
+        end
+        gGlobalSyncTable.voteLevels[i] = level
     end
 end
 
@@ -488,6 +522,40 @@ function on_server_update()
         sWaitTimer = sWaitTimer - 1
         if sWaitTimer <= 0 then
             sWaitTimer = 0
+            if sWillEnterVoting then start_voting(); sWillEnterVoting = true else round_begin() end
+        end
+    elseif gGlobalSyncTable.gameState == GAME_STATE_VOTING then
+        sWaitTimer = sWaitTimer - 1
+        if sWaitTimer <= 0 then
+            sWaitTimer = 0
+            -- figure out which level was voted for the most
+            local voteCounts = {
+                [1] = get_amount_of_votes_for_level(1),
+                [2] = get_amount_of_votes_for_level(2),
+                [3] = get_amount_of_votes_for_level(3),
+                [4] = get_amount_of_votes_for_level(4),
+                [5] = get_amount_of_votes_for_level(5),
+            }
+            local highestVoteCount = 1
+            local topVoteId = 0
+            for i = 1, 5 do
+                if voteCounts[i] >= highestVoteCount then
+                    highestVoteCount = voteCounts[i]
+                    topVoteId = i
+                end
+            end
+
+            if topVoteId == 5 then
+                local curLevelKey = get_current_level_key()
+                local prevLevelKey = get_current_level_key()
+                while curLevelKey == prevLevelKey do
+                    curLevelKey = math.random(#gGameLevels)
+                end
+                gGlobalSyncTable.currentLevel = gGameLevels[curLevelKey].level
+            elseif topVoteId ~= 1 then
+                gGlobalSyncTable.currentLevel = gGameLevels[gGlobalSyncTable.voteLevels[topVoteId - 1]].level
+            end
+
             round_begin()
         end
     end
@@ -526,7 +594,7 @@ function on_gamemode_command(msg)
         djui_chat_message_create("[Arena] Setting game mode.")
         gGlobalSyncTable.gameMode = setMode
         sRandomizeMode = false
-        round_end()
+        round_end(false)
         sWaitTimer = 1
         sRoundCount = 0
         return true

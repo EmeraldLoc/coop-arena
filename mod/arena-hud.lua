@@ -60,10 +60,8 @@ function render_game_mode()
     local x = (screenWidth - width) / 2
     local y = 4 * scale
 
-    djui_hud_set_color(0, 0, 0, 255)
-    djui_hud_print_text(txt, x + 2 * scale, y + 2 * scale, scale)
     djui_hud_set_color(255, 255, 255, 255)
-    djui_hud_print_text(txt, x, y, scale)
+    djui_hud_print_text_shaded(txt, x, y, scale)
 end
 
 function render_single_team_score(team)
@@ -90,10 +88,8 @@ function render_single_team_score(team)
     djui_hud_render_rect(x, y, width, height)
 
     x = x + (width - textWidth) / 2
-    djui_hud_set_color(0, 0, 0, 255)
-    djui_hud_print_text(txt, x + 2 * scale, y + 2 * scale, scale)
     djui_hud_set_color(255, 255, 255, 255)
-    djui_hud_print_text(txt, x + 0 * scale, y + 0 * scale, scale)
+    djui_hud_print_text_shaded(txt, x + 0 * scale, y + 0 * scale, scale)
 end
 
 function render_team_score()
@@ -125,10 +121,8 @@ function render_local_rank()
     local x = (screenWidth - width) / 2
     local y = 40 * scale
 
-    djui_hud_set_color(0, 0, 0, 255)
-    djui_hud_print_text(rankTxt, x + paddingX / 8 + 2 * scale, y + 2 * scale, scale)
     djui_hud_set_color(255, rank_color_g(s.rank), 0, 255)
-    djui_hud_print_text(rankTxt, x + paddingX / 8, y, scale)
+    djui_hud_print_text_shaded(rankTxt, x + paddingX / 8, y, scale)
 end
 
 function render_server_message()
@@ -149,10 +143,8 @@ function render_server_message()
     djui_hud_render_rect(x, y, width, height)
 
     x = x + 4 * scale
-    djui_hud_set_color(0, 0, 0, 255)
-    djui_hud_print_text(txt, x + 2 * scale, y + 2 * scale, scale)
     djui_hud_set_color(255, 255, 255, 255)
-    djui_hud_print_text(txt, x + 0 * scale, y + 0 * scale, scale)
+    djui_hud_print_text_shaded(txt, x + 0 * scale, y + 0 * scale, scale)
 end
 
 function render_health()
@@ -205,10 +197,8 @@ function render_timer()
     djui_hud_set_color(0, 0, 0, 128)
     djui_hud_render_rect(x, y, width, height)
 
-    djui_hud_set_color(0, 0, 0, 255)
-    djui_hud_print_text(txt, x + paddingX / 8 + 2 * scale, y + 2 * scale, scale)
     djui_hud_set_color(255, 255, 255, 255)
-    djui_hud_print_text(txt, x + paddingX / 8, y, scale)
+    djui_hud_print_text_shaded(txt, x + paddingX / 8, y, scale)
 end
 
 function render_hud_icon(obj, hudIcon)
