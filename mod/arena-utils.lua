@@ -1,12 +1,8 @@
 function active_player(m)
     local np = gNetworkPlayers[m.playerIndex]
-    if m.playerIndex == 0 then
-        return true
-    end
-    if not np.connected then
-        return false
-    end
-    return is_player_active(m)
+    if m.playerIndex == 0 then return true end
+    if not np.connected then return false end
+    return is_player_active(m) ~= 0
 end
 
 function set_dist_and_angle(from, dist, pitch, yaw)

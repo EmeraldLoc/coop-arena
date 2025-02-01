@@ -521,11 +521,11 @@ function on_server_update()
             sWaitTimer = 0
             -- figure out which level was voted for the most
             local voteCounts = {
-                [1] = get_amount_of_votes_for_level(1),
-                [2] = get_amount_of_votes_for_level(2),
-                [3] = get_amount_of_votes_for_level(3),
-                [4] = get_amount_of_votes_for_level(4),
-                [5] = get_amount_of_votes_for_level(5),
+                get_amount_of_votes_for_level(1),
+                get_amount_of_votes_for_level(2),
+                get_amount_of_votes_for_level(3),
+                get_amount_of_votes_for_level(4),
+                get_amount_of_votes_for_level(5)
             }
             local highestVoteCount = 1
             local topVoteId = 0
@@ -536,7 +536,8 @@ function on_server_update()
                 end
             end
 
-            if topVoteId == 5 then
+            if topVoteId == 0
+            or topVoteId == 5 then
                 local curLevelKey = get_current_level_key()
                 local prevLevelKey = get_current_level_key()
                 while curLevelKey == prevLevelKey do
@@ -637,6 +638,7 @@ end
 
 local function on_arena_command(msg)
     local args = split(msg)
+    if not network_is_server() then goto settings end
     if args[1] == "gamemode" then
         return on_gamemode_command(args[2] or "")
     elseif args[1] == "level" then
@@ -648,10 +650,11 @@ local function on_arena_command(msg)
     elseif args[1] == "jump-leniency" then
         return on_jump_leniency_command(args[2] or "")
     elseif args[1] == "help" then
-        djui_chat_message_create("/arena \\#00ffff\\[gamemode|level|jump-leniency|help]")
+        djui_chat_message_create("/arena \\#0ff\\[gamemode|level|jump-leniency|help]")
         return true
     end
 
+    ::settings::
     toggle_arena_settings()
     return true
 end
@@ -679,9 +682,7 @@ function get_level_choices()
     return levelChoices
 end
 
-if network_is_server() then
-    hook_chat_command("arena", "\\#00ffff\\[gamemode|level|jump-leniency]", on_arena_command)
-end
+hook_chat_command("arena", "\\#00ffff\\[gamemode|level|jump-leniency]", on_arena_command)
 
 if _G.dayNightCycleApi ~= nil then
     _G.dayNightCycleApi.enable_day_night_cycle(false)
