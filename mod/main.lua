@@ -69,14 +69,15 @@ gGameLevels = {
 
 -- expose certain functions to other mods
 _G.Arena = {
-    add_level = function (levelNum, levelName, compatibleGamemodes, bgm, previewImage, maxTeams)
+    add_level = function (levelNum, levelName, levelAuthor, compatibleGamemodes, bgm, previewImage, maxTeams)
         -- for compatibility reasons, we set default values for some of these
+        if not levelAuthor then levelAuthor = "" end
         if not compatibleGamemodes then
             compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH }
         end
         if not maxTeams then maxTeams = 2 end
 
-        table.insert(gGameLevels, { level = levelNum, name = levelName, compatibleGamemodes = compatibleGamemodes, bgm = bgm, previewImage = previewImage, maxTeams = maxTeams })
+        table.insert(gGameLevels, { level = levelNum, name = levelName, author = levelAuthor, compatibleGamemodes = compatibleGamemodes, bgm = bgm, previewImage = previewImage, maxTeams = maxTeams })
     end,
     get_player_team = function (localIndex)
         return gPlayerSyncTable[localIndex].team
