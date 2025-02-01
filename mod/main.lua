@@ -637,6 +637,7 @@ end
 
 local function on_arena_command(msg)
     local args = split(msg)
+    if not network_is_server() then goto settings end
     if args[1] == "gamemode" then
         return on_gamemode_command(args[2] or "")
     elseif args[1] == "level" then
@@ -648,10 +649,11 @@ local function on_arena_command(msg)
     elseif args[1] == "jump-leniency" then
         return on_jump_leniency_command(args[2] or "")
     elseif args[1] == "help" then
-        djui_chat_message_create("/arena \\#00ffff\\[gamemode|level|jump-leniency|help]")
+        djui_chat_message_create("/arena \\#0ff\\[gamemode|level|jump-leniency|help]")
         return true
     end
 
+    ::settings::
     toggle_arena_settings()
     return true
 end
@@ -679,9 +681,7 @@ function get_level_choices()
     return levelChoices
 end
 
-if network_is_server() then
-    hook_chat_command("arena", "\\#00ffff\\[gamemode|level|jump-leniency]", on_arena_command)
-end
+hook_chat_command("arena", "\\#00ffff\\[gamemode|level|jump-leniency]", on_arena_command)
 
 if _G.dayNightCycleApi ~= nil then
     _G.dayNightCycleApi.enable_day_night_cycle(false)
