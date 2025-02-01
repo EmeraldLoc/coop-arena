@@ -53,6 +53,7 @@ LEVEL_ARENA_CITY      = level_register('level_arena_city_entry',      COURSE_NON
 
 --- @type ArenaLevel[]
 gGameLevels = {
+    -- TODO: Add preview images to all of these
     { level = LEVEL_ARENA_ORIGIN,    name = 'Origin',    author = "djoslin0", previewImage = get_texture_info("origin_preview_image"), maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
     { level = LEVEL_ARENA_SKY_BEACH, name = 'Sky Beach', author = "djoslin0", previewImage = nil,                                      maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
     { level = LEVEL_ARENA_PILLARS,   name = 'Pillars',   author = "djoslin0", previewImage = nil,                                      maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
@@ -68,12 +69,14 @@ gGameLevels = {
 
 -- expose certain functions to other mods
 _G.Arena = {
-    add_level = function (levelNum, levelName, compatibleGamemodes, bgm, previewImage)
+    add_level = function (levelNum, levelName, compatibleGamemodes, bgm, previewImage, maxTeams)
+        -- for compatibility reasons, we set default values for some of these
         if not compatibleGamemodes then
             compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH }
         end
+        if not maxTeams then maxTeams = 2 end
 
-        table.insert(gGameLevels, { level = levelNum, name = levelName, compatibleGamemodes = compatibleGamemodes, bgm = bgm, previewImage = previewImage })
+        table.insert(gGameLevels, { level = levelNum, name = levelName, compatibleGamemodes = compatibleGamemodes, bgm = bgm, previewImage = previewImage, maxTeams = maxTeams })
     end,
     get_player_team = function (localIndex)
         return gPlayerSyncTable[localIndex].team
