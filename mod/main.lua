@@ -536,7 +536,8 @@ function on_server_update()
                 end
             end
 
-            if topVoteId == 5 then
+            if topVoteId == 0
+            or topVoteId == 5 then
                 local curLevelKey = get_current_level_key()
                 local prevLevelKey = get_current_level_key()
                 while curLevelKey == prevLevelKey do
