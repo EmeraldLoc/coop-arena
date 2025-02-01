@@ -57,7 +57,7 @@ local function render_playerlist()
             djui_hud_set_color(40, 40, 40, 100)
             djui_hud_render_rect(x, y + 2, 2, playerListHeight - 4)
 
-            if gPlayerSyncTable[0].team == 3 then
+            if gPlayerSyncTable[0].team == TEAM_SPECTATOR then
                 djui_hud_set_color(70, 70, 70, 255)
                 djui_hud_print_text("Spectator", x + 10, y, 1)
                 goto continue

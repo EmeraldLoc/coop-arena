@@ -27,9 +27,15 @@ function bhv_arena_flag_init(obj)
 
     if team == 0 then
         obj_set_model_extended(obj, E_MODEL_FLAG_WHITE)
-    elseif team == 1 then
+    elseif team == TEAM_RED then
         obj_set_model_extended(obj, E_MODEL_FLAG_RED)
-    elseif team == 2 then
+    elseif team == TEAM_BLUE then
+        obj_set_model_extended(obj, E_MODEL_FLAG_BLUE)
+    elseif team == TEAM_GREEN then
+        -- TODO: Add in new flag models
+        obj_set_model_extended(obj, E_MODEL_FLAG_BLUE)
+    elseif team == TEAM_YELLOW then
+        -- TODO: Add in new flag models
         obj_set_model_extended(obj, E_MODEL_FLAG_BLUE)
     else
         obj_mark_for_deletion(obj)
@@ -157,16 +163,9 @@ function bhv_arena_flag_collect(obj, m)
                 local msg = string.format('%s%s captured the %s%s%s flag!', team_color_str(s.team), get_uncolored_string(np.name), team_color_str(otherTeam), team_name_str(otherTeam), team_color_str(s.team))
                 send_arena_flag(otherFlag.oArenaFlagTeam, np.globalIndex, msg)
                 if gGlobalSyncTable.gameState == GAME_STATE_ACTIVE then
-                    if s.team == 1 then
-                        gGlobalSyncTable.capTeam1 = gGlobalSyncTable.capTeam1 + 1
-                        if gGlobalSyncTable.capTeam1 >= gGameModes[gGlobalSyncTable.gameMode].scoreCap then
-                            round_end()
-                        end
-                    elseif s.team == 2 then
-                        gGlobalSyncTable.capTeam2 = gGlobalSyncTable.capTeam2 + 1
-                        if gGlobalSyncTable.capTeam2 >= gGameModes[gGlobalSyncTable.gameMode].scoreCap then
-                            round_end()
-                        end
+                    gGlobalSyncTable.capTeams[s.team] = gGlobalSyncTable.capTeams[s.team] + 1
+                    if gGlobalSyncTable.capTeams[s.team] >= gGameModes[gGlobalSyncTable.gameMode].scoreCap then
+                        round_end()
                     end
                 end
                 return true
@@ -304,7 +303,7 @@ function bhv_arena_flag_reset()
 end
 
 function bhv_arena_flag_hide(obj)
-    if gGlobalSyncTable.gameMode == GAME_MODE_CTF and (obj.oArenaFlagTeam == 1 or obj.oArenaFlagTeam == 2) then
+    if gGlobalSyncTable.gameMode == GAME_MODE_CTF and (obj.oArenaFlagTeam >= 1 and obj.oArenaFlagTeam <= gGameLevels[get_current_level_key()].maxTeams) then
         cur_obj_unhide()
         return false
     elseif (gGlobalSyncTable.gameMode == GAME_MODE_FT or gGlobalSyncTable.gameMode == GAME_MODE_TFT) and obj.oArenaFlagTeam == 0 then
@@ -318,7 +317,7 @@ end
 
 function is_holding_flag(m)
     local np = gNetworkPlayers[m.playerIndex]
-    for teamNum = 0, 2 do
+    for teamNum = 0, gGameLevels[get_current_level_key()].maxTeams do
         local data = gArenaFlagInfo[teamNum]
         if data ~= nil and data.obj ~= nil and np.globalIndex == data.obj.oArenaFlagHeldByGlobal then
             return true

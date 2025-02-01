@@ -110,17 +110,17 @@ local function on_mods_loaded()
             name = 'Spectating',
             input = INPUT_A,
             permission = PERMISSION_ALL,
-            toggleValue = gPlayerSyncTable[0].team == 3,
+            toggleValue = gPlayerSyncTable[0].team == TEAM_SPECTATOR,
             action = function ()
-                if gPlayerSyncTable[0].team == 3 then
+                if gPlayerSyncTable[0].team == TEAM_SPECTATOR then
                     player_reset_sync_table(gMarioStates[0])
                 else
-                    gPlayerSyncTable[0].team = 3
+                    gPlayerSyncTable[0].team = TEAM_SPECTATOR
                     gPlayerSyncTable[0].item = ITEM_NONE
                 end
             end,
             update = function (entry)
-                entry.toggleValue = gPlayerSyncTable[0].team == 3
+                entry.toggleValue = gPlayerSyncTable[0].team == TEAM_SPECTATOR
             end,
         }
     }

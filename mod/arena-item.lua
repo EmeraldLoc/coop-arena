@@ -141,7 +141,7 @@ function bhv_arena_item_check_collect(obj)
         local player = m.marioObj
         local yDist = math.abs(obj.oPosY - player.oPosY)
         local xzDist = math.sqrt((obj.oPosX - player.oPosX) ^ 2 + (obj.oPosZ - player.oPosZ) ^ 2)
-        if xzDist < 160 and yDist < 250 and s.team ~= 3 then
+        if xzDist < 160 and yDist < 250 and s.team ~= TEAM_SPECTATOR then
             if data ~= nil and data.customCollectionFunc ~= nil then
                 data.customCollectionFunc(obj)
             elseif s.item == ITEM_NONE then

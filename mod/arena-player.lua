@@ -287,7 +287,7 @@ function allow_pvp_attack(attacker, victim)
     local sVictim = gPlayerSyncTable[victim.playerIndex]
 
     -- check spectator status
-    if sAttacker.team == 2 or sVictim.team == 2 then return false end
+    if sAttacker.team == TEAM_SPECTATOR or sVictim.team == TEAM_SPECTATOR then return false end
 
     -- hammer attacks are custom
     if sAttacker.item == ITEM_HAMMER and mario_hammer_is_attack(attacker.action) then
@@ -311,12 +311,12 @@ function allow_interact(interactor, interactee, interactType, interactValue)
     for i = 0, MAX_PLAYERS - 1 do
         local m = gMarioStates[i]
         local s = gPlayerSyncTable[i]
-        if m.marioObj == interactee and s.team == 3 then
+        if m.marioObj == interactee and s.team == TEAM_SPECTATOR then
             return false
         end
     end
 
-    if gPlayerSyncTable[interactor.playerIndex].team == 3 then return false end
+    if gPlayerSyncTable[interactor.playerIndex].team == TEAM_SPECTATOR then return false end
 end
 
 function on_interact(interactor, interactee, interactType, interactValue)
@@ -461,7 +461,7 @@ local function mario_update(m)
     end
 
     -- update palette
-    if s.team == 1 then
+    if s.team == TEAM_RED then
         network_player_set_override_palette_color(np, PANTS, { r = 225, g = 5, b = 49 })
         network_player_set_override_palette_color(np, SHIRT, { r = 40, g = 10, b = 10 })
         network_player_set_override_palette_color(np, GLOVES, network_player_get_palette_color(np, GLOVES))
@@ -470,7 +470,7 @@ local function mario_update(m)
         network_player_set_override_palette_color(np, SKIN, network_player_get_palette_color(np, SKIN))
         network_player_set_override_palette_color(np, CAP, { r = 40, g = 10, b = 10 })
         network_player_set_override_palette_color(np, EMBLEM, network_player_get_palette_color(np, EMBLEM))
-    elseif s.team == 2 then
+    elseif s.team == TEAM_BLUE then
         network_player_set_override_palette_color(np, PANTS, { r = 63, g = 63, b = 255 })
         network_player_set_override_palette_color(np, SHIRT, { r = 10, g = 10, b = 40 })
         network_player_set_override_palette_color(np, GLOVES, network_player_get_palette_color(np, GLOVES))
@@ -478,6 +478,26 @@ local function mario_update(m)
         network_player_set_override_palette_color(np, HAIR, network_player_get_palette_color(np, HAIR))
         network_player_set_override_palette_color(np, SKIN, network_player_get_palette_color(np, SKIN))
         network_player_set_override_palette_color(np, CAP, { r = 10, g = 10, b = 40 })
+        network_player_set_override_palette_color(np, EMBLEM, network_player_get_palette_color(np, EMBLEM))
+    elseif s.team == TEAM_GREEN then
+        -- TODO: Update palette to match team color
+        network_player_set_override_palette_color(np, PANTS, { r = 63, g = 63, b = 255 })
+        network_player_set_override_palette_color(np, SHIRT, { r = 10, g = 10, b = 40 })
+        network_player_set_override_palette_color(np, GLOVES, network_player_get_palette_color(np, GLOVES))
+        network_player_set_override_palette_color(np, SHOES, network_player_get_palette_color(np, SHOES))
+        network_player_set_override_palette_color(np, HAIR, network_player_get_palette_color(np, HAIR))
+        network_player_set_override_palette_color(np, SKIN, network_player_get_palette_color(np, SKIN))
+        network_player_set_override_palette_color(np, CAP, { r = 10, g = 200, b = 10 })
+        network_player_set_override_palette_color(np, EMBLEM, network_player_get_palette_color(np, EMBLEM))
+    elseif s.team == TEAM_YELLOW then
+        -- TODO: Update palette to match team color
+        network_player_set_override_palette_color(np, PANTS, { r = 63, g = 63, b = 255 })
+        network_player_set_override_palette_color(np, SHIRT, { r = 10, g = 10, b = 40 })
+        network_player_set_override_palette_color(np, GLOVES, network_player_get_palette_color(np, GLOVES))
+        network_player_set_override_palette_color(np, SHOES, network_player_get_palette_color(np, SHOES))
+        network_player_set_override_palette_color(np, HAIR, network_player_get_palette_color(np, HAIR))
+        network_player_set_override_palette_color(np, SKIN, network_player_get_palette_color(np, SKIN))
+        network_player_set_override_palette_color(np, CAP, { r = 255, g = 220, b = 0 })
         network_player_set_override_palette_color(np, EMBLEM, network_player_get_palette_color(np, EMBLEM))
     else
         network_player_reset_override_palette(np)
@@ -489,7 +509,7 @@ local function mario_update(m)
     end
 
     -- set spectator transparency
-    if s.team == 3 then
+    if s.team == TEAM_SPECTATOR then
         m.marioBodyState.modelState = MODEL_STATE_NOISE_ALPHA
     end
 

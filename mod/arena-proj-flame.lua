@@ -35,7 +35,8 @@ function bhv_arena_child_flame_init(obj)
     local np = network_player_from_global_index(obj.oArenaFlameGlobalOwner)
     if np ~= nil then
         local s = gPlayerSyncTable[np.localIndex]
-        if s.team == 2 then
+        if s.team == TEAM_BLUE then
+            -- TODO: Add for other teams
             obj_set_model_extended(obj, E_MODEL_BLUE_FLAME)
         end
     end
@@ -100,7 +101,8 @@ function bhv_arena_flame_init(obj)
     local np = network_player_from_global_index(obj.oArenaFlameGlobalOwner)
     if np ~= nil then
         local s = gPlayerSyncTable[np.localIndex]
-        if s.team == 2 then
+        -- TODO: Add for other teams
+        if s.team == TEAM_BLUE then
             obj_set_model_extended(obj, E_MODEL_BLUE_FLAME)
         end
     end

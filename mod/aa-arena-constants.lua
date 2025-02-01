@@ -23,3 +23,9 @@ E_MODEL_SPRING_BOTTOM = smlua_model_util_get_id("spring_bottom_geo")
 
 TEX_FLAG = get_texture_info('arena-flag')
 TEX_KOTH = get_texture_info('arena-koth')
+
+TEAM_RED = 1
+TEAM_BLUE = 2
+TEAM_GREEN = 3
+TEAM_YELLOW = 4
+TEAM_SPECTATOR = 5

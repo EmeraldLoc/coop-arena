@@ -47,22 +47,23 @@ LEVEL_ARENA_CITY      = level_register('level_arena_city_entry',      COURSE_NON
 --- @field name                string
 --- @field author              string
 --- @field previewImage        TextureInfo?
+--- @field maxTeams            integer?
 --- @field compatibleGamemodes table
 --- @field bgm                 ArenaBGM?
 
 --- @type ArenaLevel[]
 gGameLevels = {
-    { level = LEVEL_ARENA_ORIGIN,    name = 'Origin',    author = "djoslin0", previewImage = get_texture_info("origin_preview_image"), compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
-    { level = LEVEL_ARENA_SKY_BEACH, name = 'Sky Beach', author = "djoslin0", previewImage = nil,                                      compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
-    { level = LEVEL_ARENA_PILLARS,   name = 'Pillars',   author = "djoslin0", previewImage = nil,                                      compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
-    { level = LEVEL_ARENA_FORTS,     name = 'Forts',     author = "djoslin0", previewImage = nil,                                      compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
-    { level = LEVEL_ARENA_CITADEL,   name = 'Citadel',   author = "djoslin0", previewImage = nil,                                      compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
-    { level = LEVEL_ARENA_SPIRE,     name = 'Spire',     author = "djoslin0", previewImage = nil,                                      compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH },
-      bgm = { audio = 'snow.ogg',    loopStart = 0,      loopEnd = 500,                                                                volume = 1, name = "Frosty Citadel - Sonic Gaiden" } },
-    { level = LEVEL_ARENA_RAINBOW,   name = 'Rainbow',   author = "unknown",  previewImage = nil,                                      compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH },
-      bgm = { audio = 'rainbow.ogg', loopStart = 13.378, loopEnd = 159.948,                                                            volume = 1, name = "Rainbow Road - FunkyLion" } },
-    { level = LEVEL_ARENA_CITY,      name = 'City',      author = "unknown",  previewImage = nil,                                      compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH },
-      bgm = { audio = 'city.ogg',    loopStart = 06.975, loopEnd = 500,                                                                volume = 1, name = "City Outskirts - Sonic Megamix" } }
+    { level = LEVEL_ARENA_ORIGIN,    name = 'Origin',    author = "djoslin0", previewImage = get_texture_info("origin_preview_image"), maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
+    { level = LEVEL_ARENA_SKY_BEACH, name = 'Sky Beach', author = "djoslin0", previewImage = nil,                                      maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
+    { level = LEVEL_ARENA_PILLARS,   name = 'Pillars',   author = "djoslin0", previewImage = nil,                                      maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
+    { level = LEVEL_ARENA_FORTS,     name = 'Forts',     author = "djoslin0", previewImage = nil,                                      maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
+    { level = LEVEL_ARENA_CITADEL,   name = 'Citadel',   author = "djoslin0", previewImage = nil,                                      maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
+    { level = LEVEL_ARENA_SPIRE,     name = 'Spire',     author = "djoslin0", previewImage = nil,                                      maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH },
+      bgm = { audio = 'snow.ogg',    loopStart = 0,      loopEnd = 500,                                                                volume   = 1, name = "Frosty Citadel - Sonic Gaiden" } },
+    { level = LEVEL_ARENA_RAINBOW,   name = 'Rainbow',   author = "unknown",  previewImage = nil,                                      maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH },
+      bgm = { audio = 'rainbow.ogg', loopStart = 13.378, loopEnd = 159.948,                                                            volume   = 1, name = "Rainbow Road - FunkyLion" } },
+    { level = LEVEL_ARENA_CITY,      name = 'City',      author = "unknown",  previewImage = nil,                                      maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH },
+      bgm = { audio = 'city.ogg',    loopStart = 06.975, loopEnd = 500,                                                                volume   = 1, name = "City Outskirts - Sonic Megamix" } }
 }
 
 -- expose certain functions to other mods
@@ -84,8 +85,11 @@ gGlobalSyncTable.gameState = GAME_STATE_ACTIVE
 gGlobalSyncTable.gameMode  = GAME_MODE_DM
 gGlobalSyncTable.currentLevel = gGameLevels[math.random(#gGameLevels)].level
 gGlobalSyncTable.roundsPerShuffle = 3
-gGlobalSyncTable.capTeam1 = 0
-gGlobalSyncTable.capTeam2 = 0
+gGlobalSyncTable.capTeams = {}
+gGlobalSyncTable.capTeams[TEAM_RED] = 0
+gGlobalSyncTable.capTeams[TEAM_BLUE] = 0
+gGlobalSyncTable.capTeams[TEAM_GREEN] = 0
+gGlobalSyncTable.capTeams[TEAM_YELLOW] = 0
 gGlobalSyncTable.kothPoint = -1
 gGlobalSyncTable.message = ' '
 gGlobalSyncTable.timer = 0
@@ -113,7 +117,7 @@ function calculate_rankings()
         local s  = gPlayerSyncTable[i]
         local np = gNetworkPlayers[i]
         local m  = gMarioStates[i]
-        if active_player(m) and s.team ~= 3 then
+        if active_player(m) and s.team ~= TEAM_SPECTATOR then
             local score = 0
             if gGameModes[gGlobalSyncTable.gameMode].useScore then
                 score = s.score * 1000 + (1 - (np.globalIndex / MAX_PLAYERS))
@@ -134,35 +138,29 @@ function calculate_rankings()
 end
 
 function calculate_team_rank(teamNum)
-    if teamNum < 1 or teamNum > 2 then
+    if teamNum < 1 or teamNum > gGameLevels[get_current_level_key()].maxTeams then
         return 0
     end
-    local red = calculate_team_score(1)
-    local blue = calculate_team_score(2)
-    if teamNum == 1 then
-        if red >= blue then
-            return 1
-        else
-            return 2
+    local teamScores = {}
+    for team = 1, gGameLevels[get_current_level_key()].maxTeams do
+        table.insert(teamScores, { team = team, score = calculate_team_score(team) })
+    end
+    table.sort(teamScores, function (a, b)
+        if a.score == b.score then
+            return a.team < b.team
         end
-    else
-        if blue >= red then
-            return 1
-        else
-            return 2
+        return a.score > b.score
+    end)
+    for rank = 1, 4 do
+        if teamScores[rank].team == teamNum then
+            return rank
         end
     end
 end
 
 function calculate_team_score(teamNum)
     if gGlobalSyncTable.gameMode == GAME_MODE_CTF then
-        if teamNum == 1 then
-            return gGlobalSyncTable.capTeam1
-        elseif teamNum == 2 then
-            return gGlobalSyncTable.capTeam2
-        else
-            return 0
-        end
+        return gGlobalSyncTable.capTeams[teamNum]
     end
 
     local score = 0
@@ -192,27 +190,22 @@ function pick_team_on_join(m)
         local inp = gNetworkPlayers[i]
         local is = gPlayerSyncTable[i]
         if inp.connected and i ~= m.playerIndex then
-            if teamCount[is.team] == nil then
-                teamCount[is.team] = 0
-            end
+            if teamCount[is.team] == nil then teamCount[is.team] = 0 end
             teamCount[is.team] = teamCount[is.team] + 1
         end
     end
 
-    -- sanitize counts
-    local redCount = teamCount[1]
-    if redCount == nil then redCount = 0 end
-    local blueCount = teamCount[2]
-    if blueCount == nil then blueCount = 0 end
-
-    -- pick team
-    if redCount == blueCount then
-        return math.random(1,2)
-    elseif redCount < blueCount then
-        return 1
-    else
-        return 2
+    -- pick team with lowest player count
+    local lowestPlayerCount = 0
+    local lowestTeam = 0
+    for team, count in pairs(teamCount) do
+        if lowestTeam == 0 or count < lowestPlayerCount then
+            lowestPlayerCount = count
+            lowestTeam = team
+        end
     end
+
+    return lowestTeam
 end
 
 function shuffle_teams()
@@ -222,7 +215,7 @@ function shuffle_teams()
     for i = 0, (MAX_PLAYERS-1) do
         local m = gMarioStates[i]
         local s = gPlayerSyncTable[i]
-        if active_player(m) and s.team ~= 3 then
+        if active_player(m) and s.team ~= TEAM_SPECTATOR then
             table.insert(t, s)
             count = count + 1
         end
@@ -235,23 +228,16 @@ function shuffle_teams()
     end
 
     -- assign teams
-    local team1Count = 0
-    local team2Count = 0
-    local oddS = nil
+    local teamCount = {}
+    local nextTeamSelected = 1
     for i, s in ipairs(t) do
-        if (i - 1) < count / 2 then
-            s.team = 1
-            team1Count = team1Count + 1
-            oddS = s
-        else
-            s.team = 2
-            team2Count = team2Count + 1
+        s.team = nextTeamSelected
+        if teamCount[nextTeamSelected] == nil then teamCount[nextTeamSelected] = 0 end
+        teamCount[nextTeamSelected] = teamCount[nextTeamSelected] + 1
+        nextTeamSelected = nextTeamSelected + 1
+        if nextTeamSelected > gGameLevels[get_current_level_key()].maxTeams then
+            nextTeamSelected = 1
         end
-    end
-
-    -- shuffle odd player
-    if team1Count > team2Count then
-        oddS.team = math.random(1, 2)
     end
 end
 
@@ -270,8 +256,10 @@ end
 function round_begin()
     gGlobalSyncTable.message = ' '
     gGlobalSyncTable.gameState = GAME_STATE_ACTIVE
-    gGlobalSyncTable.capTeam1 = 0
-    gGlobalSyncTable.capTeam2 = 0
+    gGlobalSyncTable.capTeams[TEAM_RED] = 0
+    gGlobalSyncTable.capTeams[TEAM_BLUE] = 0
+    gGlobalSyncTable.capTeams[TEAM_GREEN] = 0
+    gGlobalSyncTable.capTeams[TEAM_YELLOW] = 0
     gGlobalSyncTable.kothPoint = -1
     bhv_arena_flag_reset()
 
@@ -316,7 +304,7 @@ function round_begin()
     for i = 0, (MAX_PLAYERS - 1) do
         player_reset_sync_table(gMarioStates[i])
         local s = gPlayerSyncTable[i]
-        if not gGameModes[gGlobalSyncTable.gameMode].teams and s.team ~= 3 then
+        if not gGameModes[gGlobalSyncTable.gameMode].teams and s.team ~= TEAM_SPECTATOR then
             s.team = 0
         end
     end
@@ -459,21 +447,20 @@ function end_round_if_team_empty()
     if not sRandomizeMode then
         return
     end
-    local redCount = 0
-    local blueCount = 0
+    local teamCount = {}
     for i = 0, (MAX_PLAYERS - 1) do
         local s  = gPlayerSyncTable[i]
         local np = gNetworkPlayers[i]
         if np.connected then
-            if s.team == 1 then
-                redCount = redCount + 1
-            elseif s.team == 2 then
-                blueCount = blueCount + 1
-            end
+            if not teamCount[s.team] then teamCount[s.team] = 0 end
+            teamCount[s.team] = teamCount[s.team] + 1
         end
     end
-    if redCount == 0 or blueCount == 0 then
-        round_end()
+    for _, count in pairs(teamCount) do
+        if count == 0 then
+            round_end()
+            break
+        end
     end
 end
 

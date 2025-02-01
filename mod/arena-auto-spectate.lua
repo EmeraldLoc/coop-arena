@@ -18,7 +18,7 @@ local function mario_update(m)
     end
 
     if  autoSpectateTimer <= 0 then
-        gPlayerSyncTable[0].team = 3
+        gPlayerSyncTable[0].team = TEAM_SPECTATOR
         gPlayerSyncTable[0].item = ITEM_NONE
     end
 end
