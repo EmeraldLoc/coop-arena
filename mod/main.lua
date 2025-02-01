@@ -54,12 +54,12 @@ LEVEL_ARENA_CITY      = level_register('level_arena_city_entry',      COURSE_NON
 --- @type ArenaLevel[]
 gGameLevels = {
     -- TODO: Add preview images to all of these
-    { level = LEVEL_ARENA_ORIGIN,    name = 'Origin',    author = "djoslin0", previewImage = get_texture_info("origin_preview_image"), maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
-    { level = LEVEL_ARENA_SKY_BEACH, name = 'Sky Beach', author = "djoslin0", previewImage = nil,                                      maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
-    { level = LEVEL_ARENA_PILLARS,   name = 'Pillars',   author = "djoslin0", previewImage = nil,                                      maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
-    { level = LEVEL_ARENA_FORTS,     name = 'Forts',     author = "djoslin0", previewImage = nil,                                      maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
-    { level = LEVEL_ARENA_CITADEL,   name = 'Citadel',   author = "djoslin0", previewImage = nil,                                      maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
-    { level = LEVEL_ARENA_SPIRE,     name = 'Spire',     author = "djoslin0", previewImage = nil,                                      maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH },
+    { level = LEVEL_ARENA_ORIGIN,    name = 'Origin',    author = "djoslin0", previewImage = get_texture_info("origin_preview_image"),    maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
+    { level = LEVEL_ARENA_SKY_BEACH, name = 'Sky Beach', author = "djoslin0", previewImage = get_texture_info("sky_beach_preview_image"), maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
+    { level = LEVEL_ARENA_PILLARS,   name = 'Pillars',   author = "djoslin0", previewImage = get_texture_info("pillars_preview_image"),   maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
+    { level = LEVEL_ARENA_FORTS,     name = 'Forts',     author = "djoslin0", previewImage = get_texture_info("forts_preview_image"),     maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
+    { level = LEVEL_ARENA_CITADEL,   name = 'Citadel',   author = "djoslin0", previewImage = get_texture_info("citadel_preview_image"),   maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
+    { level = LEVEL_ARENA_SPIRE,     name = 'Spire',     author = "djoslin0", previewImage = get_texture_info("spire_preview_image"),     maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH },
       bgm = { audio = 'snow.ogg',    loopStart = 0,      loopEnd = 500,                                                                volume   = 1, name = "Frosty Citadel - Sonic Gaiden" } },
     { level = LEVEL_ARENA_RAINBOW,   name = 'Rainbow',   author = "unknown",  previewImage = nil,                                      maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH },
       bgm = { audio = 'rainbow.ogg', loopStart = 13.378, loopEnd = 159.948,                                                            volume   = 1, name = "Rainbow Road - FunkyLion" } },
@@ -543,7 +543,7 @@ function on_server_update()
                     curLevelKey = math.random(#gGameLevels)
                 end
                 gGlobalSyncTable.currentLevel = gGameLevels[curLevelKey].level
-            elseif topVoteId ~= 1 then
+            elseif topVoteId >= 1 then
                 gGlobalSyncTable.currentLevel = gGameLevels[gGlobalSyncTable.voteLevels[topVoteId - 1]].level
             end
 
