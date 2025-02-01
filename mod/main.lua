@@ -521,11 +521,11 @@ function on_server_update()
             sWaitTimer = 0
             -- figure out which level was voted for the most
             local voteCounts = {
-                [1] = get_amount_of_votes_for_level(1),
-                [2] = get_amount_of_votes_for_level(2),
-                [3] = get_amount_of_votes_for_level(3),
-                [4] = get_amount_of_votes_for_level(4),
-                [5] = get_amount_of_votes_for_level(5),
+                get_amount_of_votes_for_level(1),
+                get_amount_of_votes_for_level(2),
+                get_amount_of_votes_for_level(3),
+                get_amount_of_votes_for_level(4),
+                get_amount_of_votes_for_level(5)
             }
             local highestVoteCount = 1
             local topVoteId = 0
