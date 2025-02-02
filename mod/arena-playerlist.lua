@@ -29,30 +29,27 @@ local function render_playerlist()
             local playerListWidth = width - 10
             local playerListHeight = 32
             local originalX = x
-            local quadrants = 4
-            local curQuardrant = 1
-            local quadrantWidth = playerListWidth / (quadrants + 1)
+            local cells = 4
+            local curCell = 1
+            local cellWidth = playerListWidth / (cells + 1)
             djui_hud_set_color(20, 20, 20, 255)
             djui_hud_render_rect(x, y, playerListWidth, playerListHeight)
 
-            local TEX_CHARACTER_ICON = gCharacters[np.overrideModelIndex].hudHeadTexture
-            if _G.charSelect then
-                TEX_CHARACTER_ICON = _G.charSelect.character_get_life_icon(index)
-            end
-            if TEX_CHARACTER_ICON then
-                djui_hud_set_color(255, 255, 255, 255)
-                djui_hud_render_texture(TEX_CHARACTER_ICON, x, y, 32 / (TEX_CHARACTER_ICON.width),
-                    32 / (TEX_CHARACTER_ICON.height))
+            djui_hud_set_color(255, 255, 255, 255)
+            if charSelect then
+                charSelect.character_render_life_icon(i, x, y, 2)
+            else
+                local headTex = gCharacters[np.overrideModelIndex].hudHeadTexture or get_texture_info("texture_hud_char_question")
+
+                djui_hud_render_texture(headTex, x, y, 32 / (headTex.width), 32 / (headTex.height))
             end
 
             x = x + 40
 
             djui_hud_set_color(playerTextColor.r, playerTextColor.g, playerTextColor.b, 255)
-            djui_hud_print_text(cap_text(np.name, quadrantWidth * 2 - 45), x, y, 1)
+            djui_hud_print_text(cap_text(np.name, cellWidth * 2 - 45), x, y, 1)
 
-            curQuardrant = curQuardrant + 1
-
-            x = (screenWidth - width) / 2 + quadrantWidth * curQuardrant
+            curCell = curCell + 1; x = (screenWidth - width) / 2 + cellWidth * curCell
 
             djui_hud_set_color(40, 40, 40, 100)
             djui_hud_render_rect(x, y + 2, 2, playerListHeight - 4)
@@ -66,9 +63,7 @@ local function render_playerlist()
                 djui_hud_print_text(rank, x + 10, y, 1)
             end
 
-            curQuardrant = curQuardrant + 1
-
-            x = (screenWidth - width) / 2 + quadrantWidth * curQuardrant
+            curCell = curCell + 1; x = (screenWidth - width) / 2 + cellWidth * curCell
 
             djui_hud_set_color(40, 40, 40, 100)
             djui_hud_render_rect(x, y + 2, 2, playerListHeight - 4)
@@ -76,9 +71,7 @@ local function render_playerlist()
             djui_hud_set_color(255, rank_color_g(s.rank), 0, 255)
             djui_hud_print_text(tostring(s.kills) .. " kills", x + 10, y, 1)
 
-            curQuardrant = curQuardrant + 1
-
-            x = (screenWidth - width) / 2 + quadrantWidth * curQuardrant
+            curCell = curCell + 1; x = (screenWidth - width) / 2 + cellWidth * curCell
 
             djui_hud_set_color(40, 40, 40, 100)
             djui_hud_render_rect(x, y + 2, 2, playerListHeight - 4)
