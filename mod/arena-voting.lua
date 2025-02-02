@@ -82,10 +82,10 @@ function voting_hud()
 
         djui_hud_set_font(FONT_MENU)
         djui_hud_set_color(255, 255, 255, 255)
-        djui_hud_print_text_outlined(levelName, x + 6, y + 4, 0.5, 0, 0, 0, 255, 0)
+        djui_hud_print_text(levelName, x + 6, y + 4, 0.5)
 
         djui_hud_set_color(255, 255, 255, 255)
-        djui_hud_print_text_outlined(levelAuthor, x + previewWidth - djui_hud_measure_text(levelAuthor) * 0.5 - 12, y + previewHeight - 30 - 6, 0.5, 0, 0, 0, 255, 0)
+        djui_hud_print_text(levelAuthor, x + previewWidth - djui_hud_measure_text(levelAuthor) * 0.5 - 12, y + previewHeight - 30 - 6, 0.5)
 
         djui_hud_set_font(FONT_NORMAL)
     end
