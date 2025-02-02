@@ -80,11 +80,14 @@ function voting_hud()
         local levelName = level.name
         local levelAuthor = level.author
 
+        djui_hud_set_font(FONT_MENU)
         djui_hud_set_color(255, 255, 255, 255)
-        djui_hud_print_text_shaded(levelName, x + 6, y + 4, 1)
+        djui_hud_print_text_outlined(levelName, x + 6, y + 4, 0.5, 0, 0, 0, 255, 0)
 
         djui_hud_set_color(255, 255, 255, 255)
-        djui_hud_print_text_shaded(levelAuthor, x + previewWidth - djui_hud_measure_text(levelAuthor) - 6, y + previewHeight - 30 - 6, 1)
+        djui_hud_print_text_outlined(levelAuthor, x + previewWidth - djui_hud_measure_text(levelAuthor) * 0.5 - 12, y + previewHeight - 30 - 6, 0.5, 0, 0, 0, 255, 0)
+
+        djui_hud_set_font(FONT_NORMAL)
     end
 
     previewWidth = 192
@@ -143,7 +146,6 @@ end
 
 ---@param m MarioState
 local function mario_update(m)
-
     if gGlobalSyncTable.gameState ~= GAME_STATE_VOTING then
         selection = 2
         return

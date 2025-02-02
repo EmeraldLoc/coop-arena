@@ -160,6 +160,30 @@ function djui_hud_render_rect_outlined(x, y, width, height, oR, oG, oB, oA, thic
     djui_hud_render_rect(x, y + (height - thickness) + thickness, width, thickness)
 end
 
+---@param text string
+---@param x number
+---@param y number
+---@param scale number
+---@param oR number
+---@param oG number
+---@param oB number
+---@param oA number
+---@param offset number
+function djui_hud_print_text_outlined(text, x, y, scale, oR, oG, oB, oA, offset)
+    local c = djui_hud_get_color()
+    djui_hud_set_color(oR, oG, oB, oA)
+    djui_hud_print_text(text, x - offset, y, scale)
+    djui_hud_print_text(text, x + offset, y, scale)
+    djui_hud_print_text(text, x, y - offset, scale)
+    djui_hud_print_text(text, x, y + offset, scale)
+    djui_hud_set_color(c.r, c.g, c.b, c.a)
+    djui_hud_print_text(text, x, y, scale)
+end
+
+---@param text string
+---@param x number
+---@param y number
+---@param scale number
 function djui_hud_print_text_shaded(text, x, y, scale)
     local color = djui_hud_get_color()
     djui_hud_set_color(0, 0, 0, color.a)
