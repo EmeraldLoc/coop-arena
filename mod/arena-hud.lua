@@ -86,6 +86,12 @@ function render_single_team_score(team)
     elseif team == 2 then
         x = x + distance
         djui_hud_set_color(0, 0, 128, 128)
+    elseif team == 3 then
+        x = x - distance + width + 2
+        djui_hud_set_color(0, 128, 0, 128)
+    elseif team == 4 then
+        x = x + distance - width - 2
+        djui_hud_set_color(128, 128, 0, 128)
     end
 
     djui_hud_render_rect(x, y, width, height)
@@ -100,8 +106,9 @@ function render_team_score()
         return
     end
 
-    render_single_team_score(1)
-    render_single_team_score(2)
+    for i = 1, gGameLevels[get_current_level_key()].maxTeams do
+        render_single_team_score(i)
+    end
 end
 
 function render_local_rank()
