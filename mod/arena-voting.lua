@@ -43,11 +43,11 @@ function voting_hud()
     djui_hud_set_color(20, 20, 20, 200)
     djui_hud_render_rect(x, y, width, height)
 
-    --[[if #gGlobalSyncTable.voteLevels == 0 then
+    if #sVoteEntries == 0 then
         djui_hud_set_color(255, 255, 255, 255)
         djui_hud_print_text_shaded("Please Wait...", x + width / 2 - djui_hud_measure_text("Please Wait...") / 2, y + height / 2, 1)
         return
-    end--]]
+    end
 
     -- render preview
     local previewWidth = 768
@@ -59,7 +59,7 @@ function voting_hud()
     elseif selection == 5 then
         previewImage = TEXTURE_RANDOM_LEVEL
     else
-        previewImage = gGameLevels[gGlobalSyncTable.voteLevels[selection - 1]].previewImage
+        previewImage = gGameLevels[sVoteEntries[selection - 1].level].previewImage
         if not previewImage then
             previewImage = TEXTURE_NO_IMAGE
         end
@@ -75,10 +75,12 @@ function voting_hud()
 
     if selection > 1 and selection < 5 then
 
-        local level = gGameLevels[gGlobalSyncTable.voteLevels[selection - 1]]
+        local level = gGameLevels[sVoteEntries[selection - 1].level]
+        local gamemode = gGameModes[sVoteEntries[selection - 1].gamemode]
 
         local levelName = level.name
         local levelAuthor = level.author
+        local gamemodeName = gamemode.name
 
         djui_hud_set_font(FONT_MENU)
         djui_hud_set_color(255, 255, 255, 255)
@@ -86,6 +88,9 @@ function voting_hud()
 
         djui_hud_set_color(255, 255, 255, 255)
         djui_hud_print_text(levelAuthor, x + previewWidth - djui_hud_measure_text(levelAuthor) * 0.5 - 12, y + previewHeight - 30 - 6, 0.5)
+
+        djui_hud_set_color(255, 255, 255, 255)
+        djui_hud_print_text(gamemodeName, x + previewWidth - djui_hud_measure_text(gamemodeName) * 0.5 - 12, y + 4, 0.5)
 
         djui_hud_set_font(FONT_NORMAL)
     end
@@ -111,11 +116,11 @@ function voting_hud()
     djui_hud_print_text_shaded(redoLevelText, x + previewWidth / 2 - djui_hud_measure_text(redoLevelText) / 2, y + previewHeight + 10, 1)
 
     for i = 1, 3 do
-        local v = gGlobalSyncTable.voteLevels[i]
+        local v = sVoteEntries[i]
 
         x = x + previewWidth + 75
 
-        previewImage = gGameLevels[v].previewImage
+        previewImage = gGameLevels[v.level].previewImage
         if not previewImage then previewImage = TEXTURE_NO_IMAGE end
 
         djui_hud_set_color(255, 220, 0, selection == i + 1 and 255 or 0)
@@ -123,7 +128,7 @@ function voting_hud()
         djui_hud_set_color(255, s.vote == i + 1 and 200 or 255, s.vote == i + 1 and 0 or 255, 255)
         djui_hud_render_texture(previewImage, x, y, previewWidth / previewImage.width, previewHeight / (previewImage.width / 16 * 9))
 
-        local voteLevelText = gGameLevels[v].name .. " (" .. get_amount_of_votes_for_level(i + 1) .. ")"
+        local voteLevelText = gGameLevels[v.level].name .. " (" .. get_amount_of_votes_for_level(i + 1) .. ")"
 
         djui_hud_set_color(255, s.vote == i + 1 and 220 or 255, s.vote == i + 1 and 0 or 255, 255)
         djui_hud_print_text_shaded(voteLevelText, x + previewWidth / 2 - djui_hud_measure_text(voteLevelText) / 2, y + previewHeight + 10, 1)

@@ -98,12 +98,12 @@ gGlobalSyncTable.kothPoint = -1
 gGlobalSyncTable.message = ' '
 gGlobalSyncTable.timer = 0
 gGlobalSyncTable.maxInvincTimer = 0
-gGlobalSyncTable.voteLevels = {}
 sWaitTimerMax = 15 * 30 -- 15 seconds
 sWaitTimer = 0
 sRoundCount = 0
 sUsingTimer = false
 sWillEnterVoting = false
+sVoteEntries = {}
 
 sRandomizeMode = true
 
@@ -381,13 +381,23 @@ function start_voting()
             containsLevel = false
 
             for i = 1, 3 do
-                if gGlobalSyncTable.voteLevels[i] == level or gGlobalSyncTable.currentLevel == level then
+                if (sVoteEntries[i] and sVoteEntries[i].level == level) or gGlobalSyncTable.currentLevel == level then
                     containsLevel = true
                 end
             end
         end
-        gGlobalSyncTable.voteLevels[i] = level
+
+        sVoteEntries[i] = { level = level }
+
+        local gamemode = math.random(#gGameModes)
+        while not gGameLevels[level].compatibleGamemodes[gamemode] do
+            gamemode = math.random(#gGameModes)
+        end
+
+        sVoteEntries[i].gamemode = gamemode
     end
+
+    send_arena_vote_entries(sVoteEntries)
 end
 
 function on_arena_player_death(victimGlobalId, attackerGlobalId)
@@ -543,9 +553,15 @@ function on_server_update()
                 while curLevelKey == prevLevelKey do
                     curLevelKey = math.random(#gGameLevels)
                 end
+                local gamemode = math.random(#gGameModes)
+                while not gGameLevels[curLevelKey].compatibleGamemodes[gamemode] do
+                    gamemode = math.random(#gGameModes)
+                end
                 gGlobalSyncTable.currentLevel = gGameLevels[curLevelKey].level
+                gGlobalSyncTable.gameMode = gamemode
             elseif topVoteId >= 1 then
-                gGlobalSyncTable.currentLevel = gGameLevels[gGlobalSyncTable.voteLevels[topVoteId - 1]].level
+                gGlobalSyncTable.currentLevel = gGameLevels[sVoteEntries[topVoteId - 1].level].level
+                gGlobalSyncTable.gameMode = sVoteEntries[topVoteId - 1].gamemode
             end
 
             round_begin()

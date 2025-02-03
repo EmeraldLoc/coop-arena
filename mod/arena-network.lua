@@ -2,6 +2,7 @@ PACKET_ARENA_DEATH = 1
 PACKET_ARENA_HAMMER_HIT = 2
 PACKET_ARENA_RESPAWN = 3
 PACKET_ARENA_FLAG = 4
+PACKET_ARENA_VOTE_ENTRIES = 5
 
 -------------
 
@@ -95,11 +96,31 @@ end
 
 -------------
 
+function on_packet_arena_vote_entries_receive(dataTable)
+    sVoteEntries = {}
+    for i = 1, 3 do
+        sVoteEntries[i] = { level = dataTable["level" .. i], gamemode = dataTable["gamemode" .. i] }
+    end
+end
+
+function send_arena_vote_entries(voteEntries)
+    local dataTable = {
+        id = PACKET_ARENA_VOTE_ENTRIES,
+        level1 = voteEntries[1].level, gamemode1 = voteEntries[1].gamemode,
+        level2 = voteEntries[2].level, gamemode2 = voteEntries[2].gamemode,
+        level3 = voteEntries[3].level, gamemode3 = voteEntries[3].gamemode,
+    }
+    network_send(true, dataTable)
+end
+
+-------------
+
 sPacketTable = {
-    [PACKET_ARENA_DEATH]      = on_packet_arena_death_receive,
-    [PACKET_ARENA_HAMMER_HIT] = on_packet_arena_hammer_hit_receive,
-    [PACKET_ARENA_RESPAWN]    = on_packet_arena_respawn_receive,
-    [PACKET_ARENA_FLAG]       = on_packet_arena_flag_receive,
+    [PACKET_ARENA_DEATH]        = on_packet_arena_death_receive,
+    [PACKET_ARENA_HAMMER_HIT]   = on_packet_arena_hammer_hit_receive,
+    [PACKET_ARENA_RESPAWN]      = on_packet_arena_respawn_receive,
+    [PACKET_ARENA_FLAG]         = on_packet_arena_flag_receive,
+    [PACKET_ARENA_VOTE_ENTRIES] = on_packet_arena_vote_entries_receive,
 }
 
 function on_packet_receive(dataTable)
