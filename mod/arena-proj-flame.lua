@@ -2,6 +2,9 @@ define_custom_obj_fields({
     oArenaFlameGlobalOwner = 'u32',
 })
 
+E_MODEL_GREEN_FLAME = smlua_model_util_get_id("green_flame_geo")
+E_MODEL_YELLOW_FLAME = smlua_model_util_get_id("yellow_flame_geo")
+
 local sArenaChildFlameLife = 30 * 1.8
 
 function bhv_arena_child_flame_init(obj)
@@ -36,11 +39,13 @@ function bhv_arena_child_flame_init(obj)
     if np ~= nil then
         local s = gPlayerSyncTable[np.localIndex]
         if s.team == TEAM_BLUE then
-            -- TODO: Add for other teams
             obj_set_model_extended(obj, E_MODEL_BLUE_FLAME)
+        elseif s.team == TEAM_GREEN then
+            obj_set_model_extended(obj, E_MODEL_GREEN_FLAME)
+        elseif s.team == TEAM_YELLOW then
+            obj_set_model_extended(obj, E_MODEL_YELLOW_FLAME)
         end
     end
-
 end
 
 function bhv_arena_child_flame_loop(obj)
@@ -101,9 +106,12 @@ function bhv_arena_flame_init(obj)
     local np = network_player_from_global_index(obj.oArenaFlameGlobalOwner)
     if np ~= nil then
         local s = gPlayerSyncTable[np.localIndex]
-        -- TODO: Add for other teams
         if s.team == TEAM_BLUE then
             obj_set_model_extended(obj, E_MODEL_BLUE_FLAME)
+        elseif s.team == TEAM_GREEN then
+            obj_set_model_extended(obj, E_MODEL_GREEN_FLAME)
+        elseif s.team == TEAM_YELLOW then
+            obj_set_model_extended(obj, E_MODEL_YELLOW_FLAME)
         end
     end
 

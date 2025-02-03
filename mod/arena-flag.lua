@@ -32,11 +32,9 @@ function bhv_arena_flag_init(obj)
     elseif team == TEAM_BLUE then
         obj_set_model_extended(obj, E_MODEL_FLAG_BLUE)
     elseif team == TEAM_GREEN then
-        -- TODO: Add in new flag models
-        obj_set_model_extended(obj, E_MODEL_FLAG_BLUE)
+        obj_set_model_extended(obj, E_MODEL_FLAG_GREEN)
     elseif team == TEAM_YELLOW then
-        -- TODO: Add in new flag models
-        obj_set_model_extended(obj, E_MODEL_FLAG_BLUE)
+        obj_set_model_extended(obj, E_MODEL_FLAG_YELLOW)
     else
         obj_mark_for_deletion(obj)
     end
