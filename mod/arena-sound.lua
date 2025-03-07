@@ -1,11 +1,3 @@
---- @class ArenaBGM
---- @field audio     string
---- @field loopStart number
---- @field loopEnd   number
---- @field volume    number
---- @field name      string
---- @field stream    ModAudio?
-
 local m = gMarioStates[0]
 local np = gNetworkPlayers[0]
 

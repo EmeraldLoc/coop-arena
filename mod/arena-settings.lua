@@ -148,7 +148,7 @@ local function on_mods_loaded()
             permission = PERMISSION_MODERATORS,
             toggleValue = gGlobalSyncTable.gameMode == key and not sRandomizeMode,
             action = function ()
-                if gGameLevels[get_current_level_key()].compatibleGamemodes[key] then
+                if table.contains(gGameLevels[get_current_level_key()].compatibleGamemodes, key) then
                     gGlobalSyncTable.gameMode = key
                     sRandomizeMode = false
                     round_end(false)

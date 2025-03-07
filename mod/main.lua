@@ -15,6 +15,7 @@ GAME_MODE_FT    = 4
 GAME_MODE_TFT   = 5
 GAME_MODE_KOTH  = 6
 GAME_MODE_TKOTH = 7
+GAME_MODE_COUNT = 7
 
 gGameModes = {
     [GAME_MODE_DM]    = { shortName = 'DM',    name = 'Deathmatch',            teams = false, teamSpawns = false, useScore = false, scoreCap = 10,  minPlayers = 0, maxPlayers = 99, time = 0,   rules = "First to %d kills"         },
@@ -52,20 +53,7 @@ LEVEL_ARENA_CITY      = level_register('level_arena_city_entry',      COURSE_NON
 --- @field bgm                 ArenaBGM?
 
 --- @type ArenaLevel[]
-gGameLevels = {
-    -- TODO: Add preview images to all of these
-    { level = LEVEL_ARENA_ORIGIN,    name = 'Origin',    author = "djoslin0", previewImage = get_texture_info("origin_preview_image"),    maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
-    { level = LEVEL_ARENA_SKY_BEACH, name = 'Sky Beach', author = "djoslin0", previewImage = get_texture_info("sky_beach_preview_image"), maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
-    { level = LEVEL_ARENA_PILLARS,   name = 'Pillars',   author = "djoslin0", previewImage = get_texture_info("pillars_preview_image"),   maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
-    { level = LEVEL_ARENA_FORTS,     name = 'Forts',     author = "djoslin0", previewImage = get_texture_info("forts_preview_image"),     maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
-    { level = LEVEL_ARENA_CITADEL,   name = 'Citadel',   author = "djoslin0", previewImage = get_texture_info("citadel_preview_image"),   maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH } },
-    { level = LEVEL_ARENA_SPIRE,     name = 'Spire',     author = "djoslin0", previewImage = get_texture_info("spire_preview_image"),     maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH },
-      bgm = { audio = 'snow.ogg',    loopStart = 0,      loopEnd = 500,                                                                volume   = 1, name = "Frosty Citadel - Sonic Gaiden" } },
-    { level = LEVEL_ARENA_RAINBOW,   name = 'Rainbow',   author = "Yuyake",  previewImage = nil,                                      maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH },
-      bgm = { audio = 'rainbow.ogg', loopStart = 13.378, loopEnd = 159.948,                                                            volume   = 1, name = "Rainbow Road - FunkyLion" } },
-    { level = LEVEL_ARENA_CITY,      name = 'City',      author = "Yuyake",  previewImage = nil,                                      maxTeams = 2, compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH },
-      bgm = { audio = 'city.ogg',    loopStart = 06.975, loopEnd = 500,                                                                volume   = 1, name = "City Outskirts - Sonic Megamix" } }
-}
+gGameLevels = {}
 
 -- expose certain functions to other mods
 _G.Arena = {
@@ -78,11 +66,39 @@ _G.Arena = {
         if not maxTeams then maxTeams = 2 end
 
         table.insert(gGameLevels, { level = levelNum, name = levelName, author = levelAuthor, compatibleGamemodes = compatibleGamemodes, bgm = bgm, previewImage = previewImage, maxTeams = maxTeams })
+        return #gGameLevels
+    end,
+    add_level_data = function (level, data)
+        local validData = {
+            author              = "string",
+            previewImage        = "CObject",
+            maxTeams            = "number",
+            compatibleGamemodes = function (value)
+                for _, gm in pairs(value) do
+                    if gm > GAME_MODE_COUNT then return false end
+                end
+            end,
+            bgm                 = { audio = "string", loopStart = "number", loopEnd = "number", name = "string" },
+        }
+
     end,
     get_player_team = function (localIndex)
         return gPlayerSyncTable[localIndex].team
     end
 }
+
+    -- TODO: Add preview images to all of these
+L_ORIGIN    = Arena.add_level{LEVEL_ARENA_ORIGIN,    'Origin',    "djoslin0",   get_texture_info("origin_preview_image"),    }
+L_SKY_BEACH = Arena.add_level{LEVEL_ARENA_SKY_BEACH, 'Sky Beach', "djoslin0",   get_texture_info("sky_beach_preview_image"), }
+L_PILLARS   = Arena.add_level{LEVEL_ARENA_PILLARS,   'Pillars',   "djoslin0",   get_texture_info("pillars_preview_image"),   }
+L_FORTS     = Arena.add_level{LEVEL_ARENA_FORTS,     'Forts',     "djoslin0",   get_texture_info("forts_preview_image"),     }
+L_CITADEL   = Arena.add_level{LEVEL_ARENA_CITADEL,   'Citadel',   "djoslin0",   get_texture_info("citadel_preview_image"),   }
+L_SPIRE     = Arena.add_level{LEVEL_ARENA_SPIRE,     'Spire',     "djoslin0",   get_texture_info("spire_preview_image"),     }
+L_RAINBOW   = Arena.add_level{LEVEL_ARENA_RAINBOW,   'Rainbow',   "FunkyLion",  nil,                                         }
+L_CITY      = Arena.add_level{LEVEL_ARENA_CITY,      'City',      "FunkyLion",  nil,                                         }
+Arena.add_level_data(L_SPIRE,   { bgm = { audio = 'snow.ogg',    loopStart = 0,      loopEnd = 500, volume = 1, name = "Frosty Citadel - Sonic Gaiden" } } )
+Arena.add_level_data(L_RAINBOW, { bgm = { audio = 'rainbow.ogg', loopStart = 13.378, loopEnd = 159.948, volume = 1, name = "Rainbow Road - FunkyLion" } } )
+Arena.add_level_data(L_CITY,    { bgm = { audio = 'city.ogg',    loopStart = 06.975, loopEnd = 500, volume = 1, name = "City Outskirts - Sonic Megamix" } } )
 
 -- setup global sync table
 gGlobalSyncTable.gameState = GAME_STATE_ACTIVE
@@ -301,7 +317,7 @@ function round_begin()
         gGlobalSyncTable.gameMode = gamemodes[math.random(#gamemodes)]
     end
 
-    while not gGameLevels[get_current_level_key()].compatibleGamemodes[gGlobalSyncTable.gameMode] do
+    while not table.contains(gGameLevels[get_current_level_key()].compatibleGamemodes, gGlobalSyncTable.gameMode) do
         gGlobalSyncTable.gameMode = math.random(#gGameModes)
     end
 
@@ -390,7 +406,7 @@ function start_voting()
         sVoteEntries[i] = { level = level }
 
         local gamemode = math.random(#gGameModes)
-        while not gGameLevels[level].compatibleGamemodes[gamemode] do
+        while not table.contains(gGameLevels[level].compatibleGamemodes, gamemode) do
             gamemode = math.random(#gGameModes)
         end
 
@@ -554,7 +570,7 @@ function on_server_update()
                     curLevelKey = math.random(#gGameLevels)
                 end
                 local gamemode = math.random(#gGameModes)
-                while not gGameLevels[curLevelKey].compatibleGamemodes[gamemode] do
+                while not table.contains(gGameLevels[curLevelKey].compatibleGamemodes, gamemode) do
                     gamemode = math.random(#gGameModes)
                 end
                 gGlobalSyncTable.currentLevel = gGameLevels[curLevelKey].level
@@ -598,7 +614,7 @@ function on_gamemode_command(msg)
         return true
     end
 
-    if setMode ~= nil and gGameLevels[get_current_level_key()].compatibleGamemodes[setMode] then
+    if setMode ~= nil and table.contains(gGameLevels[get_current_level_key()].compatibleGamemodes, setMode) then
         djui_chat_message_create("[Arena] Setting game mode.")
         gGlobalSyncTable.gameMode = setMode
         sRandomizeMode = false
@@ -606,7 +622,7 @@ function on_gamemode_command(msg)
         sWaitTimer = 1
         sRoundCount = 0
         return true
-    elseif not gGameLevels[get_current_level_key()].compatibleGamemodes[setMode] then
+    elseif not table.contains(gGameLevels[get_current_level_key()].compatibleGamemodes, setMode) then
         djui_chat_message_create("[Arena] Gamemode not compatible with current level.")
         return true
     end
