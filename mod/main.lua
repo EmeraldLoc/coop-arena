@@ -74,13 +74,24 @@ _G.Arena = {
             previewImage        = "CObject",
             maxTeams            = "number",
             compatibleGamemodes = function (value)
+                if type(value) ~= "table" then --[[ invalid data type! ]] return false end
                 for _, gm in pairs(value) do
-                    if gm > GAME_MODE_COUNT then return false end
+                    if type(gm) ~= "number" or gm > GAME_MODE_COUNT then
+                        --[[ invalid game mode! ]]
+                        return false
+                    end
                 end
             end,
-            bgm                 = { audio = "string", loopStart = "number", loopEnd = "number", name = "string" },
+            bgm = { audio = "string", loopStart = "number", loopEnd = "number", name = "string" },
         }
-
+        for name, value in pairs(data) do
+            local check = validData[name]
+            if check then
+                if type(check) == "string" then
+                    if type(value) ~= check then
+                end
+            else --[[ "invalid data!" ]] end 
+        end
     end,
     get_player_team = function (localIndex)
         return gPlayerSyncTable[localIndex].team
