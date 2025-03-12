@@ -10,13 +10,8 @@ gHudIcons = {
     koth = { tex = TEX_KOTH, prevX = 0, prevY = 0, r = 255, g = 255, b = 255 },
 }
 
-local ranks = {
-    "st",
-    "nd",
-    "rd"
-}
 function rank_str(rank)
-    return rank .. (((rank // 10) % 10 ~= 1) and ranks[rank % 10] or "th")
+    return rank .. (((rank // 10) % 10 ~= 1) and ({"st", "nd", "rd"})[rank % 10] or "th")
 end
 
 function rank_color_g(rank)

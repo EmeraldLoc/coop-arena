@@ -69,15 +69,17 @@ _G.Arena = {
         return #gGameLevels
     end,
     add_level_data = function (level, data)
+        level = gGameLevels[level]
+        if not level then log_to_console("Invalid level") return end
         local validData = {
             author              = "string",
             previewImage        = "CObject",
             maxTeams            = "number",
             compatibleGamemodes = function (value)
-                if type(value) ~= "table" then --[[ invalid data type! ]] return false end
+                if type(value) ~= "table" then log_to_console("Invalid data for compatibleGamemodes", CONSOLE_MESSAGE_ERROR) return false end
                 for _, gm in pairs(value) do
                     if type(gm) ~= "number" or gm > GAME_MODE_COUNT then
-                        --[[ invalid game mode! ]]
+                        log_to_console("Invalid gamemode: "..tostring(gm))
                         return false
                     end
                 end
@@ -86,11 +88,16 @@ _G.Arena = {
         }
         for name, value in pairs(data) do
             local check = validData[name]
-            if check then
-                if type(check) == "string" then
-                    if type(value) ~= check then
+            if check then -- valid field
+            local t = type(check)
+                if t == "string" then
+                    if type(value) ~= check then end
+                elseif t == "function" then
+
+                elseif t == "table" then
+
                 end
-            else --[[ "invalid data!" ]] end 
+            else log_to_console("Invalid data: "..name, CONSOLE_MESSAGE_ERROR) end
         end
     end,
     get_player_team = function (localIndex)
@@ -99,14 +106,14 @@ _G.Arena = {
 }
 
     -- TODO: Add preview images to all of these
-L_ORIGIN    = Arena.add_level{LEVEL_ARENA_ORIGIN,    'Origin',    "djoslin0",   get_texture_info("origin_preview_image"),    }
-L_SKY_BEACH = Arena.add_level{LEVEL_ARENA_SKY_BEACH, 'Sky Beach', "djoslin0",   get_texture_info("sky_beach_preview_image"), }
-L_PILLARS   = Arena.add_level{LEVEL_ARENA_PILLARS,   'Pillars',   "djoslin0",   get_texture_info("pillars_preview_image"),   }
-L_FORTS     = Arena.add_level{LEVEL_ARENA_FORTS,     'Forts',     "djoslin0",   get_texture_info("forts_preview_image"),     }
-L_CITADEL   = Arena.add_level{LEVEL_ARENA_CITADEL,   'Citadel',   "djoslin0",   get_texture_info("citadel_preview_image"),   }
-L_SPIRE     = Arena.add_level{LEVEL_ARENA_SPIRE,     'Spire',     "djoslin0",   get_texture_info("spire_preview_image"),     }
-L_RAINBOW   = Arena.add_level{LEVEL_ARENA_RAINBOW,   'Rainbow',   "FunkyLion",  nil,                                         }
-L_CITY      = Arena.add_level{LEVEL_ARENA_CITY,      'City',      "FunkyLion",  nil,                                         }
+L_ORIGIN    = Arena.add_level{LEVEL_ARENA_ORIGIN,    'Origin',    "djoslin0",   get_texture_info("origin_preview_image")    }
+L_SKY_BEACH = Arena.add_level{LEVEL_ARENA_SKY_BEACH, 'Sky Beach', "djoslin0",   get_texture_info("sky_beach_preview_image") }
+L_PILLARS   = Arena.add_level{LEVEL_ARENA_PILLARS,   'Pillars',   "djoslin0",   get_texture_info("pillars_preview_image")   }
+L_FORTS     = Arena.add_level{LEVEL_ARENA_FORTS,     'Forts',     "djoslin0",   get_texture_info("forts_preview_image")     }
+L_CITADEL   = Arena.add_level{LEVEL_ARENA_CITADEL,   'Citadel',   "djoslin0",   get_texture_info("citadel_preview_image")   }
+L_SPIRE     = Arena.add_level{LEVEL_ARENA_SPIRE,     'Spire',     "djoslin0",   get_texture_info("spire_preview_image")     }
+L_RAINBOW   = Arena.add_level{LEVEL_ARENA_RAINBOW,   'Rainbow',   "FunkyLion",  nil                                         }
+L_CITY      = Arena.add_level{LEVEL_ARENA_CITY,      'City',      "FunkyLion",  nil                                         }
 Arena.add_level_data(L_SPIRE,   { bgm = { audio = 'snow.ogg',    loopStart = 0,      loopEnd = 500, volume = 1, name = "Frosty Citadel - Sonic Gaiden" } } )
 Arena.add_level_data(L_RAINBOW, { bgm = { audio = 'rainbow.ogg', loopStart = 13.378, loopEnd = 159.948, volume = 1, name = "Rainbow Road - FunkyLion" } } )
 Arena.add_level_data(L_CITY,    { bgm = { audio = 'city.ogg',    loopStart = 06.975, loopEnd = 500, volume = 1, name = "City Outskirts - Sonic Megamix" } } )
