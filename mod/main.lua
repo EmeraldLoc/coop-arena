@@ -105,10 +105,10 @@ _G.Arena = {
                         if type(value[vkey]) ~= vtype then
                             fail = 1
                             log_to_console("Invalid data for "..key.."."..vkey, CONSOLE_MESSAGE_ERROR)
-                            break
                         end
                     end
-                    if fail then level[key] = value end
+                    if fail then log_to_console("Rejecting data: "..key, CONSOLE_MESSAGE_ERROR)
+                    else level[key] = value end
                 else log_to_console("Invalid check (???)", CONSOLE_MESSAGE_ERROR) end
             else log_to_console("Invalid data: "..key, CONSOLE_MESSAGE_ERROR) end
         end
