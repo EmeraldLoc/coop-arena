@@ -22,6 +22,7 @@ local function handle_music()
             bgm.stream = audio_stream_load(bgm.audio)
             if bgm.stream then
                 audio_stream_set_looping(bgm.stream, true)
+                audio_stream_set_loop_points(bgm.stream, bgm.loopStart, bgm.loopEnd)
                 audio_stream_play(bgm.stream, true, bgm.volume)
                 print("Playing new audio " .. bgm.name)
             else
@@ -42,12 +43,6 @@ local function handle_music()
         end
 
         audio_stream_set_volume(bgm.stream, bgm.volume * (is_game_paused() and .31 or 1))
-
-        local curPosition = audio_stream_get_position(bgm.stream)
-        if curPosition >= bgm.loopEnd then
-            local minus = bgm.loopStart - bgm.loopEnd
-            audio_stream_set_position(bgm.stream, curPosition - math.abs(minus))
-        end
     end
 end
 

@@ -1,5 +1,3 @@
-local np = gNetworkPlayers[0]
-
 local lightingDir = {
     ["Rainbow"] = -10,
     ["City"] = -1,

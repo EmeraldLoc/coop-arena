@@ -42,6 +42,7 @@ LEVEL_ARENA_CITY      = level_register('level_arena_city_entry',      COURSE_NON
 --- @field loopEnd             number
 --- @field volume              number
 --- @field name                string
+--- @field stream              ModAudio
 
 --- @class ArenaLevel
 --- @field level               LevelNum|integer
@@ -57,15 +58,12 @@ gGameLevels = {}
 
 -- expose certain functions to other mods
 _G.Arena = {
-    add_level = function (levelNum, levelName, levelAuthor, compatibleGamemodes, bgm, previewImage, maxTeams)
-        -- for compatibility reasons, we set default values for some of these
-        if not levelAuthor then levelAuthor = "" end
-        if not compatibleGamemodes then
-            compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH }
-        end
-        if not maxTeams then maxTeams = 2 end
-
-        table.insert(gGameLevels, { level = levelNum, name = levelName, author = levelAuthor, compatibleGamemodes = compatibleGamemodes, bgm = bgm, previewImage = previewImage, maxTeams = maxTeams })
+    add_level = function (levelNum, levelName, levelAuthor, previewImage)
+        table.insert(gGameLevels,
+        {
+            level = levelNum, name = levelName, author = levelAuthor or "", previewImage = previewImage, maxTeams = 2,
+            compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH },
+        })
         return #gGameLevels
     end,
     add_level_data = function (level, data)
@@ -75,9 +73,9 @@ _G.Arena = {
             author              = "string",
             previewImage        = "CObject",
             maxTeams            = "number",
-            compatibleGamemodes = function (value)
-                if type(value) ~= "table" then log_to_console("Invalid data for compatibleGamemodes", CONSOLE_MESSAGE_ERROR) return false end
-                for _, gm in pairs(value) do
+            compatibleGamemodes = function (data)
+                if type(data) ~= "table" then log_to_console("Invalid data for compatibleGamemodes", CONSOLE_MESSAGE_ERROR) return false end
+                for _, gm in pairs(data) do
                     if type(gm) ~= "number" or gm > GAME_MODE_COUNT then
                         log_to_console("Invalid gamemode: "..tostring(gm), CONSOLE_MESSAGE_ERROR)
                         return false
@@ -85,32 +83,33 @@ _G.Arena = {
                 end
                 return true
             end,
-            bgm = { audio = "string", loopStart = "number", loopEnd = "number", name = "string" },
+            bgm = { audio = "string", loopStart = "number", loopEnd = "number", volume = "number", name = "string" },
+            -- lighting = {  }
         }
-        for key, value in pairs(data) do
-            local check = validData[key]
+        for field, data in pairs(data) do
+            local check = validData[field]
             if check then -- field is valid
                 local t = type(check)
                 if t == "string" then -- simple type check
-                    if type(value) == check then
-                        level[key] = value
-                    else log_to_console("Invalid data for "..key, CONSOLE_MESSAGE_ERROR) end
+                    if type(data) == check then
+                        level[field] = data
+                    else log_to_console("Invalid data for "..field, CONSOLE_MESSAGE_ERROR) end
                 elseif t == "function" then -- run custom check
-                    if check() then
-                        level[key] = value
+                    if check(data, level) then
+                        level[field] = table.copy(data)
                     end
                 elseif t == "table" then
                     local fail
                     for vkey, vtype in pairs(check) do
-                        if type(value[vkey]) ~= vtype then
+                        if type(data[vkey]) ~= vtype then
                             fail = 1
-                            log_to_console("Invalid data for "..key.."."..vkey, CONSOLE_MESSAGE_ERROR)
+                            log_to_console("Invalid data for "..field.."."..vkey, CONSOLE_MESSAGE_ERROR)
                         end
                     end
-                    if fail then log_to_console("Rejecting data: "..key, CONSOLE_MESSAGE_ERROR)
-                    else level[key] = value end
+                    if fail then log_to_console("Rejecting data: "..field, CONSOLE_MESSAGE_ERROR)
+                    else level[field] = table.copy(data) end
                 else log_to_console("Invalid check (???)", CONSOLE_MESSAGE_ERROR) end
-            else log_to_console("Invalid data: "..key, CONSOLE_MESSAGE_ERROR) end
+            else log_to_console("Invalid data: "..field, CONSOLE_MESSAGE_ERROR) end
         end
     end,
     get_player_team = function (localIndex)
@@ -127,9 +126,10 @@ L_CITADEL   = Arena.add_level(LEVEL_ARENA_CITADEL,   'Citadel',   "djoslin0",   
 L_SPIRE     = Arena.add_level(LEVEL_ARENA_SPIRE,     'Spire',     "djoslin0",   get_texture_info("spire_preview_image")     )
 L_RAINBOW   = Arena.add_level(LEVEL_ARENA_RAINBOW,   'Rainbow',   "FunkyLion",  nil                                         )
 L_CITY      = Arena.add_level(LEVEL_ARENA_CITY,      'City',      "FunkyLion",  nil                                         )
-Arena.add_level_data(L_SPIRE,   { bgm = { audio = 'snow.ogg',    loopStart = 0,      loopEnd = 500,     volume = 1, name = "Frosty Citadel - Sonic Gaiden" } } )
-Arena.add_level_data(L_RAINBOW, { bgm = { audio = 'rainbow.ogg', loopStart = 13.378, loopEnd = 159.948, volume = 1, name = "Rainbow Road - FunkyLion" } } )
-Arena.add_level_data(L_CITY,    { bgm = { audio = 'city.ogg',    loopStart = 06.975, loopEnd = 500,     volume = 1, name = "City Outskirts - Sonic Megamix" } } )
+Arena.add_level_data(L_SPIRE,   { bgm = { audio = 'snow.ogg',    loopStart = 0,      loopEnd = 500,      volume = 1, name = "Frosty Citadel - Sonic Gaiden" } } )
+Arena.add_level_data(L_RAINBOW, { bgm = { audio = 'rainbow.ogg', loopStart = 13.378, loopEnd = 159.948,  volume = 1, name = "Rainbow Road - FunkyLion" } } )
+-- Arena.add_level_data(L_CITY,    { bgm = { audio = 'city.ogg',    loopStart = 06.975, loopEnd = 500,      volume = 1, name = "City Outskirts - Sonic Megamix" } } )
+Arena.add_level_data(L_CITY,    { bgm = { audio = 'city.ogg',    loopStart = 307598, loopEnd = 22050000, volume = 1, name = "City Outskirts - Sonic Megamix" } } )
 
 -- setup global sync table
 gGlobalSyncTable.gameState = GAME_STATE_ACTIVE

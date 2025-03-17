@@ -60,7 +60,7 @@ local function update()
             permission = PERMISSION_MODERATORS,
             action = function ()
                 gGlobalSyncTable.currentLevel = level.level
-                round_end()
+                round_end(false)
                 sWaitTimer = 1
                 sRoundCount = 0
             end
@@ -169,7 +169,7 @@ local function on_mods_loaded()
             permission = PERMISSION_MODERATORS,
             action = function ()
                 gGlobalSyncTable.currentLevel = level.level
-                round_end()
+                round_end(false)
                 sWaitTimer = 1
                 sRoundCount = 0
             end
