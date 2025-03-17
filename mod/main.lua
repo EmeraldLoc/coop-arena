@@ -38,9 +38,9 @@ LEVEL_ARENA_CITY      = level_register('level_arena_city_entry',      COURSE_NON
 
 --- @class ArenaBGM
 --- @field audio               string
---- @field loopStart           number
---- @field loopEnd             number
---- @field volume              number
+--- @field loopStart           integer?
+--- @field loopEnd             integer?
+--- @field volume              number?
 --- @field name                string
 --- @field stream              ModAudio
 
@@ -83,7 +83,7 @@ _G.Arena = {
                 end
                 return true
             end,
-            bgm = { audio = "string", loopStart = "number", loopEnd = "number", volume = "number", name = "string" },
+            bgm = { audio = "string", loopStart = "number?", loopEnd = "number?", volume = "number?", name = "string" },
             -- lighting = {  }
         }
         for field, data in pairs(data) do
@@ -100,14 +100,27 @@ _G.Arena = {
                     end
                 elseif t == "table" then
                     local fail
+                    local rejects = {}
                     for vkey, vtype in pairs(check) do
-                        if type(data[vkey]) ~= vtype then
-                            fail = 1
-                            log_to_console("Invalid data for "..field.."."..vkey, CONSOLE_MESSAGE_ERROR)
+                        local t = type(data[vkey])
+                        local opt = vtype:sub(#vtype)
+                        if opt == "?" then
+                            t = t.."?"
+                        else opt = nil end
+                        if not (t == vtype or (opt and t == "nil?")) then
+                            if opt then table.insert(rejects, vkey)
+                            else fail = 1 end
+                            log_to_console("Invalid data for "..field.."."..vkey..(opt and ", rejecting"), CONSOLE_MESSAGE_ERROR)
                         end
                     end
-                    if fail then log_to_console("Rejecting data: "..field, CONSOLE_MESSAGE_ERROR)
-                    else level[field] = table.copy(data) end
+                    if fail then
+                        log_to_console("Rejecting data: "..field, CONSOLE_MESSAGE_ERROR)
+                    else
+                        level[field] = table.copy(data)
+                        for _, reject in pairs(rejects) do
+                            level[field][reject] = nil
+                        end
+                    end
                 else log_to_console("Invalid check (???)", CONSOLE_MESSAGE_ERROR) end
             else log_to_console("Invalid data: "..field, CONSOLE_MESSAGE_ERROR) end
         end
@@ -126,10 +139,10 @@ L_CITADEL   = Arena.add_level(LEVEL_ARENA_CITADEL,   'Citadel',   "djoslin0",   
 L_SPIRE     = Arena.add_level(LEVEL_ARENA_SPIRE,     'Spire',     "djoslin0",   get_texture_info("spire_preview_image")     )
 L_RAINBOW   = Arena.add_level(LEVEL_ARENA_RAINBOW,   'Rainbow',   "FunkyLion",  nil                                         )
 L_CITY      = Arena.add_level(LEVEL_ARENA_CITY,      'City',      "FunkyLion",  nil                                         )
-Arena.add_level_data(L_SPIRE,   { bgm = { audio = 'snow.ogg',    loopStart = 0,      loopEnd = 500,      volume = 1, name = "Frosty Citadel - Sonic Gaiden" } } )
-Arena.add_level_data(L_RAINBOW, { bgm = { audio = 'rainbow.ogg', loopStart = 13.378, loopEnd = 159.948,  volume = 1, name = "Rainbow Road - FunkyLion" } } )
--- Arena.add_level_data(L_CITY,    { bgm = { audio = 'city.ogg',    loopStart = 06.975, loopEnd = 500,      volume = 1, name = "City Outskirts - Sonic Megamix" } } )
-Arena.add_level_data(L_CITY,    { bgm = { audio = 'city.ogg',    loopStart = 307598, loopEnd = 22050000, volume = 1, name = "City Outskirts - Sonic Megamix" } } )
+-- Arena.add_level_data(L_RAINBOW, { bgm = { audio = 'rainbow.ogg', loopStart = 13.378, loopEnd = 159.948,  name = "Rainbow Road - FunkyLion" } } )
+Arena.add_level_data(L_SPIRE,   { bgm = { audio = 'snow.ogg', loopStart = 446898, loopEnd = 3566438, name = "Frozen Heart Melancholy - MegaBaz (Sonic Gaiden)" } } )
+Arena.add_level_data(L_RAINBOW, { bgm = { audio = 'rainbow.ogg', name = "Rainbow Road - FunkyLion" } } )
+Arena.add_level_data(L_CITY,    { bgm = { audio = 'city.ogg', loopStart = 70181, loopEnd = 4051293, name = "City Outskirts Zone - GeckoYamori (Sonic Megamix)" } } )
 
 -- setup global sync table
 gGlobalSyncTable.gameState = GAME_STATE_ACTIVE

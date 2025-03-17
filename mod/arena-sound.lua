@@ -19,10 +19,13 @@ local function handle_music()
         curBGM = bgm
 
         if bgm and bgm.audio then
+            bgm.volume = bgm.volume or 1
             bgm.stream = audio_stream_load(bgm.audio)
             if bgm.stream then
                 audio_stream_set_looping(bgm.stream, true)
-                audio_stream_set_loop_points(bgm.stream, bgm.loopStart, bgm.loopEnd)
+                if bgm.loopStart and bgm.loopEnd then
+                    audio_stream_set_loop_points(bgm.stream, bgm.loopStart, bgm.loopEnd)
+                end
                 audio_stream_play(bgm.stream, true, bgm.volume)
                 print("Playing new audio " .. bgm.name)
             else
