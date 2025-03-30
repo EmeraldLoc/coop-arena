@@ -86,6 +86,7 @@ _G.Arena = {
             bgm = { audio = "string", loopStart = "number?", loopEnd = "number?", volume = "number?", name = "string" },
             -- lighting = {  }
         }
+
         for field, data in pairs(data) do
             local check = validData[field]
             if check then -- field is valid
@@ -93,7 +94,7 @@ _G.Arena = {
                 if t == "string" then -- simple type check
                     if type(data) == check then
                         level[field] = data
-                    else log_to_console("Invalid data for "..field, CONSOLE_MESSAGE_ERROR) end
+                    else log_to_console("Invalid data for " .. field, CONSOLE_MESSAGE_ERROR) end
                 elseif t == "function" then -- run custom check
                     if check(data, level) then
                         level[field] = table.copy(data)
@@ -105,12 +106,12 @@ _G.Arena = {
                         local t = type(data[vkey])
                         local opt = vtype:sub(#vtype)
                         if opt == "?" then
-                            t = t.."?"
+                            t = t .. "?"
                         else opt = nil end
                         if not (t == vtype or (opt and t == "nil?")) then
                             if opt then table.insert(rejects, vkey)
                             else fail = 1 end
-                            log_to_console("Invalid data for "..field.."."..vkey..(opt and ", rejecting"), CONSOLE_MESSAGE_ERROR)
+                            log_to_console("Invalid data for " .. field .. "." .. vkey .. (opt and ", rejecting"), CONSOLE_MESSAGE_ERROR)
                         end
                     end
                     if fail then
@@ -122,7 +123,7 @@ _G.Arena = {
                         end
                     end
                 else log_to_console("Invalid check (???)", CONSOLE_MESSAGE_ERROR) end
-            else log_to_console("Invalid data: "..field, CONSOLE_MESSAGE_ERROR) end
+            else log_to_console("Invalid data: " .. field, CONSOLE_MESSAGE_ERROR) end
         end
     end,
     get_player_team = function (localIndex)

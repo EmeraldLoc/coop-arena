@@ -1,6 +1,10 @@
 
 local autoSpectateTimer = 1 * 60 * 30 -- 1 minute
 
+function is_auto_spectating_approaching()
+    if autoSpectateTimer <= 5 * 30 then return autoSpectateTimer else return nil end
+end
+
 ---@param m MarioState
 local function mario_update(m)
     if m.playerIndex ~= 0 then return end

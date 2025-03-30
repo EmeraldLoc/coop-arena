@@ -206,6 +206,33 @@ function render_timer()
     djui_hud_print_text_shaded(txt, x + paddingX / 8, y, scale)
 end
 
+function render_auto_spectate_warning()
+    if not is_auto_spectating_approaching() then return end
+
+    local txt = "AFK player detected. Spectating in " .. math.ceil(is_auto_spectating_approaching() / 30)
+
+    -- get screen dimensions
+    local screenWidth  = djui_hud_get_screen_width()
+    local screenHeight = djui_hud_get_screen_height()
+
+    local scale = 0.75
+    local width = screenWidth
+    local height = screenHeight
+    local x = 0
+    local y = 0
+
+    local pulseSpeed = 0.4
+    local opacity = (math.sin(get_global_timer() * pulseSpeed) * 0.5 + 0.5) * 128
+
+    djui_hud_set_color(255, 0, 0, opacity)
+    djui_hud_render_rect(x, y, width, height)
+
+    x = screenWidth / 2 - (djui_hud_measure_text(txt) * scale) / 2
+    y = screenHeight / 2 - (32 * scale) / 2
+    djui_hud_set_color(255, opacity * 2, opacity * 2, 255)
+    djui_hud_print_text_shaded(txt, x + 0 * scale, y + 0 * scale, scale)
+end
+
 function render_hud_icon(obj, hudIcon)
     local pos = { x = obj.oPosX, y = obj.oPosY, z = obj.oPosZ }
     local out = { x = 0, y = 0, z = 0 }
@@ -247,6 +274,7 @@ local function on_hud_render()
     render_server_message()
     render_health()
     render_timer()
+    render_auto_spectate_warning()
 
     -- render hud icons
     if gGlobalSyncTable.gameMode == GAME_MODE_FT or gGlobalSyncTable.gameMode == GAME_MODE_TFT then
