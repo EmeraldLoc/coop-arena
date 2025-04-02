@@ -75,6 +75,7 @@ function (str)
     return s
 end
 
+-- TODO: Support 4 teams
 function get_other_team(teamNum)
     if teamNum == 1 then
         return 2
@@ -138,6 +139,13 @@ function table.copy(orig)
         copy = orig
     end
     return copy
+end
+
+function linear_interpolation(input, minRange, maxRange, minInput, maxInput)
+    local m = (maxRange - minRange) / (maxInput - minInput)
+    local b = minRange - m * minInput
+
+    return m * input + b
 end
 
 ---@param x number|integer

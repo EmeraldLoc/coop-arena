@@ -10,6 +10,59 @@ gHudIcons = {
     koth = { tex = TEX_KOTH, prevX = 0, prevY = 0, r = 255, g = 255, b = 255 },
 }
 
+local arenaHudTextures = {
+    [ITEM_CANNON_BOX] = {
+        get_texture_info("Arena64NewHUD_0000_Cannon-Box-(PC)"),
+        get_texture_info("Arena64NewHUD_0001_Cannon-Box")
+    },
+    health = {
+        get_texture_info("Arena64NewHUD_0002_Health")
+    },
+    [ITEM_HAMMER] = {
+        get_texture_info("Arena64NewHUD_0003_Hammer-(PC)"),
+        get_texture_info("Arena64NewHUD_0004_Hammer")
+    },
+    [ITEM_FIRE_FLOWER] = {
+        get_texture_info("Arena64NewHUD_0005_Flower-(PC)"),
+        get_texture_info("Arena64NewHUD_0006_Flower")
+    },
+    [ITEM_BOBOMB] = {
+        get_texture_info("Arena64NewHUD_0007_Bobomb-(PC)"),
+        get_texture_info("Arena64NewHUD_0008_Bobomb")
+    },
+    [ITEM_NONE] = {
+        get_texture_info("Arena64NewHUD_0009_Main-Hands-(PC)"),
+    },
+    solo_timer = {
+        get_texture_info("Arena64NewHUD_0010_Solo-Timer-HUD"),
+    },
+    three_team_hud = {
+        get_texture_info("Arena64NewHUD_0011_3-TEAM-HUD")
+    },
+    four_team_hud = {
+        get_texture_info("Arena64NewHUD_0012_4-TEAM-HUD")
+    },
+    team_hud = {
+        get_texture_info("Arena64NewHUD_0013_Team-HUD")
+    },
+    two_team_colors = {
+        get_texture_info("Arena64NewHUD_0014_2_Team-Colors")
+    },
+    three_team_colors = {
+        get_texture_info("Arena64NewHUD_0015_3_Team-Colors")
+    },
+    four_team_colors = {
+        get_texture_info("Arena64NewHUD_0016_4_Team-Colors")
+    },
+}
+
+local function render_arena_hud_texture(hudTex, x, y, scale)
+    for i = 1, #hudTex do
+        local tex = hudTex[i]
+        djui_hud_render_texture(tex, x, y, scale, scale)
+    end
+end
+
 function rank_str(rank)
     return rank .. (((rank // 10) % 10 ~= 1) and ({"st", "nd", "rd"})[rank % 10] or "th")
 end
@@ -63,37 +116,28 @@ function render_game_mode()
 end
 
 function render_single_team_score(team)
-    local txt = string.format("%d", calculate_team_score(team))
+    -- TODO: Finish this
+    local txt = tostring(calculate_team_score(team))
 
     local screenWidth = djui_hud_get_screen_width()
     local screenHeight = djui_hud_get_screen_height()
-    local scale = 0.25
-    local width = 64 * scale
+    local scale = 0.18
     local textWidth = djui_hud_measure_text(txt) * scale
-    local height = 32 * scale
-    local x = (screenWidth - width) / 2
-    local y = screenHeight - height - 21
-    local distance = 56
+    local x = screenWidth / 2
+    local y = screenHeight - 37
 
     if team == 1 then
-        x = x - distance
-        djui_hud_set_color(128, 0, 0, 128)
+        x = x - 20
     elseif team == 2 then
-        x = x + distance
-        djui_hud_set_color(0, 0, 128, 128)
+        x = x + 20
     elseif team == 3 then
-        x = x - distance + width + 2
-        djui_hud_set_color(0, 128, 0, 128)
+        --x = x - distance + width + 2
     elseif team == 4 then
-        x = x + distance - width - 2
-        djui_hud_set_color(128, 128, 0, 128)
+        --x = x + distance - width - 2
     end
 
-    djui_hud_render_rect(x, y, width, height)
-
-    x = x + (width - textWidth) / 2
     djui_hud_set_color(255, 255, 255, 255)
-    djui_hud_print_text_shaded(txt, x + 0 * scale, y + 0 * scale, scale)
+    djui_hud_print_text_shaded(txt, x, y, scale)
 end
 
 function render_team_score()
@@ -152,33 +196,68 @@ function render_server_message()
     djui_hud_print_text_shaded(txt, x + 0 * scale, y + 0 * scale, scale)
 end
 
-function render_health()
+function render_main_hud()
+    djui_hud_set_resolution(RESOLUTION_DJUI)
+    local m = gMarioStates[0]
+    local s = gPlayerSyncTable[0]
+
     -- get screen dimensions
     local screenWidth  = djui_hud_get_screen_width()
     local screenHeight = djui_hud_get_screen_height()
 
-    local scale = 1
-    local width = 128 * scale
-    local height = 16 * scale
-    local x = (screenWidth - width) / 2
-    local y = screenHeight - height - 4 * scale
+    local scale = 4
+    local x = screenWidth / 2 - 64 * scale
+    local y = screenHeight - 96 * scale
 
-    djui_hud_set_color(0, 0, 0, 128)
-    djui_hud_render_rect(x, y, width, height)
+    local health = arenaHudTextures.health
+    local powerHud = arenaHudTextures[s.item]
 
-    x = x + 2 * scale
-    y = y + 2 * scale
-    width = width - 4 * scale
-    height = height - 4 * scale
-    health = mario_health_float(gMarioStates[0])
-    if health > 0 and health < 0.02 then
-        health = 0.02
+    djui_hud_set_color(255, 255, 255, 255)
+    render_arena_hud_texture(health, x, y, scale)
+
+    if gGameModes[gGlobalSyncTable.gameMode].time > 0 then
+        local timer = arenaHudTextures.solo_timer
+        render_arena_hud_texture(timer, x, y, scale)
     end
-    width = width * health
-    rscale = clamp(((1 - health) ^ 2) * 3, 0, 1)
-    gscale = clamp((health ^ 2) * 2, 0, 1)
-    djui_hud_set_color(255 * rscale, 255 * gscale, 0, 128)
-    djui_hud_render_rect(x, y, width, height)
+
+    if gGameModes[gGlobalSyncTable.gameMode].teams then
+        local teamHud = arenaHudTextures.team_hud
+        render_arena_hud_texture(teamHud, x, y, scale)
+
+        if gGameLevels[get_current_level_key()].maxTeams == 3 then
+            teamHud = arenaHudTextures.three_team_hud
+            render_arena_hud_texture(teamHud, x, y, scale)
+        elseif gGameLevels[get_current_level_key()].maxTeams == 4 then
+            teamHud = arenaHudTextures.four_team_hud
+            render_arena_hud_texture(teamHud, x, y, scale)
+        end
+        local teamColors = arenaHudTextures.two_team_colors
+        if gGameLevels[get_current_level_key()].maxTeams == 3 then
+            teamColors = arenaHudTextures.three_team_colors
+        elseif gGameLevels[get_current_level_key()].maxTeams == 4 then
+            teamColors = arenaHudTextures.four_team_colors
+        end
+        -- .....uh ignore this, definitely didn't mess up the colors, and I 100% wasn't lazy at all, nope, def not
+        djui_hud_set_color(200, 200, 200, 255)
+        render_arena_hud_texture(teamColors, x, y, scale)
+        djui_hud_set_color(255, 255, 255, 255)
+    end
+
+    if m.health <= 0x880 then
+        local width = clampf(52 * scale - linear_interpolation(m.health, 0, 52 * scale, 0xFF, 0x880), 0, 52 * scale)
+        local height = 5 * scale
+
+        local x = screenWidth / 2 + 26 * scale - width
+        local y = screenHeight - 30 * 4
+
+        djui_hud_set_color(96, 96, 96, 255)
+        djui_hud_render_rect(x, y, width, height)
+        djui_hud_set_color(255, 255, 255, 255)
+    end
+
+    render_arena_hud_texture(powerHud, x, y, scale)
+
+    djui_hud_set_resolution(RESOLUTION_N64)
 end
 
 function render_timer()
@@ -192,15 +271,12 @@ function render_timer()
 
     local screenWidth = djui_hud_get_screen_width()
     local screenHeight = djui_hud_get_screen_height()
-    local scale = 0.25
+    local scale = 0.23
     local paddingX = 64 * scale
     local width = (djui_hud_measure_text(txt) + paddingX) * scale
     local height = 32 * scale
     local x = (screenWidth - width) / 2
-    local y = screenHeight - height - 21
-
-    djui_hud_set_color(0, 0, 0, 128)
-    djui_hud_render_rect(x, y, width, height)
+    local y = screenHeight - height - 31
 
     djui_hud_set_color(255, 255, 255, 255)
     djui_hud_print_text_shaded(txt, x + paddingX / 8, y, scale)
@@ -270,10 +346,10 @@ local function on_hud_render()
     update_ranking_descriptions()
     render_game_mode()
     render_local_rank()
-    render_team_score()
     render_server_message()
-    render_health()
+    render_main_hud()
     render_timer()
+    render_team_score()
     render_auto_spectate_warning()
 
     -- render hud icons
