@@ -129,11 +129,13 @@ function render_single_team_score(team)
     if team == 1 then
         x = x - 20
     elseif team == 2 then
-        x = x + 20
+        x = x + 20 - textWidth
     elseif team == 3 then
-        --x = x - distance + width + 2
+        x = x - 20
+        y = y + 13
     elseif team == 4 then
-        --x = x + distance - width - 2
+        x = x + 20 - textWidth
+        y = y + 13
     end
 
     djui_hud_set_color(255, 255, 255, 255)
@@ -231,12 +233,14 @@ function render_main_hud()
             teamHud = arenaHudTextures.four_team_hud
             render_arena_hud_texture(teamHud, x, y, scale)
         end
+
         local teamColors = arenaHudTextures.two_team_colors
         if gGameLevels[get_current_level_key()].maxTeams == 3 then
             teamColors = arenaHudTextures.three_team_colors
         elseif gGameLevels[get_current_level_key()].maxTeams == 4 then
             teamColors = arenaHudTextures.four_team_colors
         end
+
         -- .....uh ignore this, definitely didn't mess up the colors, and I 100% wasn't lazy at all, nope, def not
         djui_hud_set_color(200, 200, 200, 255)
         render_arena_hud_texture(teamColors, x, y, scale)
