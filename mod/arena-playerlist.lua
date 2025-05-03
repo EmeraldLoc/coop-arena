@@ -2,38 +2,60 @@
 local function render_playerlist()
     local screenWidth = djui_hud_get_screen_width()
     local screenHeight = djui_hud_get_screen_height()
-    local width = 750
-    local height = 725
-    local x = (screenWidth - width) / 2
-    local y = (screenHeight - height) / 2
-
-    djui_hud_set_color(0, 0, 0, 200)
-    djui_hud_render_rect(x, y, width, height)
-
     local title = gGameModes[gGlobalSyncTable.gameMode].name
+    local width = 750
+    local height = 800
+    local lipWidth = math.max(width / 2 + 100, djui_hud_measure_text(title) * 2 + 50)
+    local lipHeight = 50
+
+    local x = (screenWidth - lipWidth) / 2
+    local y = (screenHeight - height) / 2 - lipHeight / 2
+
+    djui_hud_set_color(27, 27, 27, 200)
+    djui_hud_render_rect(x, y - 5, lipWidth, lipHeight)
+
+    -- render outline manually to remove botton
+    local thickness = 5
+    djui_hud_set_color(20, 20, 20, 200)
+    djui_hud_render_rect(x - thickness, y - thickness * 2, lipWidth + thickness * 2, thickness)
+    djui_hud_render_rect(x - thickness, y - thickness, thickness, lipHeight)
+    djui_hud_render_rect(x + lipWidth, y - thickness, thickness, lipHeight)
+
+    x = (screenWidth - width) / 2
+    y = (screenHeight - height + lipHeight) / 2
+
+    djui_hud_set_color(27, 27, 27, 200)
+    djui_hud_render_rect_outlined(x, y, width, height, 20, 20, 20, 200, 5)
 
     x = screenWidth / 2 - djui_hud_measure_text(title)
 
     djui_hud_set_color(255, 255, 255, 255)
-    djui_hud_print_text(title, x, y, 2)
+    djui_hud_print_text(title, x, y - lipHeight - 15, 2)
 
     x = (screenWidth - width) / 2 + 5
-    y = y + 75
 
     for i = 0, MAX_PLAYERS - 1 do
-        if gNetworkPlayers[i].connected then
+        if gNetworkPlayers[i].connected or true then
             local np = gNetworkPlayers[i]
             local s = gPlayerSyncTable[i]
             local rank = rank_str(s.rank)
             local playerTextColor = hex_to_rgb(network_get_player_text_color_string(i))
             local playerListWidth = width - 10
-            local playerListHeight = 32
+            local playerListHeight = 38
             local originalX = x
+            local originalY = y
             local cells = 4
             local curCell = 1
             local cellWidth = playerListWidth / (cells + 1)
+
+            s.rank = i + 1
+
+            y = y + 5
+
             djui_hud_set_color(20, 20, 20, 255)
-            djui_hud_render_rect(x, y, playerListWidth, playerListHeight)
+            djui_hud_render_rect_outlined(x, y, playerListWidth, playerListHeight, 255, rank_color_g(s.rank), 0, 255, 2)
+
+            y = y + 3
 
             djui_hud_set_color(255, 255, 255, 255)
             if charSelect then
@@ -82,13 +104,13 @@ local function render_playerlist()
             ::continue::
 
             x = originalX
-            y = y + playerListHeight + 7
+            y = originalY + playerListHeight + 12
         end
     end
 end
 
 local function render_modlist()
-
+    -- TODO: Implement modlist to playerlist
 end
 
 local function on_hud_render()

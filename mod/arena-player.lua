@@ -46,12 +46,12 @@ local sKnockbackActions = {
 -- hammer --
 ------------
 
-function mario_hammer_is_attack(action)
-    if action == ACT_PUNCHING      then return true end
-    if action == ACT_MOVE_PUNCHING then return true end
-    if action == ACT_JUMP_KICK     then return true end
-    if action == ACT_DIVE          then return true end
-    if action == ACT_GROUND_POUND  then return true end
+function mario_hammer_is_attack(m)
+    if m.action == ACT_PUNCHING      then return true end
+    if m.action == ACT_MOVE_PUNCHING then return true end
+    if m.action == ACT_JUMP_KICK     then return true end
+    if m.action == ACT_DIVE          then return true end
+    if m.action == ACT_GROUND_POUND  then return true end
     return false
 end
 
@@ -124,7 +124,7 @@ function mario_local_hammer_check(m)
         local sattacker  = gPlayerSyncTable[i]
         local cmvictim = lag_compensation_get_local_state(npattacker)
 
-        if sattacker.item == ITEM_HAMMER and mario_hammer_is_attack(mattacker.action) and passes_pvp_interaction_checks(mattacker, cmvictim) ~= 0 and passes_pvp_interaction_checks(mattacker, m) ~= 0 and global_index_hurts_mario_state(npattacker.globalIndex, m) then
+        if sattacker.item == ITEM_HAMMER and mario_hammer_is_attack(mattacker) and passes_pvp_interaction_checks(mattacker, cmvictim) ~= 0 and passes_pvp_interaction_checks(mattacker, m) ~= 0 and global_index_hurts_mario_state(npattacker.globalIndex, m) then
             local pos = mario_hammer_position(mattacker)
             local dist = vec3f_dist(pos, cmvictim.pos)
             if dist <= 200 then
@@ -290,7 +290,7 @@ function allow_pvp_attack(attacker, victim)
     if sAttacker.team == TEAM_SPECTATOR or sVictim.team == TEAM_SPECTATOR then return false end
 
     -- hammer attacks are custom
-    if sAttacker.item == ITEM_HAMMER and mario_hammer_is_attack(attacker.action) then
+    if sAttacker.item == ITEM_HAMMER and mario_hammer_is_attack(attacker) then
         return false
     end
 

@@ -263,10 +263,9 @@ function crouch_leniency(m)
             if (m.action & ACT_FLAG_STATIONARY) ~= 0 then
                 if (m.controller.buttonPressed & A_BUTTON) ~= 0 then
                     set_jumping_action(m, ACT_BACKFLIP, 0)
-                else
+                elseif m.action == ACT_CROUCHING then
                     set_mario_action(m, ACT_PUNCHING, 9)
                 end
-
             --Moving actions
             elseif m.forwardVel > 10.0 then
                 if (m.controller.buttonPressed & A_BUTTON) ~= 0 then

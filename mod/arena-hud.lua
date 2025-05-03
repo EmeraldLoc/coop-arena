@@ -3,7 +3,6 @@ gHudIcons = {
         [0] = { tex = TEX_FLAG, prevX = 0, prevY = 0, r = 255, g = 255, b = 255 },
         [TEAM_RED] = { tex = TEX_FLAG, prevX = 0, prevY = 0, r = 255, g = 120, b = 120 },
         [TEAM_BLUE] = { tex = TEX_FLAG, prevX = 0, prevY = 0, r = 120, g = 120, b = 255 },
-        -- TODO: Maybe update team colors here
         [TEAM_GREEN] = { tex = TEX_FLAG, prevX = 0, prevY = 0, r = 120, g = 255, b = 120 },
         [TEAM_YELLOW] = { tex = TEX_FLAG, prevX = 0, prevY = 0, r = 255, g = 255, b = 0 },
     },
@@ -116,7 +115,6 @@ function render_game_mode()
 end
 
 function render_single_team_score(team)
-    -- TODO: Finish this
     local txt = tostring(calculate_team_score(team))
 
     local screenWidth = djui_hud_get_screen_width()
