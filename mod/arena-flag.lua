@@ -147,7 +147,7 @@ function bhv_arena_flag_collect(obj, m)
 
     if obj.oArenaFlagTeam > 0 and s.team == obj.oArenaFlagTeam then
         if obj.oArenaFlagAtBase == 1 then
-            local otherTeam = (obj.oArenaFlagTeam)
+            local otherTeam = gPlayerSyncTable[data.obj.oArenaFlagHeldByGlobal].team
             local otherData = gArenaFlagInfo[otherTeam]
             local otherFlag = otherData.obj
             if otherFlag.oArenaFlagHeldByGlobal == np.globalIndex then
