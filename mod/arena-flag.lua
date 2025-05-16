@@ -121,8 +121,8 @@ function bhv_arena_flag_return(obj, showMessage)
     if obj.oArenaFlagAtBase == 1 then
         return
     end
-    local otherTeam = get_other_team(obj.oArenaFlagTeam)
     local data = gArenaFlagInfo[obj.oArenaFlagTeam]
+    local otherTeam = gPlayerSyncTable[data.obj.oArenaFlagHeldByGlobal].team
 
     obj.oArenaFlagHeldByGlobal = ARENA_FLAG_INVALID_GLOBAL
     obj.oArenaFlagAtBase = 1
@@ -147,7 +147,7 @@ function bhv_arena_flag_collect(obj, m)
 
     if obj.oArenaFlagTeam > 0 and s.team == obj.oArenaFlagTeam then
         if obj.oArenaFlagAtBase == 1 then
-            local otherTeam = get_other_team(obj.oArenaFlagTeam)
+            local otherTeam = (obj.oArenaFlagTeam)
             local otherData = gArenaFlagInfo[otherTeam]
             local otherFlag = otherData.obj
             if otherFlag.oArenaFlagHeldByGlobal == np.globalIndex then
@@ -292,7 +292,7 @@ function bhv_arena_flag_check_return(obj)
 end
 
 function bhv_arena_flag_reset()
-    for teamNum = 0, 2 do
+    for teamNum = 0, gGameLevels[get_current_level_key()].maxTeams do
         local data = gArenaFlagInfo[teamNum]
         if data ~= nil and data.obj ~= nil then
             bhv_arena_flag_return(data.obj, false)

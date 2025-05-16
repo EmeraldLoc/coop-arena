@@ -75,17 +75,6 @@ function (str)
     return s
 end
 
--- TODO: Support 4 teams
-function get_other_team(teamNum)
-    if teamNum == 1 then
-        return 2
-    elseif teamNum == 2 then
-        return 1
-    else
-        return 0
-    end
-end
-
 function team_color_str(teamNum)
     if teamNum == 1 then
         return '\\#ff9999\\'
