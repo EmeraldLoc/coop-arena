@@ -141,9 +141,7 @@ function render_single_team_score(team)
 end
 
 function render_team_score()
-    if not gGameModes[gGlobalSyncTable.gameMode].teams then
-        return
-    end
+    if not gGameModes[gGlobalSyncTable.gameMode].teams then return end
 
     for i = 1, gGameLevels[get_current_level_key()].maxTeams do
         render_single_team_score(i)
@@ -153,9 +151,7 @@ end
 function render_local_rank()
     local s  = gPlayerSyncTable[0]
 
-    if s.rank <= 0 then
-        return
-    end
+    if s.rank <= 0 then return end
 
     local rankTxt = ""
     if gGameModes[gGlobalSyncTable.gameMode].useScore then
