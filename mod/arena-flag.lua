@@ -2,7 +2,7 @@ ARENA_FLAG_INVALID_GLOBAL = 0xFF
 ---
 
 gArenaFlagInfo = {}
-sFlagScoreTimer = 0
+local sFlagScoreTimer = 0
 
 define_custom_obj_fields({
     oArenaFlagTeam = 'u32',
@@ -25,16 +25,16 @@ function bhv_arena_flag_init(obj)
         obj = obj,
     }
 
-    if team == 0 then
-        obj_set_model_extended(obj, E_MODEL_FLAG_WHITE)
-    elseif team == TEAM_RED then
-        obj_set_model_extended(obj, E_MODEL_FLAG_RED)
-    elseif team == TEAM_BLUE then
-        obj_set_model_extended(obj, E_MODEL_FLAG_BLUE)
-    elseif team == TEAM_GREEN then
-        obj_set_model_extended(obj, E_MODEL_FLAG_GREEN)
-    elseif team == TEAM_YELLOW then
-        obj_set_model_extended(obj, E_MODEL_FLAG_YELLOW)
+    local sFlagModels = {
+    [0]=E_MODEL_FLAG_WHITE,
+        E_MODEL_FLAG_RED,
+        E_MODEL_FLAG_BLUE,
+        E_MODEL_FLAG_GREEN,
+        E_MODEL_FLAG_YELLOW,
+    }
+
+    if sFlagModels[team] then
+        obj_set_model_extended(obj, sFlagModels[team])
     else
         obj_mark_for_deletion(obj)
     end
