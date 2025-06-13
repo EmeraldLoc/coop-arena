@@ -23,8 +23,8 @@
 
 const LevelScript level_arena_citadel_entry[] = {
 	INIT_LEVEL(),
-	LOAD_MIO0(0x7, _arena_citadel_segment_7SegmentRomStart, _arena_citadel_segment_7SegmentRomEnd), 
-	LOAD_MIO0(0xa, _bbh_skybox_mio0SegmentRomStart, _bbh_skybox_mio0SegmentRomEnd), 
+	LOAD_MIO0(0x7, _arena_citadel_segment_7SegmentRomStart, _arena_citadel_segment_7SegmentRomEnd),
+	LOAD_MIO0(0xa, _bbh_skybox_mio0SegmentRomStart, _bbh_skybox_mio0SegmentRomEnd),
 	ALLOC_LEVEL_POOL(),
 	MARIO(MODEL_MARIO, 0x00000001, bhvMario),
 
