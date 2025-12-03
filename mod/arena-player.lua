@@ -544,6 +544,7 @@ function player_reset_sync_table(m)
     s.rank     = 0
     s.team     = pick_team_on_join(m)
     s.vote     = 0
+    s.rtv      = false
 end
 
 function player_respawn(m)

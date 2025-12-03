@@ -169,6 +169,21 @@ function djui_hud_print_text_shaded(text, x, y, scale)
     djui_hud_print_text(text, x, y, scale)
 end
 
+---@param text string
+---@param prevX number
+---@param prevY number
+---@param prevScale number
+---@param x number
+---@param y number
+---@param scale number
+function djui_hud_print_text_shaded_interpolated(text, prevX, prevY, prevScale, x, y, scale)
+    local color = djui_hud_get_color()
+    djui_hud_set_color(0, 0, 0, color.a)
+    djui_hud_print_text_interpolated(text, prevX + 2 * prevScale, prevY + 2 * prevScale, prevScale, x + 2 * scale, y + 2 * scale, scale)
+    djui_hud_set_color(color.r, color.g, color.b, color.a)
+    djui_hud_print_text_interpolated(text, prevX, prevY, prevScale, x, y, scale)
+end
+
 function hex_to_rgb(hex)
 	-- remove the # and the \\ from the hex so that we can convert it properly
 	hex = hex:gsub('#','')

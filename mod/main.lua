@@ -328,6 +328,7 @@ function round_begin()
     gGlobalSyncTable.capTeams[TEAM_YELLOW] = 0
     gGlobalSyncTable.kothPoint = -1
     bhv_arena_flag_reset()
+    reset_rtv_votes()
 
     local roundShuffle = false
     sRoundCount = sRoundCount + 1
@@ -572,18 +573,20 @@ end
 function on_server_update()
     if gGlobalSyncTable.gameState == GAME_STATE_ACTIVE then
         calculate_rankings()
-        if gGameModes[gGlobalSyncTable.gameMode].teams then
-            end_round_if_team_empty()
-        end
+        if gGameModes[gGlobalSyncTable.gameMode].teams then end_round_if_team_empty() end
         if sUsingTimer then
             gGlobalSyncTable.timer = gGlobalSyncTable.timer - 1 / 30
             if gGlobalSyncTable.timer <= 0 then
                 round_end()
             end
         end
+        if get_total_rtv_count() == get_required_rtv_count() then
+            round_end()
+        end
     elseif gGlobalSyncTable.gameState == GAME_STATE_INACTIVE then
         sWaitTimer = sWaitTimer - 1
         if sWaitTimer <= 0 then
+            reset_rtv_votes()
             sWaitTimer = 0
             if sWillEnterVoting then start_voting(); sWillEnterVoting = true else round_begin() end
         end
