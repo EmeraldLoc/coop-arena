@@ -55,10 +55,20 @@ local arenaHudTextures = {
     },
 }
 
+local movePlayerlistAnimation = 0
+local prevMovePlayerlistAnimation = 0
+local movePlayerlistAnimationDuration = 0.1 * 30
+local prevTextureHudInfo = {}
+
 local function render_arena_hud_texture(hudTex, x, y, scale)
     for i = 1, #hudTex do
         local tex = hudTex[i]
-        djui_hud_render_texture(tex, x, y, scale, scale)
+        if not prevTextureHudInfo[tex] then
+            prevTextureHudInfo[tex] = { tex = tex, x = x, y = y, scale = scale }
+        end
+        local prevTexInfo = prevTextureHudInfo[tex]
+        djui_hud_render_texture_interpolated(tex, prevTexInfo.x, prevTexInfo.y, prevTexInfo.scale, prevTexInfo.scale, x, y, scale, scale)
+        prevTextureHudInfo[tex] = { tex = tex, x = x, y = y, scale = scale }
     end
 end
 
@@ -121,8 +131,10 @@ function render_single_team_score(team)
     local screenHeight = djui_hud_get_screen_height()
     local scale = 0.18
     local textWidth = djui_hud_measure_text(txt) * scale
+    local height = 32 * scale
     local x = screenWidth / 2
-    local y = screenHeight - 37
+    local y = linear_interpolation(movePlayerlistAnimation, screenHeight - height - 31, screenHeight - height - 15, 0, movePlayerlistAnimationDuration)
+    local prevY = linear_interpolation(prevMovePlayerlistAnimation, screenHeight - height - 31, screenHeight - height - 15, 0, movePlayerlistAnimationDuration)
 
     if team == 1 then
         x = x - 20
@@ -131,13 +143,15 @@ function render_single_team_score(team)
     elseif team == 3 then
         x = x - 20
         y = y + 13
+        prevY = prevY + 13
     elseif team == 4 then
         x = x + 20 - textWidth
         y = y + 13
+        prevY = prevY + 13
     end
 
     djui_hud_set_color(255, 255, 255, 255)
-    djui_hud_print_text_shaded(txt, x, y, scale)
+    djui_hud_print_text_shaded_interpolated(txt, x, prevY, scale, x, y, scale)
 end
 
 function render_team_score()
@@ -193,6 +207,8 @@ function render_server_message()
 end
 
 function render_main_hud()
+    prevMovePlayerlistAnimation = movePlayerlistAnimation
+    movePlayerlistAnimation = clamp(movePlayerlistAnimation + (djui_attempting_to_open_playerlist() and 1 or -1), 0, movePlayerlistAnimationDuration)
     djui_hud_set_resolution(RESOLUTION_DJUI)
     local m = gMarioStates[0]
     local s = gPlayerSyncTable[0]
@@ -203,7 +219,7 @@ function render_main_hud()
 
     local scale = 4
     local x = screenWidth / 2 - 64 * scale
-    local y = screenHeight - 96 * scale
+    local y = linear_interpolation(movePlayerlistAnimation, screenHeight - 96 * scale, screenHeight - 80 * scale, 0, movePlayerlistAnimationDuration)
 
     local health = arenaHudTextures.health
     local powerHud = arenaHudTextures[s.item]
@@ -246,10 +262,11 @@ function render_main_hud()
         local height = 5 * scale
 
         local x = screenWidth / 2 + 26 * scale - width
-        local y = screenHeight - 30 * 4
+        local y = linear_interpolation(movePlayerlistAnimation, screenHeight - 30 * 4, screenHeight - 14 * 4, 0, movePlayerlistAnimationDuration)
+        local prevY = linear_interpolation(prevMovePlayerlistAnimation, screenHeight - 30 * 4, screenHeight - 14 * 4, 0, movePlayerlistAnimationDuration)
 
         djui_hud_set_color(96, 96, 96, 255)
-        djui_hud_render_rect(x, y, width, height)
+        djui_hud_render_rect_interpolated(x, prevY, width, height, x, y, width, height)
         djui_hud_set_color(255, 255, 255, 255)
     end
 
@@ -274,10 +291,11 @@ function render_timer()
     local width = (djui_hud_measure_text(txt) + paddingX) * scale
     local height = 32 * scale
     local x = (screenWidth - width) / 2
-    local y = screenHeight - height - 31
+    local y = linear_interpolation(movePlayerlistAnimation, screenHeight - height - 31, screenHeight - height - 15, 0, movePlayerlistAnimationDuration)
+    local prevY = linear_interpolation(prevMovePlayerlistAnimation, screenHeight - height - 31, screenHeight - height - 15, 0, movePlayerlistAnimationDuration)
 
     djui_hud_set_color(255, 255, 255, 255)
-    djui_hud_print_text_shaded(txt, x + paddingX / 8, y, scale)
+    djui_hud_print_text_shaded_interpolated(txt, x + paddingX / 8, prevY, scale, x + paddingX / 8, y, scale)
 end
 
 function render_auto_spectate_warning()

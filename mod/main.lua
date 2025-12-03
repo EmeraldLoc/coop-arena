@@ -171,8 +171,7 @@ sRandomizeMode = true
 -- force pvp and knockback, disable player list
 gServerSettings.playerInteractions = PLAYER_INTERACTIONS_PVP
 gServerSettings.playerKnockbackStrength = 20
--- TODO: Redo the playerlist because it is SO UGLY HOLY
---gServerSettings.enablePlayerList = false
+gServerSettings.enablePlayerList = false
 
 -- use fixed collisions
 gLevelValues.fixCollisionBugs = 1
