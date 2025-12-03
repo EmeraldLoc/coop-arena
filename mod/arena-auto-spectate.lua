@@ -2,13 +2,13 @@
 local autoSpectateTimer = 1 * 60 * 30 -- 1 minute
 
 function is_auto_spectating_approaching()
-    if autoSpectateTimer <= 5 * 30 then return autoSpectateTimer else return nil end
+    if autoSpectateTimer <= 5 * 30 and gPlayerSyncTable[0].team ~= TEAM_SPECTATOR then return autoSpectateTimer else return nil end
 end
 
 ---@param m MarioState
 local function mario_update(m)
     if m.playerIndex ~= 0 then return end
-    if network_player_connected_count() == 1 then return end
+    --if network_player_connected_count() == 1 then return end
 
     autoSpectateTimer = clamp(autoSpectateTimer - 1, 0, autoSpectateTimer)
 

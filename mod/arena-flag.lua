@@ -3,6 +3,11 @@ ARENA_FLAG_INVALID_GLOBAL = 0xFF
 
 gArenaFlagInfo = {}
 local sFlagScoreTimer = 0
+-- initialize sFlagCollectCooldown
+local sFlagCollectCooldown = {}
+for i = 0, MAX_PLAYERS - 1 do
+    sFlagCollectCooldown[i] = 0
+end
 
 define_custom_obj_fields({
     oArenaFlagTeam = 'u32',
@@ -210,7 +215,8 @@ function bhv_arena_flag_check_collect(obj)
         local player = m.marioObj
         local yDist = math.abs(obj.oPosY - player.oPosY)
         local xzDist = math.sqrt((obj.oPosX - player.oPosX) ^ 2 + (obj.oPosZ - player.oPosZ) ^ 2)
-        if active_player(m) and mario_health_float(m) > 0 and xzDist < 160 and yDist < 250 then
+        sFlagCollectCooldown[i] = sFlagCollectCooldown[i] - 1
+        if active_player(m) and mario_health_float(m) > 0 and xzDist < 160 and yDist < 250 and sFlagCollectCooldown[i] <= 0 then
             if bhv_arena_flag_collect(obj, m) then
                 return
             end
@@ -249,7 +255,10 @@ function bhv_arena_flag_check_drop(obj)
         return
     end
 
-    if mario_health_float(m) <= 0 then
+    if mario_health_float(m) <= 0 or m.controller.buttonPressed & X_BUTTON ~= 0 then
+        if m.controller.buttonPressed & X_BUTTON ~= 0 then
+            sFlagCollectCooldown[np.globalIndex] = 1 * 30
+        end
         obj.oArenaFlagHeldByGlobal = ARENA_FLAG_INVALID_GLOBAL
         obj.oArenaFlagAtBase = 0
         obj.oTimer = 0
