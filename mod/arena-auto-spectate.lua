@@ -8,7 +8,7 @@ end
 ---@param m MarioState
 local function mario_update(m)
     if m.playerIndex ~= 0 then return end
-    --if network_player_connected_count() == 1 then return end
+    if network_player_connected_count() == 1 then return end
 
     autoSpectateTimer = clamp(autoSpectateTimer - 1, 0, autoSpectateTimer)
 
