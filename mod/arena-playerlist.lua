@@ -127,5 +127,6 @@ local function on_mods_loaded()
     if _G.gServerSettingsCS then _G.gServerSettingsCS.enablePlayerList = false end
 end
 
-hook_event(HOOK_ON_HUD_RENDER, on_hud_render)
-hook_event(HOOK_ON_MODS_LOADED, on_mods_loaded)
+-- TODO: Redo the playerlist because it is SO UGLY HOLY
+--hook_event(HOOK_ON_HUD_RENDER, on_hud_render)
+--hook_event(HOOK_ON_MODS_LOADED, on_mods_loaded)

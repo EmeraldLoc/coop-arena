@@ -570,7 +570,7 @@ function player_respawn(m)
     -- reset the rest of the variables
     m.capTimer = 0
     m.health = 0x880
-    soft_reset_camera(m.area.camera)
+    if m.area then soft_reset_camera(m.area.camera) end
     s.ammo = 0
     s.item = ITEM_NONE
     e.lastDamagedByGlobal = np.globalIndex

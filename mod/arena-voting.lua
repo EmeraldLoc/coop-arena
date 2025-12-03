@@ -1,4 +1,7 @@
 
+VOTE_ID_REDO = 1
+VOTE_ID_RANDOM = 5
+
 local TEXTURE_RANDOM_LEVEL = get_texture_info("random_level")
 local TEXTURE_REDO_LEVEL = get_texture_info("redo_level")
 local TEXTURE_NO_IMAGE = get_texture_info("no_image")
@@ -105,14 +108,14 @@ function voting_hud()
 
     previewImage = TEXTURE_REDO_LEVEL
 
-    djui_hud_set_color(255, 220, 0, selection == 1 and 255 or 0)
+    djui_hud_set_color(255, 220, 0, selection == VOTE_ID_REDO and 255 or 0)
     djui_hud_render_rect(x - 4, y - 4, previewWidth + 8, previewHeight + 9)
-    djui_hud_set_color(255, s.vote == 1 and 200 or 255, s.vote == 1 and 0 or 255, 255)
+    djui_hud_set_color(255, s.vote == VOTE_ID_REDO and 200 or 255, s.vote == VOTE_ID_REDO and 0 or 255, 255)
     djui_hud_render_texture(previewImage, x, y, previewWidth / previewImage.width, previewWidth / previewImage.width)
 
-    local redoLevelText = "Redo Level (" .. get_amount_of_votes_for_level(1) .. ")"
+    local redoLevelText = "Redo Level (" .. get_amount_of_votes_for_level(VOTE_ID_REDO) .. ")"
 
-    djui_hud_set_color(255, s.vote == 1 and 220 or 255, s.vote == 1 and 0 or 255, 255)
+    djui_hud_set_color(255, s.vote == VOTE_ID_REDO and 220 or 255, s.vote == VOTE_ID_REDO and 0 or 255, 255)
     djui_hud_print_text_shaded(redoLevelText, x + previewWidth / 2 - djui_hud_measure_text(redoLevelText) / 2, y + previewHeight + 10, 1)
 
     for i = 1, 3 do
@@ -138,14 +141,14 @@ function voting_hud()
 
     previewImage = TEXTURE_RANDOM_LEVEL
 
-    djui_hud_set_color(255, 220, 0, selection == 5 and 255 or 0)
+    djui_hud_set_color(255, 220, 0, selection == VOTE_ID_RANDOM and 255 or 0)
     djui_hud_render_rect(x - 4, y - 4, previewWidth + 8, previewHeight + 9)
-    djui_hud_set_color(255, s.vote == 5 and 200 or 255, s.vote == 5 and 0 or 255, 255)
+    djui_hud_set_color(255, s.vote == VOTE_ID_RANDOM and 200 or 255, s.vote == VOTE_ID_RANDOM and 0 or 255, 255)
     djui_hud_render_texture(previewImage, x, y, previewWidth / previewImage.width, previewHeight / (previewImage.width / 16 * 9))
 
-    local randomLevelText = "Random (" .. get_amount_of_votes_for_level(5) .. ")"
+    local randomLevelText = "Random (" .. get_amount_of_votes_for_level(VOTE_ID_RANDOM) .. ")"
 
-    djui_hud_set_color(255, s.vote == 5 and 220 or 255, s.vote == 5 and 0 or 255, 255)
+    djui_hud_set_color(255, s.vote == VOTE_ID_RANDOM and 220 or 255, s.vote == VOTE_ID_RANDOM and 0 or 255, 255)
     djui_hud_print_text_shaded(randomLevelText, x + previewWidth / 2 - djui_hud_measure_text(randomLevelText) / 2, y + previewHeight + 10, 1)
 end
 

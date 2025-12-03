@@ -171,7 +171,8 @@ sRandomizeMode = true
 -- force pvp and knockback, disable player list
 gServerSettings.playerInteractions = PLAYER_INTERACTIONS_PVP
 gServerSettings.playerKnockbackStrength = 20
-gServerSettings.enablePlayerList = false
+-- TODO: Redo the playerlist because it is SO UGLY HOLY
+--gServerSettings.enablePlayerList = false
 
 -- use fixed collisions
 gLevelValues.fixCollisionBugs = 1
@@ -599,7 +600,7 @@ function on_server_update()
                 get_amount_of_votes_for_level(5)
             }
             local highestVoteCount = 1
-            local topVoteId = 0
+            local topVoteId = 1
             for i = 1, 5 do
                 if voteCounts[i] >= highestVoteCount then
                     highestVoteCount = voteCounts[i]
@@ -607,8 +608,7 @@ function on_server_update()
                 end
             end
 
-            if topVoteId == 0
-            or topVoteId == 5 then
+            if topVoteId == VOTE_ID_RANDOM then
                 local curLevelKey = get_current_level_key()
                 local prevLevelKey = get_current_level_key()
                 while curLevelKey == prevLevelKey do
@@ -620,7 +620,7 @@ function on_server_update()
                 end
                 gGlobalSyncTable.currentLevel = gGameLevels[curLevelKey].level
                 gGlobalSyncTable.gameMode = gamemode
-            elseif topVoteId >= 1 then
+            elseif topVoteId ~= VOTE_ID_REDO then
                 gGlobalSyncTable.currentLevel = gGameLevels[sVoteEntries[topVoteId - 1].level].level
                 gGlobalSyncTable.gameMode = sVoteEntries[topVoteId - 1].gamemode
             end
