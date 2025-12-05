@@ -79,6 +79,10 @@ function team_color_str(team)
     return "\\" .. rgb_to_hex(TEAM_COLORS[team]) .. "\\"
 end
 
+function team_text_color_str(team)
+    return "\\" .. rgb_to_hex(TEAM_TEXT_COLORS[team]) .. "\\"
+end
+
 function team_name_str(team)
     if team == TEAM_RED then
         return 'red'
@@ -105,6 +109,15 @@ function get_players_in_team(team)
         end
     end
     return players
+end
+
+---@return integer
+function get_amount_of_teams_in_match()
+    if gGameModes[gGlobalSyncTable.gameMode].teams then
+        return gGameLevels[get_current_level_key()].maxTeams
+    else
+        return 1
+    end
 end
 
 function seconds_to_minutes(seconds)

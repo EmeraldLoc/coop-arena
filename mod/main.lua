@@ -249,12 +249,18 @@ function pick_team_on_join(m)
         return 0
     end
 
-    -- count teams
+    -- initialize team count table
     local teamCount = {}
+    for i = 1, get_amount_of_teams_in_match() do
+        teamCount[i] = 0
+    end
+
+    -- count teams
     for i = 0, (MAX_PLAYERS - 1) do
         local inp = gNetworkPlayers[i]
         local is = gPlayerSyncTable[i]
         if inp.connected and i ~= m.playerIndex then
+            -- this should not be necessary anymore, but to avoid a script error, we will include it, may cause issues down the line???
             if teamCount[is.team] == nil then teamCount[is.team] = 0 end
             teamCount[is.team] = teamCount[is.team] + 1
         end
