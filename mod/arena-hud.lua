@@ -157,7 +157,7 @@ end
 function render_team_score()
     if not gGameModes[gGlobalSyncTable.gameMode].teams then return end
 
-    for i = 1, gGameLevels[get_current_level_key()].maxTeams do
+    for i = 1, get_amount_of_teams_in_match() do
         render_single_team_score(i)
     end
 end
@@ -236,22 +236,23 @@ function render_main_hud()
         local teamHud = arenaHudTextures.team_hud
         render_arena_hud_texture(teamHud, x, y, scale)
 
-        if gGameLevels[get_current_level_key()].maxTeams == 3 then
+        if get_amount_of_teams_in_match() == 3 then
             teamHud = arenaHudTextures.three_team_hud
             render_arena_hud_texture(teamHud, x, y, scale)
-        elseif gGameLevels[get_current_level_key()].maxTeams == 4 then
+        elseif get_amount_of_teams_in_match() == 4 then
             teamHud = arenaHudTextures.four_team_hud
             render_arena_hud_texture(teamHud, x, y, scale)
         end
 
         local teamColors = arenaHudTextures.two_team_colors
-        if gGameLevels[get_current_level_key()].maxTeams == 3 then
+        if get_amount_of_teams_in_match() == 3 then
             teamColors = arenaHudTextures.three_team_colors
-        elseif gGameLevels[get_current_level_key()].maxTeams == 4 then
+        elseif get_amount_of_teams_in_match() == 4 then
             teamColors = arenaHudTextures.four_team_colors
         end
 
         -- .....uh ignore this, definitely didn't mess up the colors, and I 100% wasn't lazy at all, nope, def not
+        -- update: the heck is this comment?
         djui_hud_set_color(200, 200, 200, 255)
         render_arena_hud_texture(teamColors, x, y, scale)
         djui_hud_set_color(255, 255, 255, 255)

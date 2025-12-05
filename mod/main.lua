@@ -203,11 +203,11 @@ function calculate_rankings()
 end
 
 function calculate_team_rank(teamNum)
-    if teamNum < 1 or teamNum > gGameLevels[get_current_level_key()].maxTeams then
+    if teamNum < 1 or teamNum > get_amount_of_teams_in_match() then
         return 0
     end
     local teamScores = {}
-    for team = 1, gGameLevels[get_current_level_key()].maxTeams do
+    for team = 1, get_amount_of_teams_in_match() do
         table.insert(teamScores, { team = team, score = calculate_team_score(team) })
     end
     table.sort(teamScores, function (a, b)
@@ -306,7 +306,7 @@ function shuffle_teams()
         if teamCount[nextTeamSelected] == nil then teamCount[nextTeamSelected] = 0 end
         teamCount[nextTeamSelected] = teamCount[nextTeamSelected] + 1
         nextTeamSelected = nextTeamSelected + 1
-        if nextTeamSelected > gGameLevels[get_current_level_key()].maxTeams then
+        if nextTeamSelected > get_amount_of_teams_in_match() then
             nextTeamSelected = 1
         end
     end

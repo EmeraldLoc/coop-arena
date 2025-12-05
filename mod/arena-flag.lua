@@ -311,7 +311,7 @@ function bhv_arena_flag_reset()
 end
 
 function bhv_arena_flag_hide(obj)
-    if gGlobalSyncTable.gameMode == GAME_MODE_CTF and (obj.oArenaFlagTeam >= 1 and obj.oArenaFlagTeam <= gGameLevels[get_current_level_key()].maxTeams) then
+    if gGlobalSyncTable.gameMode == GAME_MODE_CTF and (obj.oArenaFlagTeam >= 1 and obj.oArenaFlagTeam <= get_amount_of_teams_in_match()) then
         cur_obj_unhide()
         return false
     elseif (gGlobalSyncTable.gameMode == GAME_MODE_FT or gGlobalSyncTable.gameMode == GAME_MODE_TFT) and obj.oArenaFlagTeam == 0 then
