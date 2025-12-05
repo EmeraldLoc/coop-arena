@@ -70,7 +70,6 @@ local function on_hud_render()
     previousX = x
 end
 
--- rtv is "Rock the Vote"
 local function on_rock_the_vote_command(msg)
     gPlayerSyncTable[0].rtv = true
     return true

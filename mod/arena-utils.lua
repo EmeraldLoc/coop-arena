@@ -75,24 +75,36 @@ function (str)
     return s
 end
 
-function team_color_str(teamNum)
-    if teamNum == 1 then
-        return '\\#ff9999\\'
-    elseif teamNum == 2 then
-        return '\\#9999ff\\'
-    else
-        return '\\#ffffff\\'
-    end
+function team_color_str(team)
+    return "\\" .. rgb_to_hex(TEAM_COLORS[team]) .. "\\"
 end
 
-function team_name_str(teamNum)
-    if teamNum == 1 then
+function team_name_str(team)
+    if team == TEAM_RED then
         return 'red'
-    elseif teamNum == 2 then
+    elseif team == TEAM_BLUE then
         return 'blue'
+    elseif team == TEAM_GREEN then
+        return 'green'
+    elseif team == TEAM_YELLOW then
+        return 'yellow'
     else
         return 'white'
     end
+end
+
+---@param team integer
+---@return table
+function get_players_in_team(team)
+    local players = {}
+    for i = 0, MAX_PLAYERS - 1 do
+        if gNetworkPlayers[i].connected then
+            if gPlayerSyncTable[i].team == team then
+                table.insert(players, i)
+            end
+        end
+    end
+    return players
 end
 
 function seconds_to_minutes(seconds)
@@ -193,7 +205,11 @@ function hex_to_rgb(hex)
 end
 
 function rgb_to_hex(r, g, b)
-	return string.format("#%02X%02X%02X", r, g, b)
+    if type(r) == "table" then
+        return string.format("#%02X%02X%02X", r.r, r.g, r.b)
+    else
+        return string.format("#%02X%02X%02X", r, g, b)
+    end
 end
 
 function cap_text(text, maxLength)

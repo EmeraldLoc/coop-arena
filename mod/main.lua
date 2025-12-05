@@ -371,7 +371,7 @@ function round_begin()
         player_reset_sync_table(gMarioStates[i])
         local s = gPlayerSyncTable[i]
         if not gGameModes[gGlobalSyncTable.gameMode].teams and s.team ~= TEAM_SPECTATOR then
-            s.team = 0
+            s.team = TEAM_NONE
         end
     end
 

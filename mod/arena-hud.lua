@@ -370,15 +370,14 @@ local function on_hud_render()
 
     -- render hud icons
     if gGlobalSyncTable.gameMode == GAME_MODE_FT or gGlobalSyncTable.gameMode == GAME_MODE_TFT then
-        if gArenaFlagInfo[0] and gArenaFlagInfo[0].obj then
-            render_hud_icon(gArenaFlagInfo[0].obj, gHudIcons.flags[0])
+        if gArenaFlagInfo[TEAM_NONE] and gArenaFlagInfo[TEAM_NONE].obj then
+            render_hud_icon(gArenaFlagInfo[0].obj, gHudIcons.flags[TEAM_NONE])
         end
     elseif gGlobalSyncTable.gameMode == GAME_MODE_CTF then
-        if gArenaFlagInfo[1] and gArenaFlagInfo[1].obj then
-            render_hud_icon(gArenaFlagInfo[1].obj, gHudIcons.flags[1])
-        end
-        if gArenaFlagInfo[2] and gArenaFlagInfo[2].obj then
-            render_hud_icon(gArenaFlagInfo[2].obj, gHudIcons.flags[2])
+        for team = 1, TEAM_COUNT do
+            if gArenaFlagInfo[team] and gArenaFlagInfo[team].obj then
+                render_hud_icon(gArenaFlagInfo[team].obj, gHudIcons.flags[team])
+            end
         end
     elseif gGlobalSyncTable.gameMode == GAME_MODE_KOTH or gGlobalSyncTable.gameMode == GAME_MODE_TKOTH then
         if gArenaKothActiveObj then

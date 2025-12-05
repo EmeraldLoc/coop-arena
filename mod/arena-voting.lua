@@ -1,13 +1,4 @@
-
-VOTE_ID_REDO = 1
-VOTE_ID_RANDOM = 5
-
-local TEXTURE_RANDOM_LEVEL = get_texture_info("random_level")
-local TEXTURE_REDO_LEVEL = get_texture_info("redo_level")
-local TEXTURE_NO_IMAGE = get_texture_info("no_image")
-
 local selection = 1
-
 local joystickCooldown = 0
 
 function get_amount_of_votes_for_level(level)
@@ -58,13 +49,13 @@ function voting_hud()
     local previewImage
 
     if selection == 1 then
-        previewImage = TEXTURE_REDO_LEVEL
+        previewImage = TEX_REDO_LEVEL
     elseif selection == 5 then
-        previewImage = TEXTURE_RANDOM_LEVEL
+        previewImage = TEX_RANDOM_LEVEL
     else
         previewImage = gGameLevels[sVoteEntries[selection - 1].level].previewImage
         if not previewImage then
-            previewImage = TEXTURE_NO_IMAGE
+            previewImage = TEX_NO_IMAGE
         end
     end
 
@@ -106,7 +97,7 @@ function voting_hud()
     x = (screenWidth - totalWidth) / 2
     y = (screenHeight - previewWidth) / 2 + 250
 
-    previewImage = TEXTURE_REDO_LEVEL
+    previewImage = TEX_REDO_LEVEL
 
     djui_hud_set_color(255, 220, 0, selection == VOTE_ID_REDO and 255 or 0)
     djui_hud_render_rect(x - 4, y - 4, previewWidth + 8, previewHeight + 9)
@@ -124,7 +115,7 @@ function voting_hud()
         x = x + previewWidth + 75
 
         previewImage = gGameLevels[v.level].previewImage
-        if not previewImage then previewImage = TEXTURE_NO_IMAGE end
+        if not previewImage then previewImage = TEX_NO_IMAGE end
 
         djui_hud_set_color(255, 220, 0, selection == i + 1 and 255 or 0)
         djui_hud_render_rect(x - 4, y - 4, previewWidth + 8, previewHeight + 9)
@@ -139,7 +130,7 @@ function voting_hud()
 
     x = x + previewWidth + 75
 
-    previewImage = TEXTURE_RANDOM_LEVEL
+    previewImage = TEX_RANDOM_LEVEL
 
     djui_hud_set_color(255, 220, 0, selection == VOTE_ID_RANDOM and 255 or 0)
     djui_hud_render_rect(x - 4, y - 4, previewWidth + 8, previewHeight + 9)

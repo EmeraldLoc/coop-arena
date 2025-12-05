@@ -152,6 +152,7 @@ function bhv_arena_flag_collect(obj, m)
 
     if obj.oArenaFlagTeam > 0 and s.team == obj.oArenaFlagTeam then
         if obj.oArenaFlagAtBase == 1 then
+            -- TODO: This probably doesn't work right, and causes script errors in singleplayer
             local otherTeam = gPlayerSyncTable[data.obj.oArenaFlagHeldByGlobal].team
             local otherData = gArenaFlagInfo[otherTeam]
             local otherFlag = otherData.obj
