@@ -132,6 +132,25 @@ _G.Arena = {
     end,
     get_player_team = function (localIndex)
         return gPlayerSyncTable[localIndex].team
+    end,
+    get_game_state = function ()
+        return gGlobalSyncTable.gameState
+    end,
+    get_current_gamemode = function ()
+        return gGameModes[gGlobalSyncTable.gameMode]
+    end,
+    get_current_gamemode_index = function ()
+        return gGlobalSyncTable.gameMode
+    end,
+    get_amount_of_teams_in_match = function ()
+        return get_amount_of_teams_in_match()
+    end,
+    get_amount_of_time_left = function ()
+        if gGlobalSyncTable.gameState == GAME_STATE_ACTIVE then
+            return gGlobalSyncTable.timer
+        else
+            return 0
+        end
     end
 }
 
