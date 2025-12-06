@@ -1,8 +1,26 @@
+---@param m MarioState
+---@return boolean
 function active_player(m)
     local np = gNetworkPlayers[m.playerIndex]
     if m.playerIndex == 0 then return true end
     if not np.connected then return false end
     return is_player_active(m) ~= 0
+end
+
+---@param includeSpectators boolean
+---@return integer
+function active_player_count(includeSpectators)
+    local count = 0
+    for i = 0, MAX_PLAYERS - 1 do
+        if active_player(gMarioStates[i]) then
+            if includeSpectators then
+                count = count + 1
+            elseif gPlayerSyncTable[i].team ~= TEAM_SPECTATOR then
+                count = count + 1
+            end
+        end
+    end
+    return count
 end
 
 function set_dist_and_angle(from, dist, pitch, yaw)
@@ -111,10 +129,16 @@ function get_players_in_team(team)
     return players
 end
 
----@return integer
+---@return integer?
 function get_amount_of_teams_in_match()
     if gGameModes[gGlobalSyncTable.gameMode].teams then
-        return gGameLevels[get_current_level_key()].maxTeams
+        if player_count_at_start_of_round() >= 8 then
+            return gGameLevels[get_current_level_key()].maxTeams
+        elseif player_count_at_start_of_round() >= 6 then
+            return math.min(gGameLevels[get_current_level_key()].maxTeams, 3)
+        else
+            return 2
+        end
     else
         return 1
     end

@@ -176,6 +176,8 @@ gServerSettings.enablePlayerList = false
 -- use fixed collisions
 gLevelValues.fixCollisionBugs = 1
 
+local playerCountAtStartOfRound = 0
+
 function calculate_rankings()
     local rankings = {}
     for i = 0, (MAX_PLAYERS - 1) do
@@ -312,6 +314,10 @@ function shuffle_teams()
     end
 end
 
+function player_count_at_start_of_round()
+    return playerCountAtStartOfRound
+end
+
 function get_current_level_key()
     local curLevel = nil
 
@@ -342,7 +348,7 @@ function round_begin()
         roundShuffle = true
     end
 
-    local playerCount = network_player_connected_count()
+    playerCountAtStartOfRound = active_player_count(false)
 
     --[[if roundShuffle then
         local curLevel = get_current_level_key()
@@ -362,7 +368,7 @@ function round_begin()
     if roundShuffle and sRandomizeMode then
         local gamemodes = {}
         for i, gm in ipairs(gGameModes) do
-            if playerCount >= gm.minPlayers and playerCount <= gm.maxPlayers then
+            if playerCountAtStartOfRound >= gm.minPlayers and playerCountAtStartOfRound <= gm.maxPlayers then
                 table.insert(gamemodes, i)
             end
         end

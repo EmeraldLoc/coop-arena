@@ -9,7 +9,7 @@ function reset_rtv_votes()
 end
 
 function get_required_rtv_count()
-    return math.ceil(network_player_connected_count() / 2)
+    return math.ceil(active_player_count(true) / 2)
 end
 
 function get_total_rtv_count()
