@@ -86,7 +86,12 @@ local function render_team_playerlist(players, team, width, height, alignment, l
 
         x = x + 40
 
-        djui_hud_set_color(255, 255, 255, 255)
+        if s.team == TEAM_NONE or s.team == TEAM_SPECTATOR then
+            local playerColor = hex_to_rgb(network_get_player_text_color_string(np.localIndex))
+            djui_hud_set_color(playerColor.r, playerColor.g, playerColor.b, 255)
+        else
+            djui_hud_set_color(255, 255, 255, 255)
+        end
         djui_hud_print_text_shaded(cap_text(get_uncolored_string(np.name), (listWidth - 40) / textScale), x, y, textScale)
 
         y = y + 35
