@@ -357,7 +357,7 @@ local function on_hud_render()
 
     -- set resolution and font
     djui_hud_set_resolution(RESOLUTION_N64)
-    djui_hud_set_font(djui_menu_get_font())
+    djui_hud_set_font(FONT_SCIENCE_GOTHIC)
 
     -- update and render information
     update_ranking_descriptions()

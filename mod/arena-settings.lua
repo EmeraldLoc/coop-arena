@@ -196,37 +196,37 @@ end
 local function on_hud_render()
     if #entries == 0 then return end
 
+    djui_hud_set_filter(FILTER_NEAREST)
+    djui_hud_set_font(FONT_SCIENCE_GOTHIC)
     djui_hud_set_resolution(RESOLUTION_DJUI)
-    djui_hud_set_font(djui_menu_get_font())
 
     local screenWidth = djui_hud_get_screen_width()
     local screenHeight = djui_hud_get_screen_height()
 
-    local width = 850
-    local height = 800
+    local width = 601
+    local height = 701
+    local spacing = 15
 
     local x = (screenWidth - width) / 2
     local y = (screenHeight - height) / 2
 
-    djui_hud_set_color(20, 20, 20, 200)
-    djui_hud_render_rect(x, y, width, height)
+    djui_hud_set_color(5, 5, 5, 200)
+    djui_hud_render_rect_outlined(x, y, width, height, 255, 255, 255, 255, 2)
 
     width = width - 50
+    height = 40
     x = x + 25
-    y = y + 25
+    y = y + spacing / 2
 
     for i, entry in ipairs(entries) do
         if entry.update then
             entry.update(entry)
         end
-        local rectColor        = i == selection and { 50,   50,   0, 255 } or {   0,   0,   0, 128 }
-        local outlineRectColor = i == selection and { 255, 220,   0, 255 } or {   0,   0,   0, 128 }
-        local textColor        = i == selection and { 255, 255, 255, 255 } or { 220, 220, 220, 255 }
-        height = 40
-        djui_hud_set_color(rectColor[1], rectColor[2], rectColor[3], rectColor[4])
-        djui_hud_render_rect_outlined(x, y, width, height, outlineRectColor[1], outlineRectColor[2], outlineRectColor[3], outlineRectColor[4], 2)
+        local textColor        = i == selection and { 255, 220, 0, 255 } or { 220, 220, 220, 255 }
+        djui_hud_set_color(255, 255, 255, i == #entries and 0 or 255)
+        djui_hud_render_rect(x, y + height + spacing / 2, width, 2)
         djui_hud_set_color(textColor[1], textColor[2], textColor[3], textColor[4])
-        djui_hud_print_text(entry.name, x + 5, y + 3, 1)
+        djui_hud_print_text_shaded(entry.name, x + 5, y + 3, 1)
         if entry.toggleValue ~= nil then
             local texture = entry.toggleValue and TEXTURE_CHECKMARK or TEXTURE_NO_CHECKMARK
             djui_hud_set_filter(FILTER_LINEAR)
@@ -237,7 +237,7 @@ local function on_hud_render()
             djui_hud_set_color(255, 220, 0, 255)
             djui_hud_print_text(entry.value, x + width - djui_hud_measure_text(entry.value) - 5, y + 3, 1)
         end
-        y = y + height + 25
+        y = y + height + spacing
     end
 end
 

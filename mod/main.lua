@@ -4,6 +4,10 @@
 -- pausable: false
 -- category: gamemode
 
+-- import BMFont library, made by djoslin0
+bmfont = require("/lib/bmfont")
+FONT_SCIENCE_GOTHIC = bmfont.load_fnt("bmfont-science-gothic", 0.35)
+
 GAME_STATE_ACTIVE   = 1
 GAME_STATE_INACTIVE = 2
 GAME_STATE_VOTING   = 3
@@ -159,7 +163,7 @@ gGlobalSyncTable.kothPoint = -1
 gGlobalSyncTable.message = ' '
 gGlobalSyncTable.timer = 0
 gGlobalSyncTable.maxInvincTimer = 0
-sWaitTimerMax = 15 * 30 -- 15 seconds
+sWaitTimerMax = 10 * 30 -- 10 seconds
 sWaitTimer = 0
 sRoundCount = 0
 sUsingTimer = false

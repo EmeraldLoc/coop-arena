@@ -1,3 +1,5 @@
+-- TODO: Redo this hud and make it look nice
+
 local selection = 1
 local joystickCooldown = 0
 
@@ -23,7 +25,8 @@ function voting_hud()
     local s = gPlayerSyncTable[0]
 
     djui_hud_set_resolution(RESOLUTION_DJUI)
-    djui_hud_set_font(djui_menu_get_font())
+    djui_hud_set_font(FONT_SCIENCE_GOTHIC)
+    djui_hud_set_filter(FILTER_NEAREST)
 
     local screenWidth = djui_hud_get_screen_width()
     local screenHeight = djui_hud_get_screen_height()
@@ -34,8 +37,8 @@ function voting_hud()
     local x = (screenWidth - width) / 2
     local y = (screenHeight - height) / 2
 
-    djui_hud_set_color(20, 20, 20, 200)
-    djui_hud_render_rect(x, y, width, height)
+    djui_hud_set_color(5, 5, 5, 200)
+    djui_hud_render_rect_outlined(x, y, width, height, 255, 255, 255, 255, 2)
 
     if #sVoteEntries == 0 then
         djui_hud_set_color(255, 255, 255, 255)
@@ -44,8 +47,8 @@ function voting_hud()
     end
 
     -- render preview
-    local previewWidth = 768
-    local previewHeight = 432
+    local previewWidth = 767
+    local previewHeight = 431
     local previewImage
 
     if selection == 1 then
@@ -62,10 +65,10 @@ function voting_hud()
     x = (screenWidth - previewWidth) / 2
     y = (screenHeight - previewHeight) / 2 - 100
 
-    djui_hud_set_color(255, 220, 0, s.vote == selection and 255 or 0)
-    djui_hud_render_rect(x - 6, y - 6, previewWidth + 12, previewHeight + 13)
+    djui_hud_set_color(255, 255, 255, 0)
+    djui_hud_render_rect_outlined(x, y, previewWidth, previewHeight, 255, 255, 255, 255, 2)
     djui_hud_set_color(255, 255, 255, 255)
-    djui_hud_render_texture(previewImage, x, y, previewWidth / previewImage.width, previewWidth / previewImage.width)
+    djui_hud_render_texture(previewImage, x, y, previewWidth / previewImage.width, (previewWidth - 1) / previewImage.width)
 
     if selection > 1 and selection < 5 then
 
@@ -86,11 +89,11 @@ function voting_hud()
         djui_hud_set_color(255, 255, 255, 255)
         djui_hud_print_text(gamemodeName, x + previewWidth - djui_hud_measure_text(gamemodeName) * 0.5 - 12, y + 4, 0.5)
 
-        djui_hud_set_font(FONT_NORMAL)
+        djui_hud_set_font(FONT_SCIENCE_GOTHIC)
     end
 
-    previewWidth = 192
-    previewHeight = 108
+    previewWidth = 191
+    previewHeight = 107
 
     local totalWidth = 5 * previewWidth + 4 * 75
 
@@ -99,10 +102,14 @@ function voting_hud()
 
     previewImage = TEX_REDO_LEVEL
 
-    djui_hud_set_color(255, 220, 0, selection == VOTE_ID_REDO and 255 or 0)
-    djui_hud_render_rect(x - 4, y - 4, previewWidth + 8, previewHeight + 9)
-    djui_hud_set_color(255, s.vote == VOTE_ID_REDO and 200 or 255, s.vote == VOTE_ID_REDO and 0 or 255, 255)
-    djui_hud_render_texture(previewImage, x, y, previewWidth / previewImage.width, previewWidth / previewImage.width)
+    local rectOutlineColor = { 255, 255, 255, 255 }
+    local selectedRectOutlineColor = { 255, 220, 0, 255 }
+    local rectColor = selection == VOTE_ID_REDO and selectedRectOutlineColor or rectOutlineColor
+    local oultineThickness = s.vote == VOTE_ID_REDO and 4 or 2
+    djui_hud_set_color(255, 255, 255, 0)
+    djui_hud_render_rect_outlined(x, y, previewWidth, previewHeight, rectColor[1], rectColor[2], rectColor[3], rectColor[4], oultineThickness)
+    djui_hud_set_color(255, 255, 255, 255)
+    djui_hud_render_texture(previewImage, x, y, previewWidth / previewImage.width, (previewWidth - 1) / previewImage.width)
 
     local redoLevelText = "Redo Level (" .. get_amount_of_votes_for_level(VOTE_ID_REDO) .. ")"
 
@@ -117,10 +124,12 @@ function voting_hud()
         previewImage = gGameLevels[v.level].previewImage
         if not previewImage then previewImage = TEX_NO_IMAGE end
 
-        djui_hud_set_color(255, 220, 0, selection == i + 1 and 255 or 0)
-        djui_hud_render_rect(x - 4, y - 4, previewWidth + 8, previewHeight + 9)
-        djui_hud_set_color(255, s.vote == i + 1 and 200 or 255, s.vote == i + 1 and 0 or 255, 255)
-        djui_hud_render_texture(previewImage, x, y, previewWidth / previewImage.width, previewHeight / (previewImage.width / 16 * 9))
+        rectColor = selection == i + 1 and selectedRectOutlineColor or rectOutlineColor
+        oultineThickness = s.vote == i + 1 and 4 or 2
+        djui_hud_set_color(255, 255, 255, 0)
+        djui_hud_render_rect_outlined(x, y, previewWidth, previewHeight, rectColor[1], rectColor[2], rectColor[3], rectColor[4], oultineThickness)
+        djui_hud_set_color(255, 255, 255, 255)
+        djui_hud_render_texture(previewImage, x, y, previewWidth / previewImage.width, (previewWidth - 1) / previewImage.width)
 
         local voteLevelText = gGameLevels[v.level].name .. " (" .. get_amount_of_votes_for_level(i + 1) .. ")"
 
@@ -132,10 +141,12 @@ function voting_hud()
 
     previewImage = TEX_RANDOM_LEVEL
 
-    djui_hud_set_color(255, 220, 0, selection == VOTE_ID_RANDOM and 255 or 0)
-    djui_hud_render_rect(x - 4, y - 4, previewWidth + 8, previewHeight + 9)
-    djui_hud_set_color(255, s.vote == VOTE_ID_RANDOM and 200 or 255, s.vote == VOTE_ID_RANDOM and 0 or 255, 255)
-    djui_hud_render_texture(previewImage, x, y, previewWidth / previewImage.width, previewHeight / (previewImage.width / 16 * 9))
+    rectColor = selection == VOTE_ID_RANDOM and selectedRectOutlineColor or rectOutlineColor
+    oultineThickness = s.vote == VOTE_ID_RANDOM and 4 or 2
+    djui_hud_set_color(255, 255, 255, 0)
+    djui_hud_render_rect_outlined(x, y, previewWidth, previewHeight, rectColor[1], rectColor[2], rectColor[3], rectColor[4], oultineThickness)
+    djui_hud_set_color(255, 255, 255, 255)
+    djui_hud_render_texture(previewImage, x, y, previewWidth / previewImage.width, (previewWidth - 1) / previewImage.width)
 
     local randomLevelText = "Random (" .. get_amount_of_votes_for_level(VOTE_ID_RANDOM) .. ")"
 

@@ -92,8 +92,14 @@ local function render_team_playerlist(players, team, width, height, alignment, l
         y = y + 35
         x = originalX + cellWidth * (curCell - 1)
 
-        djui_hud_set_color(255, rank_color_g(s.rank), 0, 255)
-        djui_hud_print_text_shaded(rank .. "  " .. killText .. "  " .. pointsText, x + 10 * textScale, y, textScale)
+        local text = s.team ~= TEAM_SPECTATOR and rank .. "  " .. killText .. "  " .. pointsText or "Spectator"
+
+        if s.team == TEAM_SPECTATOR then
+            djui_hud_set_color(128, 128, 128, 255)
+        else
+            djui_hud_set_color(255, rank_color_g(s.rank), 0, 255)
+        end
+        djui_hud_print_text_shaded(text, x + 10 * textScale, y, textScale)
 
         x = originalX
         y = originalY + listHeight + paddingY + 35
@@ -158,14 +164,14 @@ local function render_playerlist()
         -- this technically can work with any amount of teams, so it's also what we use for 3 player teams!
         local players = {}
         for i = 0, MAX_PLAYERS / 2 - 1 do
-            if gNetworkPlayers[i].connected and gPlayerSyncTable[i].team ~= TEAM_SPECTATOR then
+            if gNetworkPlayers[i].connected then
                 table.insert(players, i)
             end
         end
         render_team_playerlist(players, TEAM_NONE, width / 2 - listPadding, height - listPadding, TOP_LEFT, listPadding / 2, 8)
         players = {}
         for i = MAX_PLAYERS / 2, MAX_PLAYERS - 1 do
-            if gNetworkPlayers[i].connected and gPlayerSyncTable[i].team ~= TEAM_SPECTATOR then
+            if gNetworkPlayers[i].connected then
                 table.insert(players, i)
             end
         end
@@ -261,7 +267,7 @@ local function render_modlist()
 end
 
 local function on_hud_render()
-    djui_hud_set_font(djui_menu_get_font())
+    djui_hud_set_font(FONT_SCIENCE_GOTHIC)
     djui_hud_set_resolution(RESOLUTION_DJUI)
 
     if djui_attempting_to_open_playerlist() then

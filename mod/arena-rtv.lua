@@ -23,6 +23,10 @@ function get_total_rtv_count()
 end
 
 local function on_hud_render()
+
+    djui_hud_set_resolution(RESOLUTION_DJUI)
+    djui_hud_set_font(FONT_SCIENCE_GOTHIC)
+
     local voteCount = get_total_rtv_count()
     panelAnimationTimer = clamp(panelAnimationTimer + (voteCount > 0 and 1 or -1), 0, animationDuration)
 
