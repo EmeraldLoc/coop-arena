@@ -131,17 +131,19 @@ end
 
 ---@return integer?
 function get_amount_of_teams_in_match()
+    local teamCount = 1
     if gGameModes[gGlobalSyncTable.gameMode].teams then
         if player_count_at_start_of_round() >= 8 then
-            return gGameLevels[get_current_level_key()].maxTeams
+            teamCount = gGameLevels[get_current_level_key()].maxTeams
         elseif player_count_at_start_of_round() >= 6 then
-            return math.min(gGameLevels[get_current_level_key()].maxTeams, 3)
+            teamCount = math.mininteger(gGameLevels[get_current_level_key()].maxTeams, 3)
         else
-            return 2
+            teamCount = 2
         end
-    else
-        return 1
+
+        return math.max(gGameLevels[get_current_level_key()].minTeams, teamCount)
     end
+    return teamCount
 end
 
 function seconds_to_minutes(seconds)
