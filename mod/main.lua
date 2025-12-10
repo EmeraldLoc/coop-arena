@@ -53,6 +53,7 @@ LEVEL_ARENA_CITY      = level_register('level_arena_city_entry',      COURSE_NON
 --- @field name                string
 --- @field author              string
 --- @field previewImage        TextureInfo?
+--- @field minTeams            integer?
 --- @field maxTeams            integer?
 --- @field compatibleGamemodes table
 --- @field bgm                 ArenaBGM?
@@ -62,20 +63,29 @@ gGameLevels = {}
 
 -- expose certain functions to other mods
 _G.Arena = {
+    ---@param levelNum integer
+    ---@param levelName string
+    ---@param levelAuthor string
+    ---@param previewImage TextureInfo
     add_level = function (levelNum, levelName, levelAuthor, previewImage)
         table.insert(gGameLevels,
         {
-            level = levelNum, name = levelName, author = levelAuthor or "", previewImage = previewImage, maxTeams = 2,
+            level = levelNum, name = levelName, author = levelAuthor or "", previewImage = previewImage, minTeams = 2, maxTeams = 2,
             compatibleGamemodes = { GAME_MODE_DM, GAME_MODE_TDM, GAME_MODE_CTF, GAME_MODE_FT, GAME_MODE_TFT, GAME_MODE_KOTH, GAME_MODE_TKOTH },
         })
         return #gGameLevels
     end,
+    ---@param level integer|ArenaLevel
+    ---@param data table
     add_level_data = function (level, data)
-        level = gGameLevels[level]
-        if not level then log_to_console("Invalid level") return end
+        if type(level) == "number" then
+            level = gGameLevels[level]
+        end
+        if level == nil then log_to_console("Arena: Tried to adad level data, but level specified is invalid") return end
         local validData = {
             author              = "string",
             previewImage        = "CObject",
+            minTeams            = "number",
             maxTeams            = "number",
             compatibleGamemodes = function (data)
                 if type(data) ~= "table" then log_to_console("Invalid data for compatibleGamemodes", CONSOLE_MESSAGE_ERROR) return false end
