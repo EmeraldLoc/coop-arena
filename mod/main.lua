@@ -352,15 +352,11 @@ function player_count_at_start_of_round()
 end
 
 function get_current_level_key()
-    local curLevel = nil
-
     for i, gl in ipairs(gGameLevels) do
         if gGlobalSyncTable.currentLevel == gl.level then
-            curLevel = i
+            return i
         end
     end
-
-    return curLevel
 end
 
 function round_begin()
@@ -487,21 +483,21 @@ function start_voting()
             level = math.random(#gGameLevels)
             containsLevel = false
 
-            for i = 1, 3 do
-                if (sVoteEntries[i] and sVoteEntries[i].level == level) or gGlobalSyncTable.currentLevel == level then
-                    containsLevel = true
+            if level == get_current_level_key() then
+                containsLevel = true
+            else
+                for j = 1, i-1 do
+                    if level == sVoteEntries[j].level then
+                        containsLevel = true
+                    end
                 end
             end
         end
 
         sVoteEntries[i] = { level = level }
 
-        local gamemode = math.random(#gGameModes)
-        while not table.contains(gGameLevels[level].compatibleGamemodes, gamemode) do
-            gamemode = math.random(#gGameModes)
-        end
-
-        sVoteEntries[i].gamemode = gamemode
+        local gamemodes = gGameLevels[level].compatibleGamemodes
+        sVoteEntries[i].gamemode = gamemodes[math.random(#gamemodes)]
     end
 
     send_arena_vote_entries(sVoteEntries)
@@ -510,9 +506,7 @@ end
 function on_arena_player_death(victimGlobalId, attackerGlobalId)
     local npVictim   = network_player_from_global_index(victimGlobalId)
     local npAttacker = network_player_from_global_index(attackerGlobalId)
-    if npVictim == nil then
-        return
-    end
+    if not npVictim then return end
 
     if network_is_server() then
         bhv_arena_flag_check_death(npVictim)

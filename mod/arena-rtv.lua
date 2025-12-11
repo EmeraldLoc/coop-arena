@@ -36,15 +36,15 @@ local function on_hud_render()
     local width = 300
     local height = 400
 
-    local x = linear_interpolation(panelAnimationTimer, screenWidth - width, screenWidth, animationDuration, 0)
-    local y = screenHeight / 2 - height / 2
+    local x = screenWidth - width * (panelAnimationTimer / animationDuration)
+    local y = (screenHeight - height) / 2
 
     local text = "Skip round?"
     local textScale = 1.5
-    local measuredText = djui_hud_measure_text(text) * textScale
-    local textX = x + width / 2 - measuredText / 2
-    local previousTextX = previousX + width / 2 - measuredText / 2
-    y = screenHeight / 2 - 36 * textScale / 2
+    local textOffset = (width - djui_hud_measure_text(text) * textScale) / 2
+    local textX = x + textOffset
+    local previousTextX = previousX + textOffset
+    y = (screenHeight - 36 * textScale) / 2
     djui_hud_set_color(255, 255, 255, 255)
     djui_hud_print_text_shaded_interpolated(text, previousTextX, y, textScale, textX, y, textScale)
 
@@ -52,9 +52,9 @@ local function on_hud_render()
 
     text = "Vote yes by typing /rtv"
     textScale = 1
-    measuredText = djui_hud_measure_text(text) * textScale
-    textX = x + width / 2 - measuredText / 2
-    previousTextX = previousX + width / 2 - measuredText / 2
+    textOffset = (width - djui_hud_measure_text(text) * textScale) / 2
+    textX = x + textOffset
+    previousTextX = previousX + textOffset
     djui_hud_set_color(220, 220, 220, 255)
     djui_hud_print_text_shaded_interpolated(text, previousTextX, y, textScale, textX, y, textScale)
 
@@ -62,9 +62,9 @@ local function on_hud_render()
 
     text = voteCount .. "/" .. get_required_rtv_count()
     textScale = 1
-    measuredText = djui_hud_measure_text(text) * textScale
-    textX = x + width / 2 - measuredText / 2
-    previousTextX = previousX + width / 2 - measuredText / 2
+    textOffset = (width - djui_hud_measure_text(text) * textScale) / 2
+    textX = x + textOffset
+    previousTextX = previousX + textOffset
     if voteCount == get_required_rtv_count() then
         djui_hud_set_color(255, 220, 0, 255)
     else

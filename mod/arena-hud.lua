@@ -133,8 +133,8 @@ function render_single_team_score(team)
     local textWidth = djui_hud_measure_text(txt) * scale
     local height = 32 * scale
     local x = screenWidth / 2
-    local y = linear_interpolation(movePlayerlistAnimation, screenHeight - height - 31, screenHeight - height - 15, 0, movePlayerlistAnimationDuration)
-    local prevY = linear_interpolation(prevMovePlayerlistAnimation, screenHeight - height - 31, screenHeight - height - 15, 0, movePlayerlistAnimationDuration)
+    local y = screenHeight - height - math.lerp(31, 15, movePlayerlistAnimation / movePlayerlistAnimationDuration)
+    local prevY = screenHeight - height - math.lerp(31, 15, prevMovePlayerlistAnimation / movePlayerlistAnimationDuration)
 
     if team == 1 then
         x = x - 20
@@ -219,7 +219,7 @@ function render_main_hud()
 
     local scale = 4
     local x = screenWidth / 2 - 64 * scale
-    local y = linear_interpolation(movePlayerlistAnimation, screenHeight - 96 * scale, screenHeight - 80 * scale, 0, movePlayerlistAnimationDuration)
+    local y = screenHeight - math.lerp(96, 80, movePlayerlistAnimation / movePlayerlistAnimationDuration) * scale
 
     local health = arenaHudTextures.health
     local powerHud = arenaHudTextures[s.item]
@@ -259,12 +259,12 @@ function render_main_hud()
     end
 
     if m.health <= 0x880 then
-        local width = clampf(52 * scale - linear_interpolation(m.health, 0, 52 * scale, 0xFF, 0x880), 0, 52 * scale)
+        local width = (1 - mario_health_float(m)) * 52 * scale -- add a `-` (minus) behind the parentheses once negative rect size is supported
         local height = 5 * scale
 
-        local x = screenWidth / 2 + 26 * scale - width
-        local y = linear_interpolation(movePlayerlistAnimation, screenHeight - 30 * 4, screenHeight - 14 * 4, 0, movePlayerlistAnimationDuration)
-        local prevY = linear_interpolation(prevMovePlayerlistAnimation, screenHeight - 30 * 4, screenHeight - 14 * 4, 0, movePlayerlistAnimationDuration)
+        local x = screenWidth / 2 + 26 * scale - width -- remove ` - width` once negative rect size is supported
+        local y = screenHeight - math.lerp(30, 14, movePlayerlistAnimation / movePlayerlistAnimationDuration) * 4
+        local prevY = screenHeight - math.lerp(30, 14, prevMovePlayerlistAnimation / movePlayerlistAnimationDuration) * 4
 
         djui_hud_set_color(96, 96, 96, 255)
         djui_hud_render_rect_interpolated(x, prevY, width, height, x, y, width, height)
@@ -292,8 +292,8 @@ function render_timer()
     local width = (djui_hud_measure_text(txt) + paddingX) * scale
     local height = 32 * scale
     local x = (screenWidth - width) / 2
-    local y = linear_interpolation(movePlayerlistAnimation, screenHeight - height - 31, screenHeight - height - 15, 0, movePlayerlistAnimationDuration)
-    local prevY = linear_interpolation(prevMovePlayerlistAnimation, screenHeight - height - 31, screenHeight - height - 15, 0, movePlayerlistAnimationDuration)
+    local y = screenHeight - height - math.lerp(31, 15, movePlayerlistAnimation / movePlayerlistAnimationDuration)
+    local prevY = screenHeight - height - math.lerp(31, 15, prevMovePlayerlistAnimation / movePlayerlistAnimationDuration)
 
     djui_hud_set_color(255, 255, 255, 255)
     djui_hud_print_text_shaded_interpolated(txt, x + paddingX / 8, prevY, scale, x + paddingX / 8, y, scale)

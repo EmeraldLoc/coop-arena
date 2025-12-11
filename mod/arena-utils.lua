@@ -181,13 +181,6 @@ function table.copy(orig)
     return copy
 end
 
-function linear_interpolation(input, minRange, maxRange, minInput, maxInput)
-    local m = (maxRange - minRange) / (maxInput - minInput)
-    local b = minRange - m * minInput
-
-    return m * input + b
-end
-
 ---@param x number|integer
 ---@param y number|integer
 ---@param width number|integer
