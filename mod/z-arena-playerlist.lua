@@ -157,12 +157,12 @@ local function render_playerlist()
 
     local listPadding = 20
 
-    if get_amount_of_teams_in_match() == 4 then
+    if get_team_count() == 4 then
         render_team_playerlist(get_players_in_team(TEAM_RED), TEAM_RED, width / 2 - listPadding, height / 2 - listPadding, TOP_LEFT, listPadding / 2, 4)
         render_team_playerlist(get_players_in_team(TEAM_BLUE), TEAM_BLUE, width / 2 - listPadding, height / 2 - listPadding, TOP_RIGHT, listPadding / 2, 4)
         render_team_playerlist(get_players_in_team(TEAM_GREEN), TEAM_GREEN, width / 2 - listPadding, height / 2 - listPadding, BOTTOM_LEFT, listPadding / 2, 4)
         render_team_playerlist(get_players_in_team(TEAM_YELLOW), TEAM_YELLOW, width / 2 - listPadding, height / 2 - listPadding, BOTTOM_RIGHT, listPadding / 2, 4)
-    elseif get_amount_of_teams_in_match() == 2 then
+    elseif get_team_count() == 2 then
         render_team_playerlist(get_players_in_team(TEAM_RED), TEAM_RED, width / 2 - listPadding, height - listPadding, TOP_LEFT, listPadding / 2, 8)
         render_team_playerlist(get_players_in_team(TEAM_BLUE), TEAM_BLUE, width / 2 - listPadding, height - listPadding, TOP_RIGHT, listPadding / 2, 8)
     else

@@ -130,7 +130,7 @@ function get_players_in_team(team)
 end
 
 ---@return integer?
-function get_amount_of_teams_in_match()
+function get_team_count()
     local teamCount = 1
     if gGameModes[gGlobalSyncTable.gameMode].teams then
         if player_count_at_start_of_round() >= 8 then

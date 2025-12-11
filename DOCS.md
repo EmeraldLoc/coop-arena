@@ -12,7 +12,7 @@ The `level` paramater is your level index the `add_level` function returns. The 
 
 Valid data to be changed:
 
-```
+```lua
 --- @class ArenaLevel
 --- @field level               LevelNum|integer
 --- @field name                string
@@ -30,14 +30,13 @@ You can change any of these fields by having the key as the field name, and valu
 
 The arena background music class for `bgm` looks like this
 
-```
+```lua
 --- @class ArenaBGM
 --- @field audio               string
+--- @field name                string
+--- @field volume              number?
 --- @field loopStart           integer?
 --- @field loopEnd             integer?
---- @field volume              number?
---- @field name                string
---- @field stream              ModAudio
 ```
 
 The gamemodes for `compatibleGamemodes` looks like this. Note, for your mod, you can either copy and paste these in to your mod, or use the numbers directly in the table.
@@ -60,16 +59,17 @@ Here's is an example usecase of adding a level to arena:
 ```lua
 ARENA_EXAMPLE_LEVEL = level_register('level_example_entry', COURSE_NONE, 'Example', 'example', 28000, 0x08, 0x08, 0x08)
 
+local levelAdded
 function on_level_init()
-    local arenaLevelIndex = _G.Arena.add_level(ARENA_EXAMPLE_LEVEL, "Example", "EmeraldLockdown", get_texture_info("example_preview_image"))
-    _G.Arena.add_level_data(arenaLevelIndex, {
+    if levelAdded then return end
+    local L_EXAMPLE = Arena.add_level(ARENA_EXAMPLE_LEVEL, "Example", "EmeraldLockdown", get_texture_info("example_preview_image"))
+    Arena.add_level_data(L_EXAMPLE, {
         minTeams = 3,
         maxTeams = 4,
         compatibleGamemodes = {
-            -- Compatible gamemodes are a bunch of numbers, refer to this documentation or `main.lua` to get them
-            3, -- Capture the Flag
-            4, -- Flag Tag
-            5, -- Team Flag Tag
+            Arena.GAME_MODE_CTF,
+            Arena.GAME_MODE_FT,
+            Arena.GAME_MODE_TFT
         },
         bgm = {
             audio = "rock.ogg",
@@ -78,6 +78,7 @@ function on_level_init()
             name = "Bowser's Castle - Mario Kart World"
         }
     })
+    levelAdded = true
 end
 
 hook_event(HOOK_ON_LEVEL_INIT, on_level_init)

@@ -152,7 +152,7 @@ function bhv_arena_flag_collect(obj, m)
 
     if obj.oArenaFlagTeam ~= TEAM_NONE and s.team == obj.oArenaFlagTeam then
         if obj.oArenaFlagAtBase == 1 then
-            for otherTeam = 1, get_amount_of_teams_in_match() do
+            for otherTeam = 1, get_team_count() do
                 local otherData = gArenaFlagInfo[otherTeam]
                 local otherFlag = otherData.obj
                 if otherFlag.oArenaFlagHeldByGlobal == np.globalIndex then
@@ -311,7 +311,7 @@ function bhv_arena_flag_reset()
 end
 
 function bhv_arena_flag_hide(obj)
-    if gGlobalSyncTable.gameMode == GAME_MODE_CTF and (obj.oArenaFlagTeam >= 1 and obj.oArenaFlagTeam <= get_amount_of_teams_in_match()) then
+    if gGlobalSyncTable.gameMode == GAME_MODE_CTF and (obj.oArenaFlagTeam >= 1 and obj.oArenaFlagTeam <= get_team_count()) then
         cur_obj_unhide()
         return false
     elseif (gGlobalSyncTable.gameMode == GAME_MODE_FT or gGlobalSyncTable.gameMode == GAME_MODE_TFT) and obj.oArenaFlagTeam == 0 then

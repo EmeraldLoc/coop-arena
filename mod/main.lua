@@ -5,7 +5,7 @@
 -- category: gamemode
 
 -- import BMFont library, made by djoslin0
-bmfont = require("/lib/bmfont")
+bmfont = require "/lib/bmfont"
 FONT_SCIENCE_GOTHIC = bmfont.load_fnt("bmfont-science-gothic", 0.35)
 
 GAME_STATE_ACTIVE   = 1
@@ -42,10 +42,10 @@ LEVEL_ARENA_CITY      = level_register('level_arena_city_entry',      COURSE_NON
 
 --- @class ArenaBGM
 --- @field audio               string
+--- @field name                string
+--- @field volume              number?
 --- @field loopStart           integer?
 --- @field loopEnd             integer?
---- @field volume              number?
---- @field name                string
 --- @field stream              ModAudio
 
 --- @class ArenaLevel
@@ -63,10 +63,19 @@ gGameLevels = {}
 
 -- expose certain functions to other mods
 _G.Arena = {
+    ---@param audio     string
+    ---@param name      string
+    ---@param volume    number?
+    ---@param loopStart integer?
+    ---@param loopEnd   integer?
+    BGM = function (audio, name, volume, loopStart, loopEnd)
+        return { audio = audio, name = name, volume = volume, loopStart = loopStart, loopEnd = loopEnd }
+    end,
+
     ---@param levelNum integer
     ---@param levelName string
     ---@param levelAuthor string
-    ---@param previewImage TextureInfo
+    ---@param previewImage TextureInfo?
     add_level = function (levelNum, levelName, levelAuthor, previewImage)
         table.insert(gGameLevels,
         {
@@ -75,13 +84,14 @@ _G.Arena = {
         })
         return #gGameLevels
     end,
+
     ---@param level integer|ArenaLevel
     ---@param data table
     add_level_data = function (level, data)
         if type(level) == "number" then
             level = gGameLevels[level]
         end
-        if level == nil then log_to_console("Arena: Tried to adad level data, but level specified is invalid") return end
+        if not level then log_to_console("Arena: Tried to add level data, but level specified is invalid") return end
         local validData = {
             author              = "string",
             previewImage        = "CObject",
@@ -140,22 +150,12 @@ _G.Arena = {
             else log_to_console("Invalid data: " .. field, CONSOLE_MESSAGE_ERROR) end
         end
     end,
-    get_player_team = function (localIndex)
-        return gPlayerSyncTable[localIndex].team
-    end,
-    get_game_state = function ()
-        return gGlobalSyncTable.gameState
-    end,
-    get_current_gamemode = function ()
-        return gGameModes[gGlobalSyncTable.gameMode]
-    end,
-    get_current_gamemode_index = function ()
-        return gGlobalSyncTable.gameMode
-    end,
-    get_amount_of_teams_in_match = function ()
-        return get_amount_of_teams_in_match()
-    end,
-    get_amount_of_time_left = function ()
+    get_player_team            = function (localIndex) return gPlayerSyncTable[localIndex].team end,
+    get_game_state             = function ()           return gGlobalSyncTable.gameState end,
+    get_current_gamemode       = function ()           return gGameModes[gGlobalSyncTable.gameMode] end,
+    get_current_gamemode_index = function ()           return gGlobalSyncTable.gameMode end,
+    get_team_count             = function ()           return get_team_count() end,
+    get_match_timer = function ()
         if gGlobalSyncTable.gameState == GAME_STATE_ACTIVE then
             return gGlobalSyncTable.timer
         else
@@ -163,20 +163,28 @@ _G.Arena = {
         end
     end
 }
+-- add various constants to API
+for k, v in pairs(_ENV) do
+    if k:sub(1, 9) == "GAME_MODE"
+    or k:sub(1,10) == "GAME_STATE"
+    then Arena[k] = v end
+end
+-- spill the API into the file scope
+for k, v in pairs(Arena) do _ENV[k] = v end
 
 -- TODO: Add preview images to all of these
-L_ORIGIN    = Arena.add_level(LEVEL_ARENA_ORIGIN,    'Origin',    "djoslin0",   get_texture_info("origin_preview_image")    )
-L_SKY_BEACH = Arena.add_level(LEVEL_ARENA_SKY_BEACH, 'Sky Beach', "djoslin0",   get_texture_info("sky_beach_preview_image") )
-L_PILLARS   = Arena.add_level(LEVEL_ARENA_PILLARS,   'Pillars',   "djoslin0",   get_texture_info("pillars_preview_image")   )
-L_FORTS     = Arena.add_level(LEVEL_ARENA_FORTS,     'Forts',     "djoslin0",   get_texture_info("forts_preview_image")     )
-L_CITADEL   = Arena.add_level(LEVEL_ARENA_CITADEL,   'Citadel',   "djoslin0",   get_texture_info("citadel_preview_image")   )
-L_SPIRE     = Arena.add_level(LEVEL_ARENA_SPIRE,     'Spire',     "djoslin0",   get_texture_info("spire_preview_image")     )
-L_RAINBOW   = Arena.add_level(LEVEL_ARENA_RAINBOW,   'Rainbow',   "FunkyLion",  nil                                         )
-L_CITY      = Arena.add_level(LEVEL_ARENA_CITY,      'City',      "FunkyLion",  nil                                         )
--- Arena.add_level_data(L_RAINBOW, { bgm = { audio = 'rainbow.ogg', loopStart = 13.378, loopEnd = 159.948,  name = "Rainbow Road - FunkyLion" } } )
-Arena.add_level_data(L_SPIRE,   { bgm = { audio = 'snow.ogg', loopStart = 446898, loopEnd = 3566438, name = "Frozen Heart Melancholy - MegaBaz (Sonic Gaiden)" } } )
-Arena.add_level_data(L_RAINBOW, { bgm = { audio = 'rainbow.ogg', name = "Rainbow Road - FunkyLion" } } )
-Arena.add_level_data(L_CITY,    { bgm = { audio = 'city.ogg', loopStart = 70181, loopEnd = 4051293, name = "City Outskirts Zone - GeckoYamori (Sonic Megamix)" } } )
+L_ORIGIN    = add_level(LEVEL_ARENA_ORIGIN,    'Origin',    "djoslin0",   get_texture_info("origin_preview_image")    )
+L_SKY_BEACH = add_level(LEVEL_ARENA_SKY_BEACH, 'Sky Beach', "djoslin0",   get_texture_info("sky_beach_preview_image") )
+L_PILLARS   = add_level(LEVEL_ARENA_PILLARS,   'Pillars',   "djoslin0",   get_texture_info("pillars_preview_image")   )
+L_FORTS     = add_level(LEVEL_ARENA_FORTS,     'Forts',     "djoslin0",   get_texture_info("forts_preview_image")     )
+L_CITADEL   = add_level(LEVEL_ARENA_CITADEL,   'Citadel',   "djoslin0",   get_texture_info("citadel_preview_image")   )
+L_SPIRE     = add_level(LEVEL_ARENA_SPIRE,     'Spire',     "djoslin0",   get_texture_info("spire_preview_image")     )
+L_RAINBOW   = add_level(LEVEL_ARENA_RAINBOW,   'Rainbow',   "FunkyLion")
+L_CITY      = add_level(LEVEL_ARENA_CITY,      'City',      "FunkyLion")
+
+add_level_data(L_SPIRE,   { bgm = BGM('snow.ogg', "Frozen Heart Melancholy - MegaBaz (Sonic Gaiden)", 1, 446898, 3566438) } )
+add_level_data(L_RAINBOW, { bgm = BGM('rainbow.ogg', "Rainbow Road - FunkyLion") } )
+add_level_data(L_CITY,    { bgm = BGM('city.ogg', "City Outskirts Zone - GeckoYamori (Sonic Megamix)", 1, 70181, 4051293) } )
 
 -- setup global sync table
 gGlobalSyncTable.gameState = GAME_STATE_ACTIVE
@@ -238,11 +246,11 @@ function calculate_rankings()
 end
 
 function calculate_team_rank(teamNum)
-    if teamNum < 1 or teamNum > get_amount_of_teams_in_match() then
+    if teamNum < 1 or teamNum > get_team_count() then
         return 0
     end
     local teamScores = {}
-    for team = 1, get_amount_of_teams_in_match() do
+    for team = 1, get_team_count() do
         table.insert(teamScores, { team = team, score = calculate_team_score(team) })
     end
     table.sort(teamScores, function (a, b)
@@ -286,7 +294,7 @@ function pick_team_on_join(m)
 
     -- initialize team count table
     local teamCount = {}
-    for i = 1, get_amount_of_teams_in_match() do
+    for i = 1, get_team_count() do
         teamCount[i] = 0
     end
 
@@ -341,7 +349,7 @@ function shuffle_teams()
         if teamCount[nextTeamSelected] == nil then teamCount[nextTeamSelected] = 0 end
         teamCount[nextTeamSelected] = teamCount[nextTeamSelected] + 1
         nextTeamSelected = nextTeamSelected + 1
-        if nextTeamSelected > get_amount_of_teams_in_match() then
+        if nextTeamSelected > get_team_count() then
             nextTeamSelected = 1
         end
     end

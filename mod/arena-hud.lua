@@ -157,7 +157,7 @@ end
 function render_team_score()
     if not gGameModes[gGlobalSyncTable.gameMode].teams then return end
 
-    for i = 1, get_amount_of_teams_in_match() do
+    for i = 1, get_team_count() do
         render_single_team_score(i)
     end
 end
@@ -236,18 +236,18 @@ function render_main_hud()
         local teamHud = arenaHudTextures.team_hud
         render_arena_hud_texture(teamHud, x, y, scale)
 
-        if get_amount_of_teams_in_match() == 3 then
+        if get_team_count() == 3 then
             teamHud = arenaHudTextures.three_team_hud
             render_arena_hud_texture(teamHud, x, y, scale)
-        elseif get_amount_of_teams_in_match() == 4 then
+        elseif get_team_count() == 4 then
             teamHud = arenaHudTextures.four_team_hud
             render_arena_hud_texture(teamHud, x, y, scale)
         end
 
         local teamColors = arenaHudTextures.two_team_colors
-        if get_amount_of_teams_in_match() == 3 then
+        if get_team_count() == 3 then
             teamColors = arenaHudTextures.three_team_colors
-        elseif get_amount_of_teams_in_match() == 4 then
+        elseif get_team_count() == 4 then
             teamColors = arenaHudTextures.four_team_colors
         end
 
