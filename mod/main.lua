@@ -154,7 +154,7 @@ _G.Arena = {
     get_game_state             = function ()           return gGlobalSyncTable.gameState end,
     get_current_gamemode       = function ()           return gGameModes[gGlobalSyncTable.gameMode] end,
     get_current_gamemode_index = function ()           return gGlobalSyncTable.gameMode end,
-    get_team_count             = function ()           return get_team_count() end,
+    get_team_count             = get_team_count,
     get_match_timer = function ()
         if gGlobalSyncTable.gameState == GAME_STATE_ACTIVE then
             return gGlobalSyncTable.timer

@@ -57,7 +57,11 @@ local arenaHudTextures = {
 
 local movePlayerlistAnimation = 0
 local prevMovePlayerlistAnimation = 0
-local movePlayerlistAnimationDuration = 0.1 * 30
+local movePlayerlistAnimationDuration = 0.25 * 30
+local musicTimer = 0
+local musicAnimation = 0
+local musicAnimationDuration = 0.1 * 30
+local musicBackgroundFrame = 1
 local prevTextureHudInfo = {}
 
 local function render_arena_hud_texture(hudTex, x, y, scale)
@@ -122,6 +126,72 @@ function render_game_mode()
 
     djui_hud_set_color(255, 255, 255, 255)
     djui_hud_print_text_shaded(txt, x, y, scale)
+end
+
+function render_music()
+    djui_hud_set_resolution(RESOLUTION_DJUI)
+    musicTimer = musicTimer - 1
+    local showMusicAnimation = (is_game_paused() or djui_attempting_to_open_playerlist() or musicTimer > 0) and gGameLevels[get_current_level_key()].bgm
+    musicAnimation = clamp(musicAnimation + (showMusicAnimation and 1 or -1), 0, musicAnimationDuration)
+
+    local screenWidth = djui_hud_get_screen_width()
+    local musicBackgroundScale = 2
+    local musicBackgroundFrames = 51
+    local musicBackgroundTex = get_texture_info("music_background_" .. math.floor(musicBackgroundFrame))
+
+    -- for whatever reason, there's a small bit of leaking, so just move over by one
+    local x = screenWidth - (musicBackgroundTex.width * musicBackgroundScale) + 1
+    local y = 0
+
+    djui_hud_set_color(255, 255, 255, math.lerp(0, 255, musicAnimation / musicAnimationDuration))
+    djui_hud_render_texture(musicBackgroundTex, x, y, musicBackgroundScale, musicBackgroundScale)
+
+    x = x + 60
+    y = y + 10
+    local text = ""
+    local text2 = nil
+    if gGameLevels[get_current_level_key()].bgm then
+        text = gGameLevels[get_current_level_key()].bgm.name
+    end
+    if djui_hud_measure_text(text) > (musicBackgroundTex.width * musicBackgroundScale) - 60 then
+        local len = 0
+        local splitIndex = #text
+        local lastSpace = nil
+
+        for i = 1, #text do
+            local c = string.sub(text, i, i)
+
+            if c == " " then
+                lastSpace = i
+            end
+
+            len = len + djui_hud_measure_text(c)
+
+            if len > (musicBackgroundTex.width * musicBackgroundScale) - 60 then
+                if lastSpace then
+                    splitIndex = lastSpace
+                else
+                    splitIndex = i
+                end
+                break
+            end
+        end
+
+        text2 = string.sub(text, splitIndex + 1)
+        text  = string.sub(text, 1, splitIndex)
+    end
+    if not text2 then
+        djui_hud_print_text_shaded(text, x, y, 1)
+    else
+        y = y - 10
+        djui_hud_print_text_shaded(text, x, y, 1)
+        y = y + 30
+        djui_hud_print_text_shaded(text2, x, y, 1)
+    end
+
+    musicBackgroundFrame = musicBackgroundFrame + 1
+    if musicBackgroundFrame > musicBackgroundFrames then musicBackgroundFrame = 1 end
+    djui_hud_set_resolution(RESOLUTION_N64)
 end
 
 function render_single_team_score(team)
@@ -363,6 +433,7 @@ local function on_hud_render()
     update_ranking_descriptions()
     render_game_mode()
     render_local_rank()
+    render_music()
     render_server_message()
     render_main_hud()
     render_timer()
@@ -388,3 +459,8 @@ local function on_hud_render()
 end
 
 hook_event(HOOK_ON_HUD_RENDER, on_hud_render)
+hook_event(HOOK_ON_LEVEL_INIT, function ()
+    if gNetworkPlayers[0].currLevelNum == gGameLevels[get_current_level_key()].level then
+        musicTimer = 5 * 30
+    end
+end)
