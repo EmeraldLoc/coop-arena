@@ -23,11 +23,17 @@ end
 gArenaKothActiveObj = nil
 sArenaKothActiveLastRewardM = nil
 
+---@param obj Object
 function bhv_arena_koth_active_init(obj)
     obj.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
+    -- set model if level override exists
+    if gGameLevels[get_current_level_key()].overrideKothRing then
+        obj_set_model_extended(obj, gGameLevels[get_current_level_key()].overrideKothRing)
+    end
     cur_obj_hide()
 end
 
+---@param obj Object
 function bhv_arena_koth_active_loop(obj)
     -- sanity check like crazy
     if gGlobalSyncTable.gameMode ~= GAME_MODE_KOTH and gGlobalSyncTable.gameMode ~= GAME_MODE_TKOTH then
@@ -102,16 +108,15 @@ function bhv_arena_koth_active_loop(obj)
                         round_end()
                     end
                 end
-                obj_set_model_extended(obj, E_MODEL_KOTH_ACTIVE)
+                obj.oAnimState = 2
                 obj.globalPlayerIndex = np.globalIndex
             else
-                obj_set_model_extended(obj, E_MODEL_KOTH)
+                obj.oAnimState = 1
             end
         else
-            obj_set_model_extended(obj, E_MODEL_KOTH)
+            obj.oAnimState = 1
         end
         sArenaKothActiveLastRewardM = rewardM
-
     end
 end
 

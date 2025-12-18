@@ -38,6 +38,12 @@ function bhv_arena_flag_init(obj)
         [4] = E_MODEL_FLAG_YELLOW,
     }
 
+    if gGameLevels[get_current_level_key()].overrideTeamFlags then
+        for k, v in gGameLevels[get_current_level_key()].overrideTeamFlags do
+            sFlagModels[k] = v
+        end
+    end
+
     if sFlagModels[team] then
         obj_set_model_extended(obj, sFlagModels[team])
     else

@@ -19,7 +19,6 @@ E_MODEL_FLAG_GREEN    = smlua_model_util_get_id("arena_flag_green_geo")
 E_MODEL_FLAG_YELLOW   = smlua_model_util_get_id("arena_flag_yellow_geo")
 E_MODEL_FLAG_WHITE    = smlua_model_util_get_id("arena_flag_white_geo")
 E_MODEL_KOTH          = smlua_model_util_get_id("koth_geo")
-E_MODEL_KOTH_ACTIVE   = smlua_model_util_get_id("koth_active_geo")
 E_MODEL_SPRING_TOP    = smlua_model_util_get_id("spring_top_geo")
 E_MODEL_SPRING_BOTTOM = smlua_model_util_get_id("spring_bottom_geo")
 

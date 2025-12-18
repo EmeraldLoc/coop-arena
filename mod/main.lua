@@ -57,6 +57,8 @@ LEVEL_ARENA_CITY      = level_register('level_arena_city_entry',      COURSE_NON
 --- @field maxTeams            integer?
 --- @field compatibleGamemodes table
 --- @field bgm                 ArenaBGM?
+--- @field overrideKothRing    integer?
+--- @field overrideTeamFlags   table?
 
 --- @type ArenaLevel[]
 gGameLevels = {}
@@ -167,6 +169,8 @@ _G.Arena = {
 for k, v in pairs(_ENV) do
     if k:sub(1, 9) == "GAME_MODE"
     or k:sub(1,10) == "GAME_STATE"
+    or (k:sub(1, 5) == "TEAM_"
+    and k ~= "TEAM_TEXT_COLORS")
     then Arena[k] = v end
 end
 -- spill the API into the file scope
