@@ -1,10 +1,10 @@
 gHudIcons = {
     flags = {
-    [0]={ tex = TEX_FLAG, prevX = 0, prevY = 0, r = 255, g = 255, b = 255 }, -- no team
-        { tex = TEX_FLAG, prevX = 0, prevY = 0, r = 255, g = 120, b = 120 }, -- red
-        { tex = TEX_FLAG, prevX = 0, prevY = 0, r = 120, g = 120, b = 255 }, -- blue
-        { tex = TEX_FLAG, prevX = 0, prevY = 0, r = 120, g = 255, b = 120 }, -- green
-        { tex = TEX_FLAG, prevX = 0, prevY = 0, r = 255, g = 255, b =   0 }, -- yellow
+        [0] = { tex = TEX_FLAG, prevX = 0, prevY = 0, r = 255, g = 255, b = 255 },
+        [TEAM_RED] = { tex = TEX_FLAG, prevX = 0, prevY = 0, r = 255, g = 120, b = 120 },
+        [TEAM_BLUE] = { tex = TEX_FLAG, prevX = 0, prevY = 0, r = 120, g = 120, b = 255 },
+        [TEAM_GREEN] = { tex = TEX_FLAG, prevX = 0, prevY = 0, r = 120, g = 255, b = 120 },
+        [TEAM_YELLOW] = { tex = TEX_FLAG, prevX = 0, prevY = 0, r = 255, g = 255, b = 0 },
     },
     koth = { tex = TEX_KOTH, prevX = 0, prevY = 0, r = 255, g = 255, b = 255 },
 }

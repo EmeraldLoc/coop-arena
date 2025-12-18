@@ -35,22 +35,20 @@ TEAM_RED         =  1
 TEAM_BLUE        =  2
 TEAM_GREEN       =  3
 TEAM_YELLOW      =  4
-
-TEAM_COUNT = 4
-TEAM_COLORS = {
-[0]={ r = 255, g = 255, b = 255 },
-    { r = 255, g =  63, b =  39 },
-    { r =  39, g = 149, b = 255 },
-    { r =  14, g = 152, b =  18 },
-    { r = 255, g = 200, b =   0 },
+TEAM_COUNT       = 4
+TEAM_COLORS      = {
+    [TEAM_NONE] = { r = 255, g = 255, b = 255 },
+    [TEAM_RED] = { r = 255, g = 63, b = 39 },
+    [TEAM_BLUE] = { r = 39, g = 149, b = 255 },
+    [TEAM_GREEN] = { r = 14, g = 152, b = 18 },
+    [TEAM_YELLOW] = { r = 255, g = 200, b = 0 },
 }
 TEAM_TEXT_COLORS = {
-[0]={ r = 220, g = 220, b = 220 },
-    { r = 255, g = 120, b = 120 },
-    { r = 120, g = 120, b = 255 },
-    { r = 120, g = 255, b = 120 },
-    { r = 255, g = 255, b =   0 },
+    [TEAM_NONE] = { r = 220, g = 220, b = 220 },
+    [TEAM_RED] = { r = 255, g = 120, b = 120 },
+    [TEAM_BLUE] = { r = 120, g = 120, b = 255 },
+    [TEAM_GREEN] = { r = 120, g = 255, b = 120 },
+    [TEAM_YELLOW] = { r = 255, g = 255, b = 0 },
 }
-
 VOTE_ID_REDO = 1
 VOTE_ID_RANDOM = 5

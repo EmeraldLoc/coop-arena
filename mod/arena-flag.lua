@@ -31,11 +31,11 @@ function bhv_arena_flag_init(obj)
     }
 
     local sFlagModels = {
-    [0]=E_MODEL_FLAG_WHITE,
-        E_MODEL_FLAG_RED,
-        E_MODEL_FLAG_BLUE,
-        E_MODEL_FLAG_GREEN,
-        E_MODEL_FLAG_YELLOW,
+        [0] = E_MODEL_FLAG_WHITE,
+        [1] = E_MODEL_FLAG_RED,
+        [2] = E_MODEL_FLAG_BLUE,
+        [3] = E_MODEL_FLAG_GREEN,
+        [4] = E_MODEL_FLAG_YELLOW,
     }
 
     if sFlagModels[team] then
@@ -146,7 +146,9 @@ function bhv_arena_flag_collect(obj, m)
     local s  = gPlayerSyncTable[m.playerIndex]
     local np = gNetworkPlayers[m.playerIndex]
     local e  = gMarioStateExtras[m.playerIndex]
-    if e.levelTimer < 30 then return false end
+    if e.levelTimer < 30 then
+        return false
+    end
 
     if obj.oArenaFlagTeam ~= TEAM_NONE and s.team == obj.oArenaFlagTeam then
         if obj.oArenaFlagAtBase == 1 then

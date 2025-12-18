@@ -46,6 +46,11 @@ local function render_team_playerlist(players, team, width, height, alignment, l
         djui_hud_set_color(5, 5, 5, 200)
     end
     djui_hud_render_rect_outlined(x, y, width, height, 255, 255, 255, 255, 2)
+    djui_hud_set_color(255, 255, 255, 64)
+    if team ~= TEAM_NONE and team ~= TEAM_SPECTATOR then
+        local tex = get_texture_info("team_" .. team_name_str(team) .. "_mascot")
+        djui_hud_render_texture(tex, x + width / 2 - tex.width / 2, y + height / 2 - tex.height / 2, 1, 1)
+    end
     for i = 1, playerSlots - 1 do
         djui_hud_set_color(255, 255, 255, 255)
         djui_hud_render_rect(x + dividerXPadding / 2, y + ((listHeight + paddingY + 35) * i) - 3, listWidth - dividerXPadding, 2)
