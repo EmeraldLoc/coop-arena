@@ -22,6 +22,8 @@ Valid data to be changed:
 --- @field maxTeams            integer?
 --- @field compatibleGamemodes table
 --- @field bgm                 ArenaBGM?
+--- @field overrideKothRing    integer?
+--- @field overrideTeamFlags   table?
 ```
 
 You can change any of these fields by having the key as the field name, and value as the value.
@@ -50,6 +52,32 @@ GAME_MODE_TFT   = 5
 GAME_MODE_KOTH  = 6
 GAME_MODE_TKOTH = 7
 GAME_MODE_COUNT = 7
+```
+
+#### Override King of the Hill Ring and Capture the Flag Flags
+
+`overrideKothRing` is simply your extended model. The model should have 2 different animation states, one for when a player is on the ring, the other for your normal model. 1 is the regular ring model, 2 is the player ring model. `overrideTeamFlags` should be a table, with the key being the team, and the value being the model. Example:
+
+```lua
+local newTeamFlags = {
+    [_G.Arena.TEAM_NONE] = E_MODEL_NEW_FLAG_WHITE, -- none
+    [_G.Arena.TEAM_RED] = E_MODEL_NEW_FLAG_RED, -- red
+    [_G.Arena.TEAM_BLUE] = E_MODEL_NEW_FLAG_BLUE, -- blue
+    [_G.Arena.TEAM_GREEN] = E_MODEL_NEW_FLAG_GREEN, -- green
+    [_G.Arena.TEAM_YELLOW] = E_MODEL_NEW_FLAG_YELLOW, -- yellow
+}
+```
+
+If you wish to not have each key explicitly typed, you can do this:
+
+```lua
+local newTeamFlags = {
+    [0] = E_MODEL_NEW_FLAG_WHITE, -- none
+    E_MODEL_NEW_FLAG_RED, -- red
+    E_MODEL_NEW_FLAG_BLUE, -- blue
+    E_MODEL_NEW_FLAG_GREEN, -- green
+    E_MODEL_NEW_FLAG_YELLOW, -- yellow
+}
 ```
 
 ### Examples
