@@ -31,6 +31,7 @@ function bhv_arena_item_collect(obj)
     obj.oArenaItemTouched = 1
     obj.oTimer = 0
     network_send_object(obj, true)
+
     cur_obj_play_sound_2(SOUND_GENERAL_COLLECT_1UP)
 
     local s = gPlayerSyncTable[0]
@@ -62,6 +63,9 @@ function bhv_arena_item_collect_metal_cap(obj)
     play_character_sound(m, CHAR_SOUND_HERE_WE_GO)
 
     play_cap_music(capMusic)
+
+    -- make sure the item isn't selected as the player's item
+    return false
 end
 
 function bhv_arena_item_collect_coin(obj)
@@ -76,6 +80,9 @@ function bhv_arena_item_collect_coin(obj)
     local m = gMarioStates[0]
     m.numCoins = m.numCoins + 1
     m.healCounter = m.healCounter + 8
+
+    -- make sure the item isn't selected as the player's item
+    return false
 end
 
 function bhv_arena_item_update_touch(obj)
@@ -134,16 +141,16 @@ function bhv_arena_item_update_rotation(obj)
 end
 
 function bhv_arena_item_check_collect(obj)
-    local data = gItemData[obj.oArenaItemType]
     local m = nearest_mario_state_to_object(obj)
+    local data = gItemData[obj.oArenaItemType]
     if m == gMarioStates[0] then
         local s = gPlayerSyncTable[0]
         local player = m.marioObj
         local yDist = math.abs(obj.oPosY - player.oPosY)
         local xzDist = math.sqrt((obj.oPosX - player.oPosX) ^ 2 + (obj.oPosZ - player.oPosZ) ^ 2)
         if xzDist < 160 and yDist < 250 and s.team ~= TEAM_SPECTATOR then
-            if data ~= nil and data.customCollectionFunc ~= nil then
-                data.customCollectionFunc(obj)
+            if data and data.customCollectFunc then
+                data.customCollectFunc(obj)
             elseif s.item == ITEM_NONE then
                 bhv_arena_item_collect(obj)
             end
@@ -165,13 +172,13 @@ function bhv_arena_item_loop(obj)
 
     -- see if player touched
     bhv_arena_item_check_collect(obj)
-
 end
 
 id_bhvArenaItem = hook_behavior(nil, OBJ_LIST_DEFAULT, true, bhv_arena_item_init, bhv_arena_item_loop)
 
 -----------------
 
+---@type table<integer, ArenaItem>
 gItemData = {
     [ITEM_NONE] = {
         model = E_MODEL_NONE,
@@ -180,7 +187,9 @@ gItemData = {
         billboard = false,
         updateAnimState = false,
         timeout = arenaItemTimeout,
-        customCollectionFunc = nil,
+        customCollectFunc = nil,
+        constantHooks = nil,
+        activeHooks = nil,
     },
     [ITEM_METAL_CAP] = {
         model = E_MODEL_MARIOS_METAL_CAP,
@@ -189,7 +198,9 @@ gItemData = {
         billboard = false,
         updateAnimState = false,
         timeout = arenaItemTimeout * 5,
-        customCollectionFunc = bhv_arena_item_collect_metal_cap,
+        customCollectFunc = bhv_arena_item_collect_metal_cap,
+        constantHooks = nil,
+        activeHooks = nil,
     },
     [ITEM_HAMMER] = {
         model = E_MODEL_HAMMER,
@@ -198,7 +209,23 @@ gItemData = {
         billboard = false,
         updateAnimState = false,
         timeout = arenaItemTimeout,
-        customCollectionFunc = nil,
+        customCollectFunc = nil,
+        constantHooks = {
+            {
+                hookEvent = HOOK_MARIO_UPDATE,
+                func = mario_local_hammer_check,
+            },
+            {
+                hookEvent = HOOK_MARIO_UPDATE,
+                func = mario_hammer_update
+            }
+        },
+        activeHooks = {
+            {
+                hookEvent = HOOK_ON_SET_MARIO_ACTION,
+                func = mario_hammer_on_set_action
+            }
+        }
     },
     [ITEM_FIRE_FLOWER] = {
         model = E_MODEL_FIRE_FLOWER,
@@ -207,7 +234,14 @@ gItemData = {
         billboard = false,
         updateAnimState = false,
         timeout = arenaItemTimeout,
-        customCollectionFunc = nil,
+        customCollectFunc = nil,
+        constantHooks = nil,
+        activeHooks = {
+            {
+                hookEvent = HOOK_MARIO_UPDATE,
+                func = fire_flower_update
+            }
+        },
     },
     [ITEM_CANNON_BOX] = {
         model = E_MODEL_CANNON_BOX,
@@ -216,7 +250,14 @@ gItemData = {
         billboard = false,
         updateAnimState = false,
         timeout = arenaItemTimeout,
-        customCollectionFunc = nil,
+        customCollectFunc = nil,
+        constantHooks = {
+            {
+                hookEvent = HOOK_MARIO_UPDATE,
+                func = mario_cannon_box_update
+            }
+        },
+        activeHooks = nil,
     },
     [ITEM_BOBOMB] = {
         model = E_MODEL_BLACK_BOBOMB,
@@ -227,7 +268,14 @@ gItemData = {
         billboard = false,
         updateAnimState = false,
         timeout = arenaItemTimeout,
-        customCollectionFunc = nil,
+        customCollectFunc = nil,
+        constantHooks = nil,
+        activeHooks = {
+            {
+                hookEvent = HOOK_MARIO_UPDATE,
+                func = bobomb_update
+            }
+        },
     },
     [ITEM_COIN] = {
         model = E_MODEL_YELLOW_COIN,
@@ -236,6 +284,31 @@ gItemData = {
         billboard = true,
         updateAnimState = true,
         timeout = arenaItemTimeout,
-        customCollectionFunc = bhv_arena_item_collect_coin,
+        customCollectFunc = bhv_arena_item_collect_coin,
+        constantHooks = nil,
+        activeHooks = nil,
     },
 }
+
+-- hook up the events
+function on_mods_loaded()
+    for key, item in pairs(gItemData) do
+        if item.constantHooks then
+            for _, hook in pairs(item.constantHooks) do
+                hook_event(hook.hookEvent, hook.func)
+            end
+        end
+
+        if item.activeHooks then
+            for _, hook in pairs(item.activeHooks) do
+                hook_event(hook.hookEvent, function (...)
+                    if gPlayerSyncTable[0].item == key then
+                        hook.func(...)
+                    end
+                end)
+            end
+        end
+    end
+end
+
+hook_event(HOOK_ON_MODS_LOADED, on_mods_loaded)

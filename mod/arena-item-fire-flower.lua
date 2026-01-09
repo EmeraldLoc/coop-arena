@@ -2,8 +2,9 @@ define_custom_obj_fields({
     oArenaFlameGlobalOwner = 'u32',
 })
 
-E_MODEL_GREEN_FLAME = smlua_model_util_get_id("green_flame_geo")
-E_MODEL_YELLOW_FLAME = smlua_model_util_get_id("yellow_flame_geo")
+----------------------------
+--- Fire Flower Behavior ---
+----------------------------
 
 local sArenaChildFlameLife = 30 * 1.8
 
@@ -177,4 +178,47 @@ end
 
 id_bhvArenaFlame = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_arena_flame_init, bhv_arena_flame_loop)
 
-------------------
+------------------------------
+--- Fire Flower Item Logic ---
+------------------------------
+
+local function mario_fire_flower_use(m)
+    local np = gNetworkPlayers[m.playerIndex]
+    local e = gMarioStateExtras[m.playerIndex]
+    local s = gPlayerSyncTable[m.playerIndex]
+
+    spawn_sync_object(id_bhvArenaFlame, E_MODEL_RED_FLAME, m.pos.x, m.pos.y, m.pos.z,
+        function (obj)
+            obj.oArenaFlameGlobalOwner = np.globalIndex
+            obj.oVelY = m.vel.y + 25
+            obj.oMoveAngleYaw = m.faceAngle.y
+            obj.oForwardVel = m.forwardVel + 70
+        end)
+
+    if (m.action & ACT_FLAG_INVULNERABLE) ~= 0
+    or (m.action & ACT_FLAG_INTANGIBLE) ~= 0
+    or (m.action == ACT_SHOT_FROM_CANNON) then
+        -- nothing
+    elseif (m.action & ACT_FLAG_SWIMMING) ~= 0 then
+        set_mario_action(m, ACT_WATER_PUNCH, 0)
+    elseif (m.action & ACT_FLAG_MOVING) ~= 0 then
+        set_mario_action(m, ACT_MOVE_PUNCHING, 0)
+    elseif (m.action & ACT_FLAG_AIR) ~= 0 then
+        set_mario_action(m, ACT_DIVE, 0)
+    elseif (m.action & ACT_FLAG_STATIONARY) ~= 0 then
+        set_mario_action(m, ACT_PUNCHING, 0)
+    end
+
+    e.attackCooldown = 20
+    s.ammo = s.ammo - 1
+end
+
+---@param m MarioState
+function fire_flower_update(m)
+    if m.playerIndex ~= 0 then return end
+    local s = gPlayerSyncTable[m.playerIndex]
+    local e = gMarioStateExtras[m.playerIndex]
+    if e.attackCooldown <= 0 and m.controller.buttonPressed & Y_BUTTON ~= 0 then
+        mario_fire_flower_use(m)
+    end
+end

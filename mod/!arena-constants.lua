@@ -11,8 +11,11 @@ ITEM_MAX         = 7
 
 E_MODEL_HAMMER        = smlua_model_util_get_id("hammer_geo")
 E_MODEL_FIRE_FLOWER   = smlua_model_util_get_id("fire_flower_geo")
+E_MODEL_GREEN_FLAME   = smlua_model_util_get_id("green_flame_geo")
+E_MODEL_YELLOW_FLAME  = smlua_model_util_get_id("yellow_flame_geo")
 E_MODEL_CANNON_BOX    = smlua_model_util_get_id("cannon_box_geo")
 E_MODEL_CANNON_BALL   = smlua_model_util_get_id("arena_ball_geo")
+E_MODEL_BOOMERANG     = smlua_model_util_get_id("boomerang_geo")
 E_MODEL_FLAG_RED      = smlua_model_util_get_id("arena_flag_red_geo")
 E_MODEL_FLAG_BLUE     = smlua_model_util_get_id("arena_flag_blue_geo")
 E_MODEL_FLAG_GREEN    = smlua_model_util_get_id("arena_flag_green_geo")

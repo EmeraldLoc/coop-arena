@@ -40,26 +40,6 @@ LEVEL_ARENA_SPIRE     = level_register('level_arena_spire_entry',     COURSE_NON
 LEVEL_ARENA_RAINBOW   = level_register('level_arena_rainbow_entry',   COURSE_NONE, 'Rainbow',   'rainbow',   28000, 0x28, 0x28, 0x28)
 LEVEL_ARENA_CITY      = level_register('level_arena_city_entry',      COURSE_NONE, 'City',      'city',      28000, 0x28, 0x28, 0x28)
 
---- @class ArenaBGM
---- @field audio               string
---- @field name                string
---- @field volume              number?
---- @field loopStart           integer?
---- @field loopEnd             integer?
---- @field stream              ModAudio
-
---- @class ArenaLevel
---- @field level               LevelNum|integer
---- @field name                string
---- @field author              string
---- @field previewImage        TextureInfo?
---- @field minTeams            integer?
---- @field maxTeams            integer?
---- @field compatibleGamemodes table
---- @field bgm                 ArenaBGM?
---- @field overrideKothRing    integer?
---- @field overrideTeamFlags   table?
-
 --- @type ArenaLevel[]
 gGameLevels = {}
 

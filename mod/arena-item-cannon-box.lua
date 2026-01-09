@@ -4,6 +4,10 @@ define_custom_obj_fields({
     oArenaCannonBallDamages = 'u32',
 })
 
+---------------------------
+--- Cannon Box Behavior ---
+---------------------------
+
 function bhv_arena_cannon_ball_init(obj)
     obj.oFlags = OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE
     obj.oArenaCannonBallDamages = 1
@@ -77,3 +81,44 @@ function bhv_arena_cannon_ball_loop(obj)
 end
 
 id_bhvArenaCannonBall = hook_behavior(nil, OBJ_LIST_GENACTOR, true, bhv_arena_cannon_ball_init, bhv_arena_cannon_ball_loop)
+
+-----------------------------
+--- Cannon Box Item Logic ---
+-----------------------------
+
+function mario_cannon_box_update(m)
+    local np = gNetworkPlayers[m.playerIndex]
+    local e = gMarioStateExtras[m.playerIndex]
+    local s = gPlayerSyncTable[m.playerIndex]
+    if s.item ~= ITEM_CANNON_BOX then return end
+
+    if m.playerIndex == 0 and (m.controller.buttonPressed & Y_BUTTON) ~= 0 then
+        s.charging = get_network_area_timer()
+    end
+
+    if (m.controller.buttonDown & Y_BUTTON) ~= 0 and s.charging > 0 then
+        local cannonBallSize = clamp((get_network_area_timer() - s.charging) / (30 * 5) + 0.1, 0, 1)
+        local held = gItemHeld[m.playerIndex]
+        if held ~= nil then
+            for i = 0, 2 do
+                spawn_non_sync_object(id_bhvArenaSparkle, E_MODEL_SPARKLES_ANIMATION,
+                    held.oPosX, held.oPosY, held.oPosZ,
+                    function (obj)
+                        obj.oArenaSparkleOwner = m.playerIndex
+                        obj.oArenaSparkleSize = cannonBallSize
+                    end)
+            end
+        end
+    elseif m.playerIndex == 0 and s.charging > 0 then
+        local cannonBallSize = clamp((get_network_area_timer() - s.charging) / (30 * 5) + 0.1, 0, 1)
+        s.charging = 0
+        spawn_sync_object(id_bhvArenaCannonBall, E_MODEL_CANNON_BALL, m.pos.x, m.pos.y + 150, m.pos.z,
+            function (obj)
+                obj.oArenaCannonBallGlobalOwner = np.globalIndex
+                obj.oArenaCannonBallSize = cannonBallSize
+                obj.oMoveAngleYaw = m.faceAngle.y
+                obj.oForwardVel = m.forwardVel + 150
+            end)
+        s.ammo = s.ammo - 1
+    end
+end

@@ -1,0 +1,11 @@
+extern const GeoLayout boomerang_geo[];
+// extern Lights1 boomerang_BLUECOLOR_lights;
+// extern Lights1 boomerang_WHITECOLOR_lights;
+extern u8 boomerang_NewCanvas1_ia8[];
+extern Vtx boomerang_Inst3D27_RefRep_003_mesh_layer_1_vtx_0[75];
+extern Gfx boomerang_Inst3D27_RefRep_003_mesh_layer_1_tri_0[];
+extern Vtx boomerang_Inst3D27_RefRep_003_mesh_layer_1_vtx_1[35];
+extern Gfx boomerang_Inst3D27_RefRep_003_mesh_layer_1_tri_1[];
+extern Gfx mat_boomerang_BLUECOLOR[];
+extern Gfx mat_boomerang_WHITECOLOR[];
+extern Gfx boomerang_Inst3D27_RefRep_003_mesh_layer_1[];
