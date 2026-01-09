@@ -63,9 +63,6 @@ function bhv_arena_item_collect_metal_cap(obj)
     play_character_sound(m, CHAR_SOUND_HERE_WE_GO)
 
     play_cap_music(capMusic)
-
-    -- make sure the item isn't selected as the player's item
-    return false
 end
 
 function bhv_arena_item_collect_coin(obj)
@@ -80,9 +77,6 @@ function bhv_arena_item_collect_coin(obj)
     local m = gMarioStates[0]
     m.numCoins = m.numCoins + 1
     m.healCounter = m.healCounter + 8
-
-    -- make sure the item isn't selected as the player's item
-    return false
 end
 
 function bhv_arena_item_update_touch(obj)

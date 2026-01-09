@@ -229,7 +229,6 @@ hook_event(HOOK_ON_LEVEL_INIT, on_level_init)
 
 ----
 
--- Note: The key MUST match the key in the actual item for them to link
 ---@type table<string, ArenaItemHeld>
 gItemHeldData = {
     [ITEM_NONE] = {
@@ -256,7 +255,7 @@ gItemHeldData = {
         forwardOffset = 0,
         renderAdjust = nil,
     },
-    [ITEM_HAMMER] =  {
+    [ITEM_HAMMER] = {
         heldModel = E_MODEL_HAMMER,
         updateAnimState = false,
         billboard = false,
